@@ -1,0 +1,17 @@
+<!-- 
+ * springboot2
+ * index
+ * Author: 竺志伟 
+ * Date:   2019-03-19 23:48
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<body>
+index <a href="/web/login">登录</a>
+</body>
+</html>

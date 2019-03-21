@@ -1,0 +1,50 @@
+<!-- 
+ * uni2k_print
+ * error404
+ * Author: 竺志伟 
+ * Date:   2018-10-31 10:09
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>error</title>
+    <style>
+        .tip {margin: 10px auto;border-left: solid #009688 5px;background: url("/static/images/error.gif") no-repeat 10px
+        #E2E2E2;background-size: 100px 100px;padding: 30px 20px 20px 120px;}
+
+        .tip strong {color: #FF5722;}
+
+        .tip i {color: #1E9FFF;}
+    </style>
+</head>
+<script language="javascript" type="text/javascript">
+    var i = 5;
+    var intervalid;
+    intervalid = setInterval("fun()", 1000);
+
+    function fun()
+    {
+        if (i == 0)
+        {
+            window.location.href = "/";
+            clearInterval(intervalid);
+        }
+        document.getElementById("mes").innerHTML = i;
+        i--;
+    }
+</script>
+<body>
+<div class='tip'>
+    <th:block th:text="${errorInfo}"></th:block>
+    <p>访问的URI:
+        <th:block th:text="${uri}"></th:block>
+    </p>
+    <p>页面将在 <span id="mes" style="color: #EF0000">5</span> 秒钟后返回首页！,您也可以点击 <a href="/"
+                                                                              style="background-color:#009688;color:#FFF;padding:10px;text-decoration:none ">回到主页</a>
+    </p>
+</div>
+</body>
+</html>

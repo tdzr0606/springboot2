@@ -1,0 +1,355 @@
+<!-- 
+ * springboot2
+ * header
+ * Author: 竺志伟 
+ * Date:   2019-03-19 23:15
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- 头部 模板 -->
+<th:block th:fragment="head">
+    <head>
+        <meta charset="utf-8">
+        <title>Nature</title>
+        <meta name="renderer" content="webkit|ie-comp|ie-stand">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="format-detection" content="telephone=no">
+        <meta http-equiv="Cache-Control" content="no-siteapp"/>
+        <link rel="stylesheet" href="/static/design/css/layui.css">
+        <link rel="stylesheet" href="/static/design/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/static/design/css/layuiExt.css">
+    </head>
+</th:block>
+
+<!-- 菜单模板 -->
+<th:block th:fragment="menu">
+    <style>
+        .uni2kLogo {
+            margin-top: 13px;
+            margin-left: 20px;
+            display: block;
+            width: 134px;
+            height: 44px;
+            background-image: url("/static/design/images/login_log.svg");
+            background-repeat: no-repeat;
+        }
+    </style>
+    <div class="layui-header">
+        <div class="layui-logo">
+            <a href="/web">
+                <div class="uni2kLogo">&nbsp;</div>
+            </a>
+        </div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item">
+                <a href="javascript:;"><i class="fa fa-cog"></i>&nbsp;系统设置</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="#">服务器管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right" lay-filter="topMenu">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    您好，
+                    <th:block th:text="${session.login_admin.userName}"></th:block>
+                    <i class="item-impt"></i>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" id="showInfo">基本资料</a></dd>
+                    <dd><a href="javascript:;" id="passModify">修改密码</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="javascript:;" id="loginOut">退出</a></li>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test" id="leftMainMenu">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;后台管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="#"><i class="fa fa-angle-right"></i>&nbsp;用户管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+</th:block>
+
+<!-- 底部模板 -->
+<th:block th:fragment="foot">
+    <script src="/static/design/js/security_utf8.js"></script>
+    <script src="/static/design/layui.js"></script>
+
+    <!-- 密码修改 表单 -->
+    <form class="layui-form" id="passwordModifyForm" style="display:none;padding:10px 40px 10px 0px; ">
+        <div class="layui-form-item">
+            <label class="layui-form-label">原始密码</label>
+
+            <div class="layui-input-block">
+                <input type="password" name="loginPass" id="passwordModifyForm_loginPass" required lay-verify="required"
+                       placeholder="请输入原始密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+
+            <div class="layui-input-block">
+                <input type="password" name="loginPassN" id="passwordModifyForm_loginPassN" required lay-verify="required"
+                       placeholder="请输入新密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码验证</label>
+
+            <div class="layui-input-block">
+                <input type="password" id="passwordModifyForm_loginPassA" required lay-verify="required" placeholder="请输入新密码验证"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <!--lay-filter 表示作用到 id:passwordModifyForm-->
+                <button class="layui-btn" lay-submit lay-filter="passwordModifyForm">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary" onclick="layer.closeAll()">取消</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 基本信息 表单 -->
+    <form class="layui-form" id="basicInfoForm" style="display:none;padding:10px 40px 10px 0px; ">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+
+            <div class="layui-input-block">
+                <input type="text" name="userName" id="userName" required lay-verify="required" placeholder="请输入用户名"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">登录名</label>
+
+            <div class="layui-input-block">
+                <input type="text" name="loginName" id="loginName" required lay-verify="required" placeholder="请输入登录名"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        //注意：导航 依赖 element 模块，否则无法进行功能性操作
+        layui.use(['element', 'layer', 'form'], function ()
+        {
+            var $ = layui.jquery;
+            var element = layui.element;
+            var layer = layui.layer;
+            var form = layui.form;
+            var active = {
+                showInfo: function ()
+                {
+                    $('#basicInfoForm')[0].reset();
+                    $.ajax({
+                        type: 'get',
+                        url: '/web/user/showBasicInfo',
+                        success: function (json)
+                        {
+                            if (json.success)
+                            {
+                                form.loadData(json.data, 'basicInfoForm');//表单数据回填
+                                form.render(); //更新全部
+                                layer.open({
+                                    type: 1
+                                    , title: "基本信息" //不显示标题栏
+                                    , closeBtn: 1
+                                    , area: '600px;'
+                                    , shade: 0.2
+                                    , id: 'basicInfoWindow' //设定一个id，防止重复弹出
+                                    , moveType: 1 //拖拽模式，0或者1
+                                    , resize: false
+                                    , content: $('#basicInfoForm') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响,winForm 指新建和修改的表单
+                                    , success: function (layero)
+                                    {
+                                        //这里去写完成后的事件
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                layer.msg(json.msg);
+                            }
+                        },
+                        error: function (json)
+                        {
+                            layer.alert("未知的错误！", {closeBtn: 0}, function ()
+                            {
+                                //unitjs.refresh();
+                            });
+                        }
+                    });
+                },
+                passModify: function ()
+                {
+                    $('#passwordModifyForm')[0].reset();
+                    layer.open({
+                        type: 1
+                        , title: "密码修改" //不显示标题栏
+                        , closeBtn: 1
+                        , area: '600px;'
+                        , shade: 0.2
+                        , id: 'passwordModifyWindow' //设定一个id，防止重复弹出
+                        , moveType: 1 //拖拽模式，0或者1
+                        , resize: false
+                        , content: $('#passwordModifyForm') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响,winForm 指新建和修改的表单
+                        , success: function (layero)
+                        {
+                            //这里去写完成后的事件
+                        }
+                    });
+                },
+                loginOut: function ()
+                {
+                    layer.open({
+                        type: 1
+                        , area: ['300px', '180px']
+                        , id: 'loginOutAccept' //防止重复弹出
+                        , content: '<div style="padding: 20px 30px;">是否退出当前登录?</div>'
+                        , btn: ['确定', '取消']
+                        , btnAlign: 'c' //按钮居中
+                        , shade: 0.2 //显示遮罩
+                        , resize: false
+                        , yes: function ()
+                        {
+                            layer.closeAll();
+                            window.location.href = "/web/logOut";
+                        }
+                    });
+                }
+            };
+            element.on('nav(topMenu)', function (elem)
+            {
+                var method = elem[0].childNodes[0].id;
+                active[method] ? active[method].call(this, elem) : '';
+            });
+            //form submit新建修改事件提交
+            form.on('submit(passwordModifyForm)', function (data)
+            {
+                var loginPassN = $('#passwordModifyForm_loginPassN').val();
+                var loginPassNA = $('#passwordModifyForm_loginPassA').val();
+                if (loginPassN != loginPassNA)
+                {
+                    layer.msg('两次密码不一致');
+                    return false;
+                }
+                var pass = security($('#passwordModifyForm_loginPass').val());
+                $('#passwordModifyForm_loginPass').val(pass);
+                loginPassN = security(loginPassN);
+                $('#passwordModifyForm_loginPassN').val(loginPassN);
+                loginPassNA = security(loginPassNA);
+                $('#passwordModifyForm_loginPassA').val(loginPassNA);
+                var actionUrl = "/web/admin/passwordModify";
+                var data1 = $('#passwordModifyForm').serialize();
+                $.ajax({
+                    type: 'post',
+                    data: data1,
+                    url: actionUrl,
+                    success: function (json)
+                    {
+                        if (json.success)
+                        {
+                            layer.alert(json.msg, {closeBtn: 0}, function ()
+                            {
+                                layer.closeAll();
+                                window.location.href = '/web/loginOut';
+                            });
+                        }
+                        else
+                        {
+                            if (json.code == "repeat")
+                            {
+                                alert(json.msg);
+                            }
+                            else
+                            {
+                                layer.alert(json.msg);
+                            }
+                        }
+                    },
+                    error: function (json)
+                    {
+                        layer.alert("登录超时,请重新登录！", {closeBtn: 0}, function ()
+                        {
+                            layer.closeAll();
+                            window.location.reload();
+                        });
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+        layui.use(['jquery', 'element'], function ()
+        {
+            var $ = layui.jquery;
+            var element = layui.element;
+            var nowHref = window.location.pathname;
+            //以下是让点击哪个链接就到哪个链接上
+            $("#leftMainMenu").find('a').each(function ()
+            {
+                var tempHref = $(this).attr("href");
+                if (nowHref == tempHref)
+                {
+                    $(this).parent().addClass("layui-this");
+                }
+                else
+                {
+                    $(this).parent().removeClass("layui-this");
+                }
+            });
+            //以下是增加方法.让收起的菜单在新开页面中还是收起
+            $(".layui-nav-item-first").click(function ()
+            {
+                var cookieName = security($(this).html());
+                if ($(this).parent().hasClass("layui-nav-itemed")) //如果Li是开启状态
+                {
+                    document.cookie = cookieName + "=" + true + ";path=/;expires=7";
+                }
+                else
+                {
+                    document.cookie = cookieName + "=" + false + ";path=/;expires=7";
+                }
+            });
+            $("#leftMainMenu").find('.layui-nav-item-first').each(function ()
+            {
+                var cookieName = security($(this).html());
+                var arr, reg = new RegExp("(^| )" + cookieName + "=([^;]*)(;|$)");
+                if (arr = document.cookie.match(reg))
+                {
+                    if (unescape(arr[2]) == 'true')
+                    {
+                        $(this).parent().addClass("layui-nav-itemed");
+                    }
+                    else
+                    {
+                        $(this).parent().removeClass("layui-nav-itemed");
+                    }
+                }
+            });
+        });
+    </script>
+</th:block>
+
+</body>
+
+

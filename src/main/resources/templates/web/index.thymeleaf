@@ -1,0 +1,20 @@
+<!-- 
+ * uni2k_pdf
+ * index
+ * Author: 竺志伟 
+ * Date:   2019-03-19 13:23
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/web/inc/common :: head"></div>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div th:replace="/web/inc/common :: menu"></div>
+    <div class="layui-body no-foo-body">
+        aaa
+    </div>
+</div>
+<div th:replace="/web/inc/common :: foot"></div>
+</body>
+</html>

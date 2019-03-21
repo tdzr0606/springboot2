@@ -1,0 +1,35 @@
+.block { position: absolute; left: 0; top: 0 }
+
+.canvasContainer { display: none; position: absolute; bottom: 50px; background: #FFF }
+
+.sliderImgPuzzleContainer { position: relative; text-align: center; width: 270px; height: 50px; font-size: 14px; line-height: 50px; background: #F7F9FA; color: #45494C; border: 1px solid #E4E7EB }
+
+.sliderImgPuzzleContainer_active .sliderImgPuzzle { height: 48px; top: -1px; border: 1px solid #1991FA }
+
+.sliderImgPuzzleContainer_active .sliderImgPuzzleMask { height: 48px; border-width: 1px }
+
+.sliderImgPuzzleContainer_success .sliderImgPuzzle { height: 48px; top: -1px; border: 1px solid #52CCBA; background-color: #52CCBA !important }
+
+.sliderImgPuzzleContainer_success .sliderImgPuzzleMask { height: 48px; border: 1px solid #52CCBA; background-color: #D2F4EF }
+
+.sliderImgPuzzleContainer_success .sliderImgPuzzleIcon { background-position: 0 0 !important }
+
+.sliderImgPuzzleContainer_fail .sliderImgPuzzle { height: 48px; top: -1px; border: 1px solid #F57A7A; background-color: #F57A7A !important }
+
+.sliderImgPuzzleContainer_fail .sliderImgPuzzleMask { height: 48px; border: 1px solid #F57A7A; background-color: #FCE1E1 }
+
+.sliderImgPuzzleContainer_fail .sliderImgPuzzleIcon { top: 19px; background-position: 0 -82px !important }
+
+.sliderImgPuzzleContainer_active .sliderImgPuzzleText, .sliderImgPuzzleContainer_success .sliderImgPuzzleText, .sliderImgPuzzleContainer_fail .sliderImgPuzzleText { visibility: hidden }
+
+.sliderImgPuzzleMask { position: absolute; left: 0; top: 0; height: 50px; border: 0 solid #1991FA; background: #D1E9FE }
+
+.sliderImgPuzzle { position: absolute; top: 0; left: 0; width: 50px; height: 48px; background: #FFF; box-shadow: 0 0 3px rgba(0, 0, 0, .3); cursor: pointer; transition: background .2s linear }
+
+.sliderImgPuzzle:hover { background: #1991FA }
+
+.sliderImgPuzzle:hover .sliderImgPuzzleIcon { background-position: 0 -13px }
+
+.sliderImgPuzzleIcon { position: absolute; top: 19px; left: 17px; width: 14px; height: 12px; background: url(../images/icon.png) 0 -26px; background-size: 34px 471px }
+
+.refreshIcon { position: absolute; right: 0; top: 0; width: 34px; height: 34px; cursor: pointer; background: url(../images/icon.png) 0 -437px; background-size: 34px 471px }
