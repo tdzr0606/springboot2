@@ -18,7 +18,6 @@ public abstract class BaseController
     @Autowired
     HttpServletRequest request;
     protected ModelAndView modelAndView = null;
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     /**

@@ -9,7 +9,9 @@ import org.springframework.boot.web.embedded.jetty.JettyServerCustomizer;
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * springboot2
@@ -20,7 +22,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @SpringBootApplication
 @MapperScan(value = "com.nature.jet.mapper") // Mybatis 扫描
-@EnableAsync  // 打开异步调用controller
+@EnableKafka  //打开kafka消息机制
+@EnableScheduling //打开定时器
 public class Application
 {
     public static void main(String[] args)

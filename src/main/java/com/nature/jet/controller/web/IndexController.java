@@ -3,6 +3,7 @@ package com.nature.jet.controller.web;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.pojo.web.Admin;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date: 2019-03-19 22:34
  */
 @Controller
+@Slf4j
 public class IndexController extends BaseController
 {
     @Autowired
@@ -55,7 +57,7 @@ public class IndexController extends BaseController
     public CommonResult login(@RequestParam(value = "loginName", required = true, defaultValue = "") String loginName,
                               @RequestParam(value = "loginPass", required = true, defaultValue = "") String loginPass)
     {
-        logger.info("登录名:{},密码:{}", loginName, loginPass);
+        log.info("登录名:{},密码:{}", loginName, loginPass);
         Admin admin = new Admin();
         admin.setId(0);
         admin.setLoginName("admin");
@@ -91,7 +93,7 @@ public class IndexController extends BaseController
     @RequestMapping(value = "/web/")
     public ModelAndView toIndex()
     {
-        logger.info("后台进入");
+        log.info("后台进入");
         modelAndView = new ModelAndView();
         modelAndView.setViewName("/web/index");
         return modelAndView;
