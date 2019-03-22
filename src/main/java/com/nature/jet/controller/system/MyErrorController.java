@@ -1,5 +1,6 @@
 package com.nature.jet.controller.system;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -25,6 +26,7 @@ import java.util.Map;
 @ControllerAdvice
 @Controller
 @RequestMapping("/error")
+@Slf4j
 public class MyErrorController extends BasicErrorController
 {
     public MyErrorController(ServerProperties serverProperties)
@@ -38,21 +40,22 @@ public class MyErrorController extends BasicErrorController
     @Override
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request)
     {
-        Map<String, Object> body = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.ALL));
+        Map<String, Object> model = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.ALL));
         HttpStatus status = getStatus(request);
+        log.error("错误:{}", model.get("message").toString());
         //输出自定义的Json格式
         Map<String, Object> map = new HashMap<String, Object>();
         if(status.is4xxClientError())
         {
-            map.put("message", "页面:" + body.get("path").toString() + "已经丢失,请联系管理员!");
+            map.put("message", "页面:" + model.get("path").toString() + "已经丢失,请联系管理员!");
         }
         else if(status.is5xxServerError())
         {
-            map.put("message", "页面:" + body.get("path").toString() + "发生系统错误,请联系管理员!");
+            map.put("message", "页面:" + model.get("path").toString() + "发生系统错误,请联系管理员!");
         }
         else
         {
-            map.put("message", body.get("message"));
+            map.put("message", model.get("message"));
         }
         return new ResponseEntity<Map<String, Object>>(map, status);
     }
@@ -68,6 +71,7 @@ public class MyErrorController extends BasicErrorController
         response.setStatus(getStatus(request).value());
         Map<String, Object> model = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.TEXT_HTML));
         ModelAndView modelAndView = new ModelAndView();
+        log.error("错误:{}", model.get("message").toString());
         if(status.is5xxServerError())
         {
             modelAndView.addObject("errorInfo", model.get("message").toString());
@@ -79,6 +83,7 @@ public class MyErrorController extends BasicErrorController
             modelAndView.addObject("errorInfo", "页面丢失了,程序员悬赏通缉中.....");
             modelAndView.addObject("uri", model.get("path").toString());
             modelAndView.setViewName("/common/error404");
+
         }
         return modelAndView;
     }

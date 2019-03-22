@@ -9,5 +9,6 @@ package com.nature.jet.utils;
  */
 public class Fields
 {
+    public static final String CHARACTER_ENCODING = "UTF-8";
     public static final String SESSION_ADMIN = "login_admin";
 }

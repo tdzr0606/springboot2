@@ -1,9 +1,9 @@
-<!-- 
- * springboot2
- * admin
- * Author: 竺志伟 
- * Date:   2019-03-22 09:17
- -->
+<!--
+ *  news
+ * User:竺志伟
+ * Date:2019-03-22 15:36:26
+-->
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
@@ -13,9 +13,9 @@
     <div th:replace="/web/inc/common :: menu"></div>
     <div class="layui-body" style="padding:10px">
         <fieldset class="layui-elem-field layui-field-title">
-            <legend>用户管理</legend>
+            <legend>新闻管理</legend>
         </fieldset>
-        <div id="adminMenuBar"> <!--将所有的菜单聚集在一起.一块进行监听-->
+        <div id="newsMenuBar"> <!--将所有的菜单聚集在一起.一块进行监听-->
             <div class="layui-row">
                 <div class="layui-col-md6">
                     搜索：
@@ -29,93 +29,103 @@
                         <button class="layui-btn" data-method="new">新建</button>
                         <button class="layui-btn" data-method="modify">修改</button>
                         <button class="layui-btn" data-method="delete">删除</button>
-                        <%}%>
                     </div>
                 </div>
             </div>
         </div>
-        <table class="layui-hidden" id="adminTable" lay-filter="adminTable"></table>
+        <table class="layui-hidden" id="newsTable" lay-filter="newsTable"></table>
     </div>
 </div>
 
-<form class="layui-form" id="adminForm" style="display:none;padding:10px 40px 10px 0px; ">
+<form class="layui-form" id="newsForm" style="display:none;padding:10px 40px 10px 0px; ">
     <div class="layui-form-item">
-        <label class="layui-form-label">姓名</label>
+        <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
-            <input type="text" name="userName" required lay-verify="required" placeholder="请输入姓名" autocomplete="off"
+            <input type="text" name="title" required lay-verify="required" placeholder="请输入新闻标题" autocomplete="off"
                    class="layui-input">
         </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">登录名</label>
-        <div class="layui-input-block">
-            <input type="text" name="loginName" required lay-verify="required" placeholder="请输入登录名" autocomplete="off"
-                   id="loginName"
-                   class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">登录密码</label>
-        <div class="layui-input-block">
-            <input type="password" name="loginPass" required lay-verify="required" placeholder="请输入登录密码" autocomplete="off"
-                   id="loginPass"
-                   class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">状态</label>
-        <div class="layui-input-block">
-            <input type="checkbox" name="isPublic" required lay-verify="required" lay-skin="switch" autocomplete="off"
-                   lay-text="启用|禁用" checked value="1"
-                   class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">备注</label>
-        <div class="layui-input-block">
-            <textarea class="layui-textarea" name="note" autocomplete="off"></textarea>
-        </div>
-    </div>
 
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">作者</label>
+        <div class="layui-input-inline">
+            <input type="text" name="author" required lay-verify="required" placeholder="请输入作者" autocomplete="off"
+                   class="layui-input">
+        </div>
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" name="isPublic" required lay-verify="required" lay-skin="switch" autocomplete="off"
+                   lay-text="发布|非发布" checked value="1"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <textarea id="content" style="display:none;width:700px;"></textarea>
+            <input type="hidden" name="fileContent" id="fileContent"/>
+        </div>
+    </div>
     <input type="hidden" name="id" id="id" value="0"/>
     <input type="hidden" name="actionUrl" id="actionUrl" value=""/>
+    <input type="hidden" name="fileurl" id="fileurl"/>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit lay-filter="adminForm">确定</button>
+            <button class="layui-btn" lay-submit lay-filter="newsForm">确定</button>
             <button type="reset" class="layui-btn layui-btn-primary" onclick="layer.closeAll()">取消</button>
         </div>
     </div>
 </form>
 
+
 <div th:replace="/web/inc/common :: foot"></div>
 
 <script type="text/html" id="isPublicTpl">
-    {{# if(d.isPublic) { }}
-    <font color="green">启用</font>
+    {{# if(d.isPublic){ }}
+    <font color="green">已发布</font>
     {{# } else { }}
-    <font color="red">禁用</font>
+    <font color="red">未发布</font>
     {{# } }}
 </script>
 
+
 <script type="text/javascript" th:inline="none">
-    var oldPass;
-    layui.use(['element', 'table', 'layer', 'form'], function ()
+    layui.use(['element', 'table', 'layer', 'form', 'layedit'], function ()
     {
         var $ = layui.jquery;
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
-        var adminTable = table.render({
-            elem: '#adminTable'
-            , id: 'adminTable'
-            , url: '/web/admin/list'
+        var layedit = layui.layedit;
+        layedit.set({
+            uploadImage: {
+                url: '/upload/layui/img'
+                , type: 'post'
+            },
+            tool: [
+                'strong' //加粗
+                , 'italic' //斜体
+                , 'underline' //下划线
+                , 'del' //删除线
+                , '|' //分割线
+                , 'left', 'center', 'right'
+                , '|'
+                , 'link' //超链接
+                , 'unlink' //清除链接
+            ]
+        });
+        var layeditIndex;
+        var newsTable = table.render({
+            elem: '#newsTable'
+            , id: 'newsTable'
+            , url: '/web/news/list'
             , cols: [[
                 {checkbox: true}
-                , {field: 'userName', title: '姓名', width: 120, sort: true}
-                , {field: 'loginName', title: '登录名', width: 120, sort: true}
-                , {field: 'isPublic', title: '状态', width: 80, sort: true, templet: '#isPublicTpl'}
-                , {field: 'note', title: '备注', width: 200, sort: true}
+                , {field: 'title', title: '新闻标题', width: 200, sort: true}
+                , {field: 'author', title: '作者', width: 120, sort: true}
+                , {field: 'createTime', title: '创建时间', width: 180, sort: true}
+                , {field: 'isPublic', title: '状态', width: 120, sort: true, templet: '#isPublicTpl'}
             ]]
             , height: 'full-240'
             , limit: 40
@@ -126,30 +136,31 @@
             search: function ()
             {
                 var keyValue = $('#searchKey').val();
-                adminTable.reload({where: {key: keyValue}});
+                newsTable.reload({where: {key: keyValue}});
             }
             , new: function ()
             {
-                $('#adminForm')[0].reset();
+                $('#newsForm')[0].reset();
                 $('#actionUrl').val("new");
-                oldPass = '';
-                $('#loginName').removeAttr("readonly");
-                $('#loginName').removeClass("readOnly");
                 $('#id').val('0');
                 layer.open({
                     type: 1
                     , title: "新建"
                     , closeBtn: 1
-                    , area: '650px;'
+                    , area: ['800px', '600px']
                     , shade: 0.2
-                    , id: 'adminFormWindow'
+                    , id: 'newsFormWindow'
                     , moveType: 1
-                    , content: $('#adminForm')
+                    , content: $('#newsForm')
+                    , success: function (layero)
+                    {
+                        layeditIndex = layedit.build('content'); //建立编辑
+                    }
                 });
             }
             , modify: function ()
             {
-                var checkStatus = table.checkStatus('adminTable'), data = checkStatus.data;
+                var checkStatus = table.checkStatus('newsTable'), data = checkStatus.data;
                 if (data.length < 1)
                 {
                     layer.msg('您必须选中一条需要修改的记录');
@@ -162,31 +173,56 @@
                 }
                 else
                 {
+                    var loadIndex = layer.load();
                     var id = data[0].id;
                     $.ajax({
                         type: 'get',
-                        url: '/web/admin/info?id=' + id + '&sessionId=' + new Date().getTime(),
+                        url: '/web/news/info?id=' + id + '&sessionId=' + new Date().getTime(),
                         success: function (json)
                         {
                             if (json.success)
                             {
-                                form.loadData(json.data, 'adminForm');
+                                form.loadData(json.data, 'newsForm');
+                                var fileUrl = json.data.fileurl;
                                 $('#actionUrl').val("modify");
-                                oldPass = $('#loginPass').val();
-                                $('#loginName').attr("readonly", "readonly");
-                                $('#loginName').addClass("readOnly");
                                 form.render();
                                 layer.open({
                                     type: 1
                                     , title: "修改"
                                     , closeBtn: 1
-                                    , area: '650px;'
+                                    , area: ['800px', '600px']
                                     , shade: 0.2
-                                    , id: 'adminFormWindow'
+                                    , id: 'newsFormWindow'
                                     , moveType: 1
-                                    , content: $('#adminForm')
+                                    , content: $('#newsForm')
                                     , success: function (layero)
                                     {
+                                        if (fileUrl)
+                                        {
+                                            $.ajax({
+                                                type: 'post',
+                                                url: '/system/readfile',
+                                                data: {fileUrl: fileUrl},
+                                                success: function (json)
+                                                {
+                                                    layer.close(loadIndex);
+                                                    if (json.success)
+                                                    {
+                                                        $('#content').val(json.data);
+                                                    }
+                                                    else
+                                                    {
+                                                        layer.alert(json.msg);
+                                                    }
+                                                    layeditIndex = layedit.build('content'); //建立编辑
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            layer.close(loadIndex);
+                                            layeditIndex = layedit.build('content'); //建立编辑
+                                        }
                                     }
                                 });
                             }
@@ -207,7 +243,7 @@
             }
             , delete: function ()
             {
-                var checkStatus = table.checkStatus('adminTable'), data = checkStatus.data;
+                var checkStatus = table.checkStatus('newsTable'), data = checkStatus.data;
                 if (data.length < 1)
                 {
                     layer.msg('您必须最少选中一条需要删除的记录');
@@ -215,7 +251,7 @@
                 }
                 layer.open({
                     type: 1
-                    , id: 'adminDeleteAccept'
+                    , id: 'newsDeleteAccept'
                     , content: '<div style="padding: 20px 30px;">是否真的要删除选中的记录?</div>'
                     , btn: ['确定', '取消']
                     , btnAlign: 'c'
@@ -231,7 +267,7 @@
                         $.ajax({
                             type: 'post',
                             data: {ids: idArray.toString()},
-                            url: '/web/admin/delete',
+                            url: '/web/news/delete',
                             success: function (json)
                             {
                                 if (json.success)
@@ -239,7 +275,7 @@
                                     layer.alert(json.msg, {closeBtn: 0}, function ()
                                     {
                                         layer.closeAll();
-                                        adminTable.reload();
+                                        newsTable.reload();
                                     });
                                 }
                                 else
@@ -262,7 +298,7 @@
             }
         };
         //总体上调用,是那个按钮激活哪个
-        $('#adminMenuBar .layui-btn').on('click', function ()
+        $('#newsMenuBar .layui-btn').on('click', function ()
         {
             var othis = $(this), method = othis.data('method');
             active[method] ? active[method].call(this, othis) : '';
@@ -276,18 +312,13 @@
             }
         });
         //form submit新建修改事件提交
-        form.on('submit(adminForm)', function (data)
+        form.on('submit(newsForm)', function (data)
         {
-            var loginPass = $('#loginPass').val();
-            if (oldPass != loginPass)
-            {
-                $('#loginPass').val(security(loginPass));
-            }
-            oldPass = $('#loginPass').val();
-            var actionUrl = "/web/admin/" + $('#actionUrl').val();
+            $('#fileContent').val(layedit.getContent(layeditIndex));
+            var actionUrl = "/web/news/" + $('#actionUrl').val();
             $.ajax({
                 type: 'post',
-                data: $('#adminForm').serialize(),
+                data: $('#newsForm').serialize(),
                 url: actionUrl,
                 success: function (json)
                 {
@@ -296,7 +327,7 @@
                         layer.alert(json.msg, {closeBtn: 0}, function ()
                         {
                             layer.closeAll();
-                            adminTable.reload();
+                            newsTable.reload();
                         });
                     }
                     else
@@ -317,5 +348,6 @@
         });
     });
 </script>
+
 </body>
 </html>
