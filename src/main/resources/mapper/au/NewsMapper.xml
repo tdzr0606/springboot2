@@ -44,7 +44,7 @@
 
     <!-- 批量删除-->
     <delete id="deleteByIds" parameterType="java.util.Arrays">
-        DELETE FROM au_news WHERE id in
+        DELETE FROM au_news WHERE isPublic = 1 and id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             ${item}
         </foreach>
