@@ -1,0 +1,70 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nature.jet.mapper.web.AdminMapper">
+
+    <!--基础 表字段定义 -->
+    <sql id="basicColumn">
+        note,loginName,loginPass,isPublic,id,userName
+    </sql>
+
+    <!-- 查询所有数据 -->
+    <select id="list" resultType="com.nature.jet.pojo.web.Admin" parameterType="java.lang.String">
+        select
+        <include refid="basicColumn"/>
+        from web_admin
+        <where>
+            <if test="key != null and key != '' ">
+                note like CONCAT(concat('%',#{key}),'%')
+                or loginName like CONCAT(concat('%',#{key}),'%')
+                or userName like CONCAT(concat('%',#{key}),'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <!-- 根据ID查询数据 -->
+    <select id="findById" resultType="com.nature.jet.pojo.web.Admin" parameterType="java.lang.Integer">
+        select <include refid="basicColumn"></include> from web_admin where id = #{id}
+    </select>
+
+    <!-- 新建 -->
+    <insert id="add" parameterType="com.nature.jet.pojo.web.Admin" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO web_admin ( note,loginName,loginPass,isPublic,id,userName ) 
+        VALUES ( #{note},#{loginName},#{loginPass},#{isPublic},#{id},#{userName} ) 
+    </insert>
+
+    <!-- 修改-->
+    <update id="modify" parameterType="com.nature.jet.pojo.web.Admin">
+        UPDATE web_admin SET note = #{note},loginName = #{loginName},loginPass = #{loginPass},isPublic = #{isPublic},userName = #{userName}
+        WHERE  id = #{id} 
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM web_admin WHERE  id = #{id}
+    </delete>
+
+    <!-- 批量删除-->
+    <delete id="deleteByIds" parameterType="java.util.Arrays">
+        DELETE FROM web_admin WHERE id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            ${item}
+        </foreach>
+    </delete>
+
+    <!-- 根据登录名和id统计数量 -->
+    <select id="countByLoginNameAndId" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from web_admin where loginName = #{loginName} and id != #{id}
+    </select>
+
+    <!-- 登录 -->
+    <select id="login" parameterType="java.util.Map" resultType="Admin">
+        select <include refid="basicColumn"/> from web_admin where loginName = #{loginName} and loginPass = #{loginPass}
+        and isPublic = 1
+    </select>
+
+    <!-- 密码修改 -->
+    <update id="modifyPassword" parameterType="java.util.Map">
+        update web_admin set loginPass = #{loginPass} where id = #{id}
+    </update>
+
+</mapper>

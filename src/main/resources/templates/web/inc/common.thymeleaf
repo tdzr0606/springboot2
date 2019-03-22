@@ -74,7 +74,7 @@
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;后台管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="#"><i class="fa fa-angle-right"></i>&nbsp;用户管理</a></dd>
+                        <dd><a href="/web/admin/toPage"><i class="fa fa-angle-right"></i>&nbsp;用户管理</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -159,7 +159,7 @@
                     $('#basicInfoForm')[0].reset();
                     $.ajax({
                         type: 'get',
-                        url: '/web/user/showBasicInfo',
+                        url: '/web/showBasicInfo',
                         success: function (json)
                         {
                             if (json.success)
@@ -268,19 +268,18 @@
                             layer.alert(json.msg, {closeBtn: 0}, function ()
                             {
                                 layer.closeAll();
-                                window.location.href = '/web/loginOut';
+                                window.location.href = '/web/logOut';
                             });
                         }
                         else
                         {
-                            if (json.code == "repeat")
+                            layer.alert(json.msg, function (index)
                             {
-                                alert(json.msg);
-                            }
-                            else
-                            {
-                                layer.alert(json.msg);
-                            }
+                                layer.close(index);
+                                $('#passwordModifyForm_loginPass').val('');
+                                $('#passwordModifyForm_loginPassA').val('');
+                                $('#passwordModifyForm_loginPassN').val('');
+                            });
                         }
                     },
                     error: function (json)

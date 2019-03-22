@@ -3,6 +3,7 @@ package com.nature.jet.controller.web;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.pojo.web.Admin;
+import com.nature.jet.service.web.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +28,8 @@ public class IndexController extends BaseController
 {
     @Autowired
     HttpServletRequest request;
+    @Autowired
+    AdminService adminService;
 
     /**
      * To login model and view.
@@ -58,13 +62,13 @@ public class IndexController extends BaseController
                               @RequestParam(value = "loginPass", required = true, defaultValue = "") String loginPass)
     {
         log.info("登录名:{},密码:{}", loginName, loginPass);
-        Admin admin = new Admin();
-        admin.setId(0);
-        admin.setLoginName("admin");
-        admin.setLoginPass("123456");
-        admin.setUserName("竺志伟");
+        Admin admin = adminService.login(loginName, loginPass);
+        if(null == admin)
+        {
+            return resultFailsWrapper("用户名密码错误", null);
+        }
         super.setLoginAdmin(admin, request);
-        return resultSuccessWrapper("", null);
+        return resultSuccessWrapper("登录成功", null);
     }
 
     /**
@@ -79,8 +83,22 @@ public class IndexController extends BaseController
     {
         modelAndView = new ModelAndView();
         super.clearLoginAdmin(request);
-        modelAndView.setViewName("/web/login");
+        modelAndView.setView(new RedirectView("/web/login"));
         return modelAndView;
+    }
+
+    /**
+     * Show basic info admin.
+     *
+     * @return the admin
+     * @author:竺志伟
+     * @date :2019-03-22 11:21:36
+     */
+    @RequestMapping(value = "/web/showBasicInfo")
+    @ResponseBody
+    public CommonResult showBasicInfo()
+    {
+        return resultSuccessWrapper("", super.getLoginAdmin(request));
     }
 
     /**

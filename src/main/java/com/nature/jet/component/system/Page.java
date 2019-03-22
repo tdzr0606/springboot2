@@ -91,7 +91,7 @@ public class Page<T>
 
     public Page()
     {
-        this.code = 1;
+        this.code = 0;
         this.msg = "";
         this.page = 1;
         this.limit = 1;
@@ -103,7 +103,7 @@ public class Page<T>
 
     public Page(int nowPage, int count, int totalPage, int pageSize, List<T> dataList)
     {
-        this.code = 1;
+        this.code = 0;
         this.msg = "";
         this.page = nowPage;
         this.limit = pageSize;
@@ -123,7 +123,7 @@ public class Page<T>
      */
     public Page(PageInfo<T> pageInfo)
     {
-        this.code = 1;
+        this.code = 0;
         this.msg = "";
         this.data = pageInfo.getList();
         this.page = pageInfo.getPageNum();

@@ -5,18 +5,19 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * springboot2
  * Admin
- *
- * @Author: 竺志伟
- * @Date: 2019-03-19 23:26
+ * Author:竺志伟
+ * Date:2019-03-22 09:12:53
  */
+
 @Data
 public class Admin implements Serializable
 {
-    private Integer id;
+    private String note;
     private String loginName;
     private String loginPass;
-    private String userName;
     private Boolean isPublic;
+    private Integer id;
+    private String userName;
+
 }
