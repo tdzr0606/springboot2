@@ -7,10 +7,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<div th:replace="/web/common :: head"></div>
+<div th:replace="web/common :: head"></div>
 <body>
 <div class="layui-layout layui-layout-admin">
-    <div th:replace="/web/common :: menu"></div>
+    <div th:replace="web/common :: menu"></div>
     <div class="layui-body" style="padding:10px">
         <fieldset class="layui-elem-field layui-field-title">
             <legend>用户管理</legend>
@@ -88,7 +88,7 @@
     </div>
 </form>
 
-<div th:replace="/web/common :: foot"></div>
+<div th:replace="web/common :: foot"></div>
 
 <script type="text/html" id="isPublicTpl">
     {{# if(d.isPublic) { }}

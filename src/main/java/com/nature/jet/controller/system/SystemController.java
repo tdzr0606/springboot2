@@ -57,7 +57,7 @@ public class SystemController extends BaseController
     public ModelAndView error()
     {
         modelAndView = new ModelAndView();
-        modelAndView.setViewName("/common/error500");
+        modelAndView.setViewName("common/error500");
         return modelAndView;
     }
 

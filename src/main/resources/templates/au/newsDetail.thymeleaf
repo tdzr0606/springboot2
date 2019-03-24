@@ -7,12 +7,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<div th:replace="/au/common :: head"></div>
+<div th:replace="au/common :: head"></div>
 <body>
-<div th:replace="/au/common :: nav"></div>
+<div th:replace="au/common :: nav"></div>
 <div class="main-newsdate">
     <div class="layui-container">
-        <p class="news" style="line-height: 60px;margin-top: 80px;"><a href="/news">实时新闻</a> > 新闻详情</p>
+        <p class="news" style="line-height: 60px;margin-top: 100px;"><a href="/news">实时新闻</a> > 新闻详情</p>
         <h1 th:text="${news.title}"></h1>
         <p class="pushtime" style="line-height: 50px;">发布时间：<span th:text="${news.createTime}"></span></p>
         <hr/>
@@ -22,12 +22,18 @@
         </p>
     </div>
 </div>
-<div th:replace="/au/common :: foot"></div>
+<div th:replace="au/common :: foot"></div>
 <script>
-    layui.define(['jquery', 'laypage'], function ()
+    layui.define(['jquery', 'laypage','layer'], function ()
     {
         var $ = layui.jquery;
-        $('#fileIframe').height($("#fileIframe").contents().find("body").height() - 0 + 30);
+        var layer = layui.layer;
+        var loadIndex = layer.load();
+        setTimeout(function ()
+        {
+            $('#fileIframe').height($("#fileIframe").contents().find("body").height() - 0 + 30);
+            layer.close(loadIndex);
+        }, 1000);
     });
 </script>
 </body>

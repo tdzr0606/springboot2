@@ -46,7 +46,7 @@ public class IndexController extends BaseController
     public ModelAndView toLogin()
     {
         modelAndView = new ModelAndView();
-        modelAndView.setViewName("/web/login");
+        modelAndView.setViewName("web/login");
         return modelAndView;
     }
 
@@ -87,7 +87,7 @@ public class IndexController extends BaseController
     {
         modelAndView = new ModelAndView();
         super.clearLoginAdmin(request);
-        modelAndView.setView(new RedirectView("/web/login"));
+        modelAndView.setView(new RedirectView("web/login"));
         return modelAndView;
     }
 
@@ -119,7 +119,7 @@ public class IndexController extends BaseController
         modelAndView = new ModelAndView();
         modelAndView.addObject("mem", SigarUtils.getMem(sigar));
         modelAndView.addObject("cpu", SigarUtils.getCpu(sigar));
-        modelAndView.setViewName("/web/index");
+        modelAndView.setViewName("web/index");
         return modelAndView;
     }
 

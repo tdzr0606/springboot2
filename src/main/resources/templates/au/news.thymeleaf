@@ -7,9 +7,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<div th:replace="/au/common :: head"></div>
+<div th:replace="au/common :: head"></div>
 <body>
-<div th:replace="/au/common :: nav"></div>
+<div th:replace="au/common :: nav"></div>
 <!-- banner部分 -->
 <div class="banner news">
     <div class="title">
@@ -38,7 +38,7 @@
     </div>
 </div>
 
-<div th:replace="/au/common :: foot"></div>
+<div th:replace="au/common :: foot"></div>
 <script type="text/javascript" th:inline="javascript">
     layui.define(['jquery', 'laypage'], function (exports)
     {
