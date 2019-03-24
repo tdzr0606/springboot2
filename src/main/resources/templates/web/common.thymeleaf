@@ -46,12 +46,12 @@
         </div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item">
-                <a href="javascript:;"><i class="fa fa-cog"></i>&nbsp;系统设置</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="#">服务器管理</a></dd>
-                </dl>
-            </li>
+            <!--<li class="layui-nav-item">-->
+                <!--<a href="javascript:;"><i class="fa fa-cog"></i>&nbsp;系统设置</a>-->
+                <!--<dl class="layui-nav-child">-->
+                    <!--<dd><a href="#">服务器管理</a></dd>-->
+                <!--</dl>-->
+            <!--</li>-->
         </ul>
         <ul class="layui-nav layui-layout-right" lay-filter="topMenu">
             <li class="layui-nav-item">

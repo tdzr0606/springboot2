@@ -134,6 +134,16 @@
             <version>2.4</version>
         </dependency>
 
+        <!-- 系统参数 -->
+        <dependency>
+            <groupId>org.hyperic</groupId>
+            <artifactId>sigar</artifactId>
+            <version>1.6.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/extlib/sigar/sigar.jar</systemPath>
+        </dependency>
+
+
     </dependencies>
 
 

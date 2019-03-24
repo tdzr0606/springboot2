@@ -4,7 +4,9 @@ import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.pojo.web.Admin;
 import com.nature.jet.service.web.AdminService;
+import com.nature.jet.utils.SigarUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.hyperic.sigar.Sigar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,8 @@ public class IndexController extends BaseController
     HttpServletRequest request;
     @Autowired
     AdminService adminService;
+    @Autowired
+    Sigar sigar;
 
     /**
      * To login model and view.
@@ -113,7 +117,37 @@ public class IndexController extends BaseController
     {
         log.info("后台进入");
         modelAndView = new ModelAndView();
+        modelAndView.addObject("mem", SigarUtils.getMem(sigar));
+        modelAndView.addObject("cpu", SigarUtils.getCpu(sigar));
         modelAndView.setViewName("/web/index");
         return modelAndView;
+    }
+
+    /**
+     * Refresh cpu common result.
+     *
+     * @return the common result
+     * @author:竺志伟
+     * @date :2019-03-24 14:22:06
+     */
+    @RequestMapping(value = "/web/refreshCpu")
+    @ResponseBody
+    public CommonResult refreshCpu()
+    {
+        return resultSuccessWrapper("", SigarUtils.getCpu(sigar));
+    }
+
+    /**
+     * Refresh mem common result.
+     *
+     * @return the common result
+     * @author:竺志伟
+     * @date :2019-03-24 14:32:00
+     */
+    @RequestMapping(value = "/web/refreshMem")
+    @ResponseBody
+    public CommonResult refreshMem()
+    {
+        return resultSuccessWrapper("",SigarUtils.getMem(sigar));
     }
 }
