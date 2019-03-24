@@ -134,6 +134,7 @@ public class IndexController extends BaseController
     @ResponseBody
     public CommonResult refreshCpu()
     {
+        log.info("更新cpu使用信息");
         return resultSuccessWrapper("", SigarUtils.getCpu(sigar));
     }
 
@@ -148,6 +149,7 @@ public class IndexController extends BaseController
     @ResponseBody
     public CommonResult refreshMem()
     {
+        log.info("更新内存使用信息");
         return resultSuccessWrapper("",SigarUtils.getMem(sigar));
     }
 }
