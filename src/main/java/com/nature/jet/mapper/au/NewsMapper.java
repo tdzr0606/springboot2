@@ -61,4 +61,6 @@ public interface NewsMapper extends MyMapper<News>
      * Date:2019-03-22 15:36:26
      */
     public News findById(@Param(value = "id") Integer id);
+
+    List<News> listPublic();
 }

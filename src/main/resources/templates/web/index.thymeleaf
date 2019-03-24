@@ -7,14 +7,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<div th:replace="/web/inc/common :: head"></div>
+<div th:replace="/web/common :: head"></div>
 <body>
 <div class="layui-layout layui-layout-admin">
-    <div th:replace="/web/inc/common :: menu"></div>
+    <div th:replace="/web/common :: menu"></div>
     <div class="layui-body no-foo-body">
         aaa
     </div>
 </div>
-<div th:replace="/web/inc/common :: foot"></div>
+<div th:replace="/web/common :: foot"></div>
 </body>
 </html>

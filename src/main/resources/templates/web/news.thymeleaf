@@ -7,10 +7,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<div th:replace="/web/inc/common :: head"></div>
+<div th:replace="/web/common :: head"></div>
 <body>
 <div class="layui-layout layui-layout-admin">
-    <div th:replace="/web/inc/common :: menu"></div>
+    <div th:replace="/web/common :: menu"></div>
     <div class="layui-body" style="padding:10px">
         <fieldset class="layui-elem-field layui-field-title">
             <legend>新闻管理</legend>
@@ -60,7 +60,13 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label"></label>
+        <label class="layui-form-label">简介</label>
+        <div class="layui-input-block">
+            <textarea name="synopsis" class="layui-textarea" required lay-verify="required"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">内容</label>
         <div class="layui-input-block">
             <textarea id="content" style="display:none;width:700px;"></textarea>
             <input type="hidden" name="fileContent" id="fileContent"/>
@@ -79,7 +85,7 @@
 </form>
 
 
-<div th:replace="/web/inc/common :: foot"></div>
+<div th:replace="/web/common :: foot"></div>
 
 <script type="text/html" id="isPublicTpl">
     {{# if(d.isPublic){ }}
@@ -113,7 +119,8 @@
                 , '|'
                 , 'link' //超链接
                 , 'unlink' //清除链接
-            ]
+            ],
+            height:200
         });
         var layeditIndex;
         var newsTable = table.render({
@@ -125,6 +132,7 @@
                 , {field: 'title', title: '新闻标题', width: 200, sort: true}
                 , {field: 'author', title: '作者', width: 120, sort: true}
                 , {field: 'createTime', title: '创建时间', width: 180, sort: true}
+                , {field: 'synopsis', title: '简介', width: 350, sort: true}
                 , {field: 'isPublic', title: '状态', width: 120, sort: true, templet: '#isPublicTpl'}
             ]]
             , height: 'full-240'

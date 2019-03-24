@@ -1,0 +1,79 @@
+<!-- 
+ * springboot2
+ * common
+ * Author: 竺志伟 
+ * Date:   2019-03-23 14:43
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="head">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+        <title>Uni2k</title>
+        <link rel="stylesheet" href="/static/au/layui/css/layui.css">
+        <link rel="stylesheet" href="/static/au/static/css/index.css">
+    </head>
+</th:block>
+
+<th:block th:fragment="nav">
+    <!-- nav部分 -->
+    <div th:class="${nav} eq 'index'?'nav index':nav" >
+        <div class="layui-container">
+            <!-- 公司logo -->
+            <div class="nav-logo">
+                <a href="/">
+                    <img src="/static/au/static/img/logo.png" alt="UNI2K">
+                </a>
+            </div>
+            <div class="nav-list">
+                <button>
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="layui-nav" lay-filter="">
+                    <li th:class="${nav} eq 'index'?'layui-nav-item layui-this':'layui-nav-item'"><a href="/">首页</a></li>
+                    <li th:class="${nav} eq 'news'?'layui-nav-item layui-this':'layui-nav-item'"><a href="/news">动态</a></li>
+                    <li th:class="${nav} eq 'case'?'layui-nav-item layui-this':'layui-nav-item'"><a href="/case">场景</a></li>
+                    <li th:class="${nav} eq 'about'?'layui-nav-item layui-this':'layui-nav-item'"><a href="/about">关于</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="foot">
+    <div class="footer">
+        <div class="layui-container">
+            <div class="layui-row footer-contact" style="padding-top: 50px;">
+                <div
+                        class="layui-col-sm2 layui-col-lg1"><img src="/static/au/static/img/erweima.png"
+                                                                 style="width: 86px;height: 86px;"></div>
+                <div class="layui-col-sm10 layui-col-lg11">
+                    <div class="layui-row">
+                        <div class="layui-col-sm6 layui-col-md8 layui-col-lg9">
+                            <p class="contact-top"><i class="layui-icon layui-icon-cellphone"></i>&nbsp;400-8888888&nbsp;&nbsp;(9:00-18:00)
+                            </p>
+                            <p class="contact-bottom"><i class="layui-icon layui-icon-home"></i>&nbsp;1597874354@qq.com</span></p>
+                        </div>
+                        <div class="layui-col-sm6 layui-col-md4 layui-col-lg3">
+                            <p class="contact-top"><span class="right">Copyright&nbsp;©&nbsp;2019-2029&nbsp;&nbsp;ICP&nbsp;备888888号</span>
+                            </p>
+                            <p class="contact-bottom"><span class="right"><a href="/web/login" target="_blank">管理登录</a></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/au/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '/static/au/static/js/'
+        }).use('firm');
+    </script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!-- 
+ * springboot2
+ * news
+ * Author: 竺志伟 
+ * Date:   2019-03-23 15:13
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/au/common :: head"></div>
+<body>
+<div th:replace="/au/common :: nav"></div>
+<!-- banner部分 -->
+<div class="banner news">
+    <div class="title">
+        <p>实时新闻</p>
+        <p class="en">Real-time News</p>
+    </div>
+</div>
+<!-- main -->
+<div class="main-news">
+    <div class="layui-container">
+        <div class="layui-row layui-col-space20">
+            <div class="layui-col-lg6 content" th:each="news:${newsList}">
+                <div>
+                    <div class="news-img" style="width:34%"><a th:href="@{|/news/${news.id}|}" target="_blank"><img
+                            src="/static/au/static/img/news_img1.jpg"></a></div>
+                    <div class="news-panel">
+                        <strong><a th:href="@{|/news/${news.id}|}" target="_blank" th:text="${news.title}"></a></strong>
+                        <p class="detail"><span th:text="${news.synopsis}"></span>
+                            <a  th:href="@{|/news/${news.id}|}" target="_blank">[详细]</a></p>
+                        <p class="read-push">发布时间：<span th:text="${news.createTime}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="newsPage"></div>
+    </div>
+</div>
+
+<div th:replace="/au/common :: foot"></div>
+<script type="text/javascript" th:inline="javascript">
+    layui.define(['jquery', 'laypage'], function (exports)
+    {
+        var nowPage = /*[[${page}]]*/;
+        var $ = layui.jquery
+            , laypage = layui.laypage;
+        //动态分页
+        laypage.render({
+            elem: 'newsPage'
+            , theme: '#2db5a3'
+            , layout: ['page', 'next']
+            , limit: 16
+            , curr: nowPage
+            , count:/*[[${count}]]*/
+            , jump: function (obj, first)
+            {
+                nowPage = obj.curr;
+                if(!first)
+                {
+                    window.location.href = "/news?page=" + nowPage + "&sessionId=" + new Date().getTime();
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

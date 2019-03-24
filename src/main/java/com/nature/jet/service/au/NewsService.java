@@ -92,4 +92,26 @@ public class NewsService
     {
         return newsMapper.findById(id);
     }
+
+
+    /**
+     * List public page page.
+     *
+     * @param nowPage  the now page
+     * @param pageSize the page size
+     * @return the page
+     * @author:竺志伟
+     * @date :2019-03-23 15:25:02
+     */
+    public Page<News> listPublicPage(Integer nowPage, Integer pageSize)
+    {
+        return new Page<>(PageHelper.startPage(nowPage, pageSize).doSelectPageInfo(new ISelect()
+        {
+            @Override
+            public void doSelect()
+            {
+                newsMapper.listPublic();
+            }
+        }));
+    }
 }

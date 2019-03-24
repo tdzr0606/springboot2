@@ -3,7 +3,7 @@
 
     <!--基础 表字段定义 -->
     <sql id="basicColumn">
-        createTime,author,isPublic,fileurl,id,title
+        createTime,author,isPublic,fileurl,id,title,synopsis
     </sql>
 
     <!-- 查询所有数据 -->
@@ -27,13 +27,13 @@
 
     <!-- 新建 -->
     <insert id="add" parameterType="com.nature.jet.pojo.au.News" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO au_news ( createTime,author,isPublic,fileurl,id,title ) 
-        VALUES ( #{createTime},#{author},#{isPublic},#{fileurl},#{id},#{title} ) 
+        INSERT INTO au_news ( createTime,author,isPublic,fileurl,id,title,synopsis )
+        VALUES ( #{createTime},#{author},#{isPublic},#{fileurl},#{id},#{title},#{synopsis} )
     </insert>
 
     <!-- 修改-->
     <update id="modify" parameterType="com.nature.jet.pojo.au.News">
-        UPDATE au_news SET author = #{author},isPublic = #{isPublic},fileurl = #{fileurl},title = #{title}
+        UPDATE au_news SET author = #{author},isPublic = #{isPublic},fileurl = #{fileurl},title = #{title},synopsis=#{synopsis}
         WHERE  id = #{id} 
     </update>
 
@@ -49,5 +49,12 @@
             ${item}
         </foreach>
     </delete>
+
+    <!-- 展示已发布 -->
+    <select id="listPublic" resultType="News">
+        select
+        <include refid="basicColumn"/>
+        from au_news where isPublic = 1 order by createTime desc
+    </select>
 
 </mapper>

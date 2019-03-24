@@ -39,7 +39,8 @@ public class SystemController extends BaseController
     public ModelAndView toIndex()
     {
         modelAndView = new ModelAndView();
-        modelAndView.setViewName("index");
+        modelAndView.addObject("nav","index");
+        modelAndView.setViewName("au/index");
         return modelAndView;
     }
 

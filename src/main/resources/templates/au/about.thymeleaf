@@ -1,0 +1,121 @@
+<!-- 
+ * springboot2
+ * about
+ * Author: 竺志伟 
+ * Date:   2019-03-23 15:44
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/au/common :: head"></div>
+<body>
+<div th:replace="/au/common :: nav"></div>
+<!-- banner部分 -->
+<div class="banner about">
+    <div class="title">
+        <p>关于我们</p>
+        <p class="en">About Us</p>
+    </div>
+</div>
+<!-- main部分 -->
+<div class="main-about">
+    <div class="layui-container">
+        <div class="layui-row">
+            <ul class="aboutab">
+                <li class="layui-this">公司简介</li><li>招贤纳士</li><li>发展历程</li>
+            </ul>
+            <div class="tabIntro">
+                <div class="content">
+                    <div class="layui-inline img"><img src="/static/au/static/img/us_img1.jpg"></div><div class="layui-inline panel">
+                    <p>以”数字芯片”技术为切入点创造性地， 研发出了一种基于信息流转生命周期, 可离线 / 在线实现高容量存储 防篡改的数字化技术解决方案， 其标准符合ISO12931 和ISO/ DIS16678标准。 该解决方案可广泛适用于安全文档证卡 和票据等领域的全过程信息加密， 保证信息在整个生命周期中的真实性， 实现社会基础信息的 防篡改、可追溯、易核验的目的。</p>
+                </div>
+                </div>
+                <div class="content">
+                    <div class="layui-inline panel p_block">
+                        <p>解决“云”时代信息流转 及验证过程中所遇到的安全问题， 也用于降低信息数据的社会使用成本。 尤尼泰克（嘉兴）信息技术有限公司 作为信息身份认证与数据离线式, 存储技术数字化解决方案的提供商， 为我们的客户提供去中心化 信息识别验证技术 及信息内容安全保护。 我们致力于成为信息价值的守护者!</p>
+                    </div><div class="layui-inline img"><img src="/static/au/static/img/us_img2.jpg"></div>
+                </div>
+                <div class="content">
+                    <div class="layui-inline img"><img src="/static/au/static/img/us_img3.jpg"></div><div class="layui-inline panel">
+                    <p>我们努力建立并遵守共同的价值观： 责任、科技、创新 在独立性基础上不断发展， 并努力遵守高度的责任感的 道德规范和严格的隐私政策。 研发和技术创新一直都是 我们应对未来需求和发展强大的、 具有开拓性并适应各行业要求的 解决方案的核心理念。 创新更是我们的DNA!</p>
+                </div>
+                </div>
+            </div>
+            <div class="tabJob">
+                <div class="content">
+                    <p class="title">前端开发工程师</p>
+                    <p>> 职位描述</p>
+                    <ol>
+                        <li>前端开发及维护工作；</li>
+                        <li>有良好的技术基础，熟悉 Web 标准，熟练掌握多种 Web 前端技术；</li>
+                        <li>掌握行业内流行的类库，Vue.js， React 等主流框架；</li>
+                        <li>参与公司前端工程的设计、研发；</li>
+                        <li>了解不同浏览器之间的差异，移动设备之间的差异。</li>
+                    </ol>
+                </div>
+                <div class="content">
+                    <p class="title">IOS 开发工程师</p>
+                    <p>> 职位描述</p>
+                    <ol>
+                        <li>前端开发及维护工作；</li>
+                        <li>有良好的技术基础，熟悉 Web 标准，熟练掌握多种 Web 前端技术；</li>
+                        <li>掌握行业内流行的类库，Vue.js， React 等主流框架；</li>
+                        <li>参与公司前端工程的设计、研发；</li>
+                        <li>了解不同浏览器之间的差异，移动设备之间的差异。</li>
+                    </ol>
+                </div>
+                <div class="content">
+                    <p class="title">JAVA 工程师</p>
+                    <p>> 职位描述</p>
+                    <ol>
+                        <li>前端开发及维护工作；</li>
+                        <li>有良好的技术基础，熟悉 Web 标准，熟练掌握多种 Web 前端技术；</li>
+                        <li>掌握行业内流行的类库，Vue.js， React 等主流框架；</li>
+                        <li>参与公司前端工程的设计、研发；</li>
+                        <li>了解不同浏览器之间的差异，移动设备之间的差异。</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="tabCour">
+                <p class="title">我们的蜕变</p>
+                <ul class="timeline">
+                    <li class="odd">
+                        <div class="cour-img"><img src="/static/au/static/img/us_img4.png"></div>
+                        <div class="cour-panel layui-col-sm4 layui-col-lg5">
+                            <p class="label">2016 年 5 月</p>
+                            <p>尤尼泰克(嘉兴)成立于桐乡市科技创业园</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="cour-img"><img src="/static/au/static/img/us_img5.png"></div>
+                        <div class="cour-panel layui-col-sm4 layui-col-sm-offset8 layui-col-lg5 layui-col-lg-offset7">
+                            <p class="label">2017 年 8 月</p>
+                            <p>项目开始正式投入运营</p>
+                        </div>
+                    </li>
+                    <li class="odd">
+                        <div class="cour-img"><img src="/static/au/static/img/us_img6.png"></div>
+                        <div class="cour-panel layui-col-sm4 layui-col-lg5">
+                            <p class="label">2017 年 9 月</p>
+                            <p>开始研发SAAS平台,IOS(Android)APP</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="cour-img"><img src="/static/au/static/img/us_img7.png"></div>
+                        <div class="cour-panel layui-col-sm4 layui-col-sm-offset8 layui-col-lg5 layui-col-lg-offset7">
+                            <p class="label">2018 年 5 月</p>
+                            <p>SAAS平台V1.0开发完成,IOS(Android)APP正式发布</p>
+                        </div>
+                    </li>
+                    <li class="odd">
+                        <div class="cour-img"><img src="/static/au/static/img/us_img8.png"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="/au/common :: foot"></div>
+</body>
+</html>

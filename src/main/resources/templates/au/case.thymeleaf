@@ -1,0 +1,55 @@
+<!-- 
+ * springboot2
+ * case
+ * Author: 竺志伟 
+ * Date:   2019-03-23 15:40
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:replace="/au/common :: head"></div>
+<body>
+<div th:replace="/au/common :: nav"></div>
+<!-- banner部分 -->
+<div class="banner case">
+    <div class="title">
+        <p>应用场景</p>
+        <p class="en">Application Scenarios</p>
+    </div>
+</div>
+<!-- main部分 -->
+<div class="main-case">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-inline content">
+                <div
+                        class="layui-inline case-img"><img src="/static/au/static/img/case1.png"
+                                                           style="width: 370px;height: 260px;"></div>
+                <p class="lable">公文证书</p>
+                <p>毕业证、文凭、登记证、执照</p>
+            </div>
+            <div class="layui-inline content even center">
+                <div class="layui-inline case-img"><img src="/static/au/static/img/case2.png" style="width: 370px;height: 260px;">
+                </div>
+                <p class="lable">各类证明</p>
+                <p>票务、发票、医疗工资</p>
+            </div>
+            <div class="layui-inline content">
+                <div class="layui-inline case-img"><img src="/static/au/static/img/case3.png" style="width: 370px;height: 260px;">
+                </div>
+                <p class="lable">有价值文件</p>
+                <p>电子保单、各种进出证</p>
+            </div>
+            <div class="layui-inline content even">
+                <div class="layui-inline case-img"><img src="/static/au/static/img/case4.png" style="width: 370px;height: 260px;">
+                </div>
+                <p class="lable">其他文件</p>
+                <p>消防证、中小企业证书、结业证书</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="/au/common :: foot"></div>
+</body>
+</html>
