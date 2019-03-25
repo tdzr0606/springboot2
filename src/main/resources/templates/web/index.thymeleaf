@@ -45,7 +45,7 @@
                 sysArray.push(cpuData[i].sys);
                 userArray.push(cpuData[i].user);
                 idleArray.push(cpuData[i].idle);
-                cpuArray.push("'CPU" + (i + 1) + "'");
+                cpuArray.push("CPU" + (i + 1));
             }
         }
         var cpu = echarts.init(document.getElementById('cpuDiv'));
@@ -288,6 +288,7 @@
                 }
             });
         }
+
         setInterval(initMem, 5000);
     });
 

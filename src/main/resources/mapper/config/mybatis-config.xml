@@ -9,6 +9,9 @@
 
     <!-- 配置 pojo类包 -->
     <typeAliases>
+        <typeAlias type="java.lang.Integer" alias="Integer"></typeAlias>
+        <typeAlias type="java.util.Map" alias="Map"></typeAlias>
+        <typeAlias type="java.lang.String" alias="String"></typeAlias>
         <package name="com.nature.jet.pojo"/>
     </typeAliases>
 </configuration>
