@@ -87,7 +87,7 @@ public class IndexController extends BaseController
     {
         modelAndView = new ModelAndView();
         super.clearLoginAdmin(request);
-        modelAndView.setView(new RedirectView("web/login"));
+        modelAndView.setView(new RedirectView("/web/login"));
         return modelAndView;
     }
 
