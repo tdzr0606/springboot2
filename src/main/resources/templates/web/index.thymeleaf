@@ -14,8 +14,8 @@
     <div class="layui-body no-foo-body">
         <div class="layui-tab layui-tab-brief" lay-filter="sysTab">
             <ul class="layui-tab-title">
-                <li class="layui-this">CPU</li>
-                <li>内存</li>
+                <li class="layui-this" lay-id="sys0">CPU</li>
+                <li lay-id="sys1">内存</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -34,6 +34,7 @@
     layui.use(['jquery', 'layer', 'element'], function ()
     {
         var $ = layui.jquery;
+        var element = layui.element;
         // cpu 使用情况
         var totalArray = [], sysArray = [], userArray = [], idleArray = [], cpuArray = [];
         var cpuData = [[${cpu}]];
@@ -49,83 +50,144 @@
             }
         }
         var cpu = echarts.init(document.getElementById('cpuDiv'));
-        cpu.setOption({
-            title: {text: ''},
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            legend: {
-                data: ['总使用率', '系统使用率', '用户使用率', '空闲率']
-            },
-            dataZoom: {
-                show: true,
-                start: 0,
-                end: 100
-            },
-            calculable: true,
-            xAxis: [
-                {
-                    type: 'category',
-                    axisTick: {show: false},
-                    data: cpuArray
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: [
-                {
-                    name: '总使用率',
-                    type: 'bar',
-                    barGap: 0,
-                    label: {
-                        normal: {
-                            show: true,
-                            formatter: '{c}%'
+        var mem = echarts.init(document.getElementById('memDiv'));
+        element.on('tab(sysTab)', function (data)
+        {
+            if (data.index == 0)
+            {
+                cpu.setOption({
+                    title: {text: ''},
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
                         }
                     },
-                    data: totalArray
-                },
-                {
-                    name: '系统使用率',
-                    type: 'bar',
-                    label: {
-                        normal: {
-                            show: true,
-                            formatter: '{c}%'
-                        }
+                    legend: {
+                        data: ['总使用率', '系统使用率', '用户使用率', '空闲率']
                     },
-                    data: sysArray
-                },
-                {
-                    name: '用户使用率',
-                    type: 'bar',
-                    label: {
-                        normal: {
-                            show: true,
-                            formatter: '{c}%'
-                        }
+                    dataZoom: {
+                        show: true,
+                        start: 0,
+                        end: 100
                     },
-                    data: userArray
-                },
-                {
-                    name: '空闲率',
-                    type: 'bar',
-                    label: {
-                        normal: {
-                            show: true,
-                            formatter: '{c}%'
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            axisTick: {show: false},
+                            data: cpuArray
                         }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '总使用率',
+                            type: 'bar',
+                            barGap: 0,
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: '{c}%'
+                                }
+                            },
+                            data: totalArray
+                        },
+                        {
+                            name: '系统使用率',
+                            type: 'bar',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: '{c}%'
+                                }
+                            },
+                            data: sysArray
+                        },
+                        {
+                            name: '用户使用率',
+                            type: 'bar',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: '{c}%'
+                                }
+                            },
+                            data: userArray
+                        },
+                        {
+                            name: '空闲率',
+                            type: 'bar',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: '{c}%'
+                                }
+                            },
+                            data: idleArray
+                        }
+                    ]
+                });
+            }
+            else if (data.index == 1)
+            {
+                mem.setOption({
+                    title: {
+                        text: '',
+                        x: 'left'
                     },
-                    data: idleArray
-                }
-            ]
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a}<br/>{b}:{c}KB({d}%)"
+                    },
+                    legend: {
+                        x: 'right',
+                        type: 'scroll',
+                        orient: 'vertical',
+                        top: 20,
+                        bottom: 20,
+                        data: [
+                            '已使用', '未使用'
+                        ]
+                    },
+                    calculable: true,
+                    series: [
+                        {
+                            name: '内存',
+                            type: 'pie',
+                            radius: [60, 200],
+                            center: ['40%', '50%'],
+                            roseType: 'radius',
+                            label: {
+                                normal: {
+                                    show: false
+                                },
+                                emphasis: {
+                                    show: true
+                                }
+                            },
+                            lableLine: {
+                                normal: {
+                                    show: false
+                                },
+                                emphasis: {
+                                    show: true
+                                }
+                            },
+                            data: [
+                                {value: [[${mem.use}]], name: '已使用'},
+                                {value: [[${mem.free}]], name: '未使用'}
+                            ]
+                        }
+                    ]
+                });
+            }
         });
+        element.tabChange('sysTab', 'sys0');
 
         function initCpu()
         {
@@ -195,58 +257,6 @@
         }
 
         setInterval(initCpu, 5000);
-        // 内存使用
-        var mem = echarts.init(document.getElementById('memDiv'));
-        mem.setOption({
-            title: {
-                text: '',
-                x: 'left'
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a}<br/>{b}:{c}KB({d}%)"
-            },
-            legend: {
-                x: 'right',
-                type: 'scroll',
-                orient: 'vertical',
-                top: 20,
-                bottom: 20,
-                data: [
-                    '已使用', '未使用'
-                ]
-            },
-            calculable: true,
-            series: [
-                {
-                    name: '内存',
-                    type: 'pie',
-                    radius: [60, 200],
-                    center: ['40%', '50%'],
-                    roseType: 'radius',
-                    label: {
-                        normal: {
-                            show: false
-                        },
-                        emphasis: {
-                            show: true
-                        }
-                    },
-                    lableLine: {
-                        normal: {
-                            show: false
-                        },
-                        emphasis: {
-                            show: true
-                        }
-                    },
-                    data: [
-                        {value: [[${mem.use}]], name: '已使用'},
-                        {value: [[${mem.free}]], name: '未使用'}
-                    ]
-                }
-            ]
-        });
 
         function initMem()
         {
