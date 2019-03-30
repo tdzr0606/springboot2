@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 /**
  * springboot2
  * IndexController
@@ -39,10 +41,10 @@ public class AuIndexController extends BaseController
     {
         Page<News> newsPage = newsService.listPublicPage(page, 16);
         modelAndView = new ModelAndView();
-        modelAndView.addObject("count",newsPage.getCount());
-        modelAndView.addObject("page",newsPage.getPage());
+        modelAndView.addObject("count", newsPage.getCount());
+        modelAndView.addObject("page", newsPage.getPage());
         modelAndView.addObject("newsList", newsPage.getData());
-        modelAndView.addObject("nav","news");
+        modelAndView.addObject("nav", "news");
         modelAndView.setViewName("au/news");
         return modelAndView;
     }
@@ -61,7 +63,7 @@ public class AuIndexController extends BaseController
     {
         News news = newsService.findById(id);
         modelAndView = new ModelAndView();
-        modelAndView.addObject("nav","news");
+        modelAndView.addObject("nav", "news");
         modelAndView.addObject("news", news);
         modelAndView.setViewName("au/newsDetail");
         return modelAndView;
@@ -79,7 +81,7 @@ public class AuIndexController extends BaseController
     public ModelAndView toCase()
     {
         modelAndView = new ModelAndView();
-        modelAndView.addObject("nav","case");
+        modelAndView.addObject("nav", "case");
         modelAndView.setViewName("au/case");
         return modelAndView;
     }
@@ -96,7 +98,7 @@ public class AuIndexController extends BaseController
     public ModelAndView toAbout()
     {
         modelAndView = new ModelAndView();
-        modelAndView.addObject("nav","about");
+        modelAndView.addObject("nav", "about");
         modelAndView.setViewName("au/about");
         return modelAndView;
     }

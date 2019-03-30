@@ -106,6 +106,12 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.2.5</version>
         </dependency>
+        <!-- mybatis 缓存 -->
+        <dependency>
+            <groupId>org.mybatis.caches</groupId>
+            <artifactId>mybatis-ehcache</artifactId>
+            <version>1.1.0</version>
+        </dependency>
 
         <!-- json object-->
         <dependency>
@@ -141,6 +147,18 @@
             <version>1.6.4</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/extlib/sigar/sigar.jar</systemPath>
+        </dependency>
+
+
+        <!--开启 cache 缓存-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <!-- ehcache 缓存 -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
         </dependency>
 
 
