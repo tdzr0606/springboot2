@@ -17,18 +17,19 @@
         <p class="pushtime" style="line-height: 50px;">发布时间：<span th:text="${news.createTime}"></span></p>
         <hr/>
         <p class="introBott" style="text-align: center;padding: 10px;margin-top: 30px;">
-            <iframe th:src="@{|/files/${news.fileurl}|}" frameborder="0" id="fileIframe"
-                    style="width:80%;"></iframe>
+            <iframe frameborder="0" id="fileIframe" style="width:80%;"></iframe>
         </p>
     </div>
 </div>
 <div th:replace="au/common :: foot"></div>
-<script>
-    layui.define(['jquery', 'laypage','layer'], function ()
+<script th:inline="javascript">
+    layui.define(['jquery', 'laypage', 'layer'], function ()
     {
         var $ = layui.jquery;
         var layer = layui.layer;
         var loadIndex = layer.load();
+        var fileUrl = '/files/' + [[${news.fileurl}]] + '?sessionId=' + new Date().getTime();
+        $('#fileIframe').attr("src", fileUrl);
         setTimeout(function ()
         {
             $('#fileIframe').height($("#fileIframe").contents().find("body").height() - 0 + 30);
