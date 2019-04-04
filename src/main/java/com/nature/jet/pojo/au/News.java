@@ -27,4 +27,5 @@ public class News implements Serializable
     private Integer id;
     private String title;
     private String synopsis;
+    private String showImg;
 }

@@ -60,6 +60,17 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">展示图片</label>
+        <div class="layui-input-inline" style="width: 455px">
+            <input type="text" class="layui-input" name="showImg" placeholder="请上传展示图片"
+                   aria-required="true" autocomplete="off" readonly id="showImg"/>
+        </div>
+        <div style="display:inline-block">
+            <a class="layui-btn" id="showImgBtn">上传</a>
+            <a class="layui-btn" id="showImgShowBtn">展示</a>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">简介</label>
         <div class="layui-input-block">
             <textarea name="synopsis" class="layui-textarea" required lay-verify="required"></textarea>
@@ -97,13 +108,40 @@
 
 
 <script type="text/javascript" th:inline="none">
-    layui.use(['element', 'table', 'layer', 'form', 'layedit'], function ()
+    layui.use(['element', 'table', 'layer', 'form', 'layedit', 'upload'], function ()
     {
         var $ = layui.jquery;
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
         var layedit = layui.layedit;
+        var upload = layui.upload;
+        upload.render({
+            elem: '#showImgBtn'
+            , size: 5120                    //大小(KB)
+            , exts: 'png|jpg|jpeg|gif'      //允许的后缀名
+            , url: '/upload/img'
+            , accept: 'images'              //类型 images图片 file(所有文件) video(视频) audio(音频)
+            , done: function (res)
+            {
+                $("#showImg").val(res.data.serverPath);
+            }
+        });
+        $('#showImgShowBtn').on('click', function ()
+        {
+            layer.open({
+                type: 1
+                , title: "展示"
+                , closeBtn: 1
+                , area: ['600px;', '400px;']
+                , shade: 0.2
+                , id: 'showImgW'
+                , moveType: 1
+                , content:
+                    '<div style="padding:10px;text-align:center"><img src="' + $('#showImg').val() +
+                    '" style="width: 400px;" /></div>'
+            });
+        });
         layedit.set({
             uploadImage: {
                 url: '/upload/layui/img'
@@ -120,7 +158,7 @@
                 , 'link' //超链接
                 , 'unlink' //清除链接
             ],
-            height:200
+            height: 200
         });
         var layeditIndex;
         var newsTable = table.render({

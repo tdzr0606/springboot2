@@ -5,7 +5,7 @@
     <cache-ref namespace="com.nature.jet.mapper.au.NewsMapper"></cache-ref>
     <!--基础 表字段定义 -->
     <sql id="basicColumn">
-        createTime,author,isPublic,fileurl,id,title,synopsis
+        createTime,author,isPublic,fileurl,id,title,synopsis,showImg
     </sql>
 
     <!-- 查询所有数据 -->
@@ -29,13 +29,14 @@
 
     <!-- 新建 -->
     <insert id="add" parameterType="com.nature.jet.pojo.au.News" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO au_news ( createTime,author,isPublic,fileurl,id,title,synopsis )
-        VALUES ( #{createTime},#{author},#{isPublic},#{fileurl},#{id},#{title},#{synopsis} )
+        INSERT INTO au_news ( createTime,author,isPublic,fileurl,id,title,synopsis,showImg )
+        VALUES ( #{createTime},#{author},#{isPublic},#{fileurl},#{id},#{title},#{synopsis},#{showImg} )
     </insert>
 
     <!-- 修改-->
     <update id="modify" parameterType="com.nature.jet.pojo.au.News">
         UPDATE au_news SET author = #{author},isPublic = #{isPublic},fileurl = #{fileurl},title = #{title},synopsis=#{synopsis}
+        ,showImg=#{showImg}
         WHERE  id = #{id} 
     </update>
 

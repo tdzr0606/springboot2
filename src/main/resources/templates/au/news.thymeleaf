@@ -23,8 +23,10 @@
         <div class="layui-row layui-col-space20">
             <div class="layui-col-lg6 content" th:each="news:${newsList}">
                 <div>
-                    <div class="news-img" style="width:34%"><a th:href="@{|/news/${news.id}|}" target="_blank"><img
-                            src="/static/au/static/img/news_img1.jpg"></a></div>
+                    <div class="news-img" style="width:33%"><a th:href="@{|/news/${news.id}|}" target="_blank">
+                        <img th:if="${news.showImg == null}" src="/static/au/static/img/news_img1.jpg" />
+                        <img th:if="${news.showImg != null}" th:src="@{${news.showImg}}" style="width: 184px;height: 125px;" />
+                    </a></div>
                     <div class="news-panel">
                         <strong><a th:href="@{|/news/${news.id}|}" target="_blank" th:text="${news.title}"></a></strong>
                         <p class="detail"><span th:text="${news.synopsis}"></span>

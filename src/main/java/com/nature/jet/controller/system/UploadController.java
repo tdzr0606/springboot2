@@ -42,7 +42,7 @@ public class UploadController extends BaseController
      */
     @RequestMapping(value = "/upload/layui/img")
     @ResponseBody
-    public CommonResult uploadImg(@RequestParam(value = "file", required = true) MultipartFile imgFile)
+    public CommonResult uploadLayuiImg(@RequestParam(value = "file", required = true) MultipartFile imgFile)
     {
         log.info("layui富文本编辑器上传图片开始");
         Map<String, String> dataMap = new HashMap<>();
@@ -78,6 +78,54 @@ public class UploadController extends BaseController
             log.info("layui富文本编辑器上传图片结束:{}", dataMap.get("title"));
             return resultWrapper(code, msg, dataMap);
         }
+    }
 
+
+    /**
+     * 图片上传
+     * Upload img common result.
+     *
+     * @param imgFile the img file
+     * @return the common result
+     * @author:竺志伟
+     * @date :2019-04-04 22:31:03
+     */
+    @RequestMapping(value = "/upload/img")
+    @ResponseBody
+    public CommonResult uploadImg(@RequestParam(value = "file", required = true) MultipartFile imgFile)
+    {
+        log.info("图片上传开始");
+        Map<String, String> dataMap = new HashMap<>();
+        int code = CommonResult.SUCCESS;
+        String msg = "图片上传成功";
+        dataMap.put("title", imgFile.getOriginalFilename());
+        try
+        {
+            String datePath = Tools.getNowDate("yyyyMMdd");
+            File parentFile = new File(rootPath, "image/" + datePath + "/");
+            if(!parentFile.exists())
+            {
+                parentFile.mkdirs();
+            }
+            String fileName = Tools.getNowDateTime("yyyyMMddHHmmssS") + "_" +
+                    UUID.randomUUID().toString().replace("-", "").substring(0, 10) + "." +
+                    FilenameUtils.getExtension(imgFile.getOriginalFilename());
+
+            FileUtils.copyInputStreamToFile(imgFile.getInputStream(), new File(parentFile.getPath(), fileName));
+            dataMap.put("fileName", fileName);
+            dataMap.put("serverPath", "/files/image/" + datePath + "/" + fileName);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            log.error("图片上传错误", e);
+            code = CommonResult.FAILS;
+            msg = "图片上传错误";
+        }
+        finally
+        {
+            log.info("图片上传结束:{}", dataMap.get("title"));
+            return resultWrapper(code, msg, dataMap);
+        }
     }
 }
