@@ -1,0 +1,323 @@
+<!--
+ *  photosList
+ * User:竺志伟
+ * Date:2019-04-15 20:55:54
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:replace="web/common :: head"></div>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-body" style="left: 0px;top:0px;padding:10px;">
+        <div id="photosListMenuBar"> <!--将所有的菜单聚集在一起.一块进行监听-->
+            <div class="layui-row">
+                <div class="layui-col-xs9">
+                    搜索：
+                    <div class="layui-inline" style="width:70%">
+                        <input class="layui-input" name="key" id="searchKey" autocomplete="off" style="width:100%;">
+                    </div>
+                    <button class="layui-btn" data-method="search" id="searchBtn">搜索</button>
+                </div>
+                <div class="layui-col-xs3">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn" data-method="new">新建</button>
+                        <button class="layui-btn" data-method="modify">修改</button>
+                        <button class="layui-btn" data-method="delete">删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="layui-hidden" id="photosListTable" lay-filter="photosListTable"></table>
+    </div>
+</div>
+
+<form class="layui-form" id="photosListForm" style="display:none;padding:10px 40px 10px 0px; ">
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片</label>
+        <div class="layui-input-inline" style="width: 355px">
+            <input type="text" name="imgUrl" readonly required lay-verify="required" placeholder="请上传图片" autocomplete="off"
+                   class="layui-input readOnly" id="imgUrl">
+        </div>
+        <div style="display:inline-block">
+            <a class="layui-btn" id="imgBtn">上传</a>
+            <a class="layui-btn" id="imgShowBtn">展示</a>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="sort" required lay-verify="required" placeholder="请输入排序" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <input type="hidden" name="id" id="id" value="0"/>
+    <input type="hidden" name="actionUrl" id="actionUrl" value=""/>
+    <input type="hidden" name="photosId" th:value="${photosId}"/>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="photosListForm">确定</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="layer.closeAll()">取消</button>
+        </div>
+    </div>
+</form>
+
+
+<script src="/static/design/layui.js"></script>
+
+<script type="text/html" id="imgUrlTpl">
+    {{# if(d.imgUrl) { }}
+    <img src="{{ d.imgUrl }}" style="height: 24px;"/>
+    {{# } }}
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'table', 'layer', 'form', 'upload'], function ()
+    {
+        var photosId = [[${photosId}]];
+        var $ = layui.jquery;
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var upload = layui.upload;
+        upload.render({
+            elem: '#imgBtn'
+            , size: 5120                    //大小(KB)
+            , exts: 'png|jpg|jpeg'      //允许的后缀名
+            , url: '/upload/img'
+            , accept: 'images'              //类型 images图片 file(所有文件) video(视频) audio(音频)
+            , done: function (res)
+            {
+                $("#imgUrl").val(res.data.serverPath);
+                $('#imgUrl').addClass('upload-success');
+                $('#imgShowBtn').click();
+            }
+        });
+        $('#imgShowBtn').on('click', function ()
+        {
+            layer.open({
+                type: 1
+                , title: "展示"
+                , closeBtn: 1
+                , area: ['600px;', '400px;']
+                , shade: 0.2
+                , id: 'imgShowW'
+                , moveType: 1
+                , content:
+                    '<div style="padding:10px;text-align:center;"><img src="' + $('#imgUrl').val() +
+                    '"  style="width: 300px;" /></div>'
+            });
+        });
+        var photosListTable = table.render({
+            elem: '#photosListTable'
+            , id: 'photosListTable'
+            , url: '/web/photosList/list?photosId=' + photosId + '&sessionId=' + new Date().getTime()
+            , cols: [
+                [
+                    {checkbox: true}
+                    , {field: 'title', title: '标题', width: 400, sort: true}
+                    , {field: 'imgUrl', title: '图片', width: 80, templet: '#imgUrlTpl'}
+                ]
+            ]
+            , height: 'full-80'
+            , limit: 40
+            , page: true
+        });
+        //触发事件
+        var active = {
+            search: function ()
+            {
+                var keyValue = $('#searchKey').val();
+                photosListTable.reload({where: {key: keyValue, photosId: photosId}, page: {curr: 1}});
+            }
+            , new: function ()
+            {
+                $('#photosListForm')[0].reset();
+                $('#actionUrl').val("new");
+                $('#id').val('0');
+                layer.open({
+                    type: 1
+                    , title: "新建"
+                    , closeBtn: 1
+                    , area: '650px;'
+                    , shade: 0.2
+                    , shadeClose: false
+                    , id: 'photosListFormWindow'
+                    , moveType: 1
+                    , content: $('#photosListForm')
+                });
+            }
+            , modify: function ()
+            {
+                var checkStatus = table.checkStatus('photosListTable'), data = checkStatus.data;
+                if (data.length < 1)
+                {
+                    layer.msg('您必须选中一条需要修改的记录');
+                    return false;
+                }
+                else if (data.length > 1)
+                {
+                    layer.msg('您在修改的时候,不能选中多条记录');
+                    return false;
+                }
+                else
+                {
+                    var id = data[0].id;
+                    $.ajax({
+                        type: 'get',
+                        url: '/web/photosList/info?id=' + id + '&sessionId=' + new Date().getTime(),
+                        success: function (json)
+                        {
+                            if (json.success)
+                            {
+                                form.loadData(json.data, 'photosListForm');
+                                $('#actionUrl').val("modify");
+                                form.render();
+                                layer.open({
+                                    type: 1
+                                    , title: "修改"
+                                    , closeBtn: 1
+                                    , area: '650px;'
+                                    , shade: 0.2
+                                    , shadeClose: false
+                                    , id: 'photosListFormWindow'
+                                    , moveType: 1
+                                    , content: $('#photosListForm')
+                                    , success: function (layero)
+                                    {
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                layer.msg(json.msg);
+                            }
+                        },
+                        error: function (json)
+                        {
+                            layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                            {
+                                layer.closeAll();
+                            });
+                        }
+                    });
+                }
+            }
+            , delete: function ()
+            {
+                var checkStatus = table.checkStatus('photosListTable'), data = checkStatus.data;
+                if (data.length < 1)
+                {
+                    layer.msg('您必须最少选中一条需要删除的记录');
+                    return false;
+                }
+                layer.open({
+                    type: 1
+                    , id: 'photosListDeleteAccept'
+                    , content: '<div style="padding: 20px 30px;">是否真的要删除选中的记录?</div>'
+                    , btn: ['确定', '取消']
+                    , btnAlign: 'c'
+                    , shade: 0.2
+                    , yes: function ()
+                    {
+                        layer.closeAll();
+                        var idArray = new Array();
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            idArray[i] = data[i].id;
+                        }
+                        $.ajax({
+                            type: 'post',
+                            data: {ids: idArray.toString()},
+                            url: '/web/photosList/delete',
+                            success: function (json)
+                            {
+                                if (json.success)
+                                {
+                                    layer.alert(json.msg, {closeBtn: 0}, function ()
+                                    {
+                                        layer.closeAll();
+                                        photosListTable.reload();
+                                    });
+                                }
+                                else
+                                {
+                                    layer.alert(json.msg);
+                                }
+                            },
+                            error: function (json)
+                            {
+                                layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                                {
+                                    layer.closeAll();
+                                    window.location.reload();
+                                });
+                            }
+                        });
+                        return false;
+                    }
+                });
+            }
+        };
+        //总体上调用,是那个按钮激活哪个
+        $('#photosListMenuBar .layui-btn').on('click', function ()
+        {
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+        // 搜索框 回车键触发
+        $('#searchKey').on('keyup', function (e)
+        {
+            if (e.keyCode == 13)
+            {
+                $('#searchBtn').click();
+            }
+        });
+        //form submit新建修改事件提交
+        form.on('submit(photosListForm)', function (data)
+        {
+            var actionUrl = "/web/photosList/" + $('#actionUrl').val();
+            $.ajax({
+                type: 'post',
+                data: $('#photosListForm').serialize(),
+                url: actionUrl,
+                success: function (json)
+                {
+                    if (json.success)
+                    {
+                        layer.alert(json.msg, {closeBtn: 0}, function ()
+                        {
+                            layer.closeAll();
+                            photosListTable.reload();
+                        });
+                    }
+                    else
+                    {
+                        layer.alert(json.msg);
+                    }
+                },
+                error: function (json)
+                {
+                    layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                    {
+                        layer.closeAll();
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+</body>
+</html>

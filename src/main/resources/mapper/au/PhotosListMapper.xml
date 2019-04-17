@@ -1,0 +1,63 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nature.jet.mapper.au.PhotosListMapper">
+
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+    <cache-ref namespace="com.nature.jet.mapper.au.PhotosListMapper"></cache-ref>
+    <!--基础 表字段定义 -->
+    <sql id="basicColumn">
+        imgUrl,photosId,id,sort,title
+    </sql>
+
+    <!-- 查询所有数据 -->
+    <select id="list" resultType="com.nature.jet.pojo.au.PhotosList" parameterType="java.util.Map">
+        select
+        <include refid="basicColumn"/>
+        from au_photos_list
+        where photosId = #{photosId}
+        <if test="key != null and key != '' ">
+            and ( title like CONCAT(concat('%',#{key}),'%') )
+        </if>
+        order by id desc
+    </select>
+
+    <!-- 根据ID查询数据 -->
+    <select id="findById" resultType="com.nature.jet.pojo.au.PhotosList" parameterType="java.lang.Integer">
+        select <include refid="basicColumn"></include> from au_photos_list where id = #{id}
+    </select>
+
+    <!-- 新建 -->
+    <insert id="add" parameterType="com.nature.jet.pojo.au.PhotosList" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO au_photos_list ( imgUrl,photosId,id,sort,title ) 
+        VALUES ( #{imgUrl},#{photosId},#{id},#{sort},#{title} ) 
+    </insert>
+
+    <!-- 修改-->
+    <update id="modify" parameterType="com.nature.jet.pojo.au.PhotosList">
+        UPDATE au_photos_list SET imgUrl = #{imgUrl},photosId = #{photosId},sort = #{sort},title = #{title}
+        WHERE  id = #{id} 
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM au_photos_list WHERE  id = #{id}
+    </delete>
+
+    <!-- 批量删除-->
+    <delete id="deleteByIds" parameterType="java.util.Arrays">
+        DELETE FROM au_photos_list WHERE id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            ${item}
+        </foreach>
+    </delete>
+
+    <select id="countByPhotosId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(1) from au_photos_list where photosId = #{photosId}
+    </select>
+
+    <select id="listByPhotosId" parameterType="java.lang.Integer" resultType="PhotosList">
+        select
+        <include refid="basicColumn"/>
+        from au_photos_list where photosId = #{photosId} order by sort asc
+    </select>
+
+</mapper>

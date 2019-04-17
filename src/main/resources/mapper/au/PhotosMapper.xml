@@ -1,0 +1,59 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nature.jet.mapper.au.PhotosMapper">
+
+    <!--基础 表字段定义 -->
+    <sql id="basicColumn">
+        createTime,id,title,note,isPublic,imgUrl
+    </sql>
+
+    <!-- 查询所有数据 -->
+    <select id="list" resultType="com.nature.jet.pojo.au.Photos" parameterType="java.lang.String">
+        select
+        <include refid="basicColumn"/>
+        from au_photos
+        <where>
+            <if test="key != null and key != '' ">
+                title like CONCAT(concat('%',#{key}),'%')
+                or note like CONCAT(concat('%',#{key}),'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <!-- 根据ID查询数据 -->
+    <select id="findById" resultType="com.nature.jet.pojo.au.Photos" parameterType="java.lang.Integer">
+        select <include refid="basicColumn"></include> from au_photos where id = #{id}
+    </select>
+
+    <!-- 新建 -->
+    <insert id="add" parameterType="com.nature.jet.pojo.au.Photos" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO au_photos ( createTime,id,title,note,isPublic,imgUrl )
+        VALUES ( #{createTime},#{id},#{title},#{note},#{isPublic},#{imgUrl} )
+    </insert>
+
+    <!-- 修改-->
+    <update id="modify" parameterType="com.nature.jet.pojo.au.Photos">
+        UPDATE au_photos SET title = #{title},note = #{note},isPublic = #{isPublic},imgUrl=#{imgUrl}
+        WHERE  id = #{id} 
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM au_photos WHERE  id = #{id}
+    </delete>
+
+    <!-- 批量删除-->
+    <delete id="deleteByIds" parameterType="java.util.Arrays">
+        DELETE FROM au_photos WHERE id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            ${item}
+        </foreach>
+    </delete>
+
+    <select id="listPublic" resultType="Photos">
+        select
+        <include refid="basicColumn"/>
+        from au_photos where isPublic = 1 order by createTime desc
+    </select>
+
+</mapper>

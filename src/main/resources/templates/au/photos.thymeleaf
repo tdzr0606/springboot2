@@ -1,0 +1,123 @@
+<!-- 
+ * springboot2
+ * photos
+ * Author: 竺志伟 
+ * Date:   2019-04-15 22:22
+ -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:replace="au/common :: head"></div>
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<body>
+<div th:replace="au/common :: nav"></div>
+<!-- banner部分 -->
+<div class="banner case">
+    <div class="title">
+        <p>企业风采</p>
+        <p class="en">Enterprise Style</p>
+    </div>
+</div>
+
+<!-- main部分 -->
+<div class="main-case">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div th:each="photos,photosStat:${photosList}"
+                 th:class="${photosStat.even}?'layui-inline content even center':'layui-inline content'">
+                <div
+                        class="layui-inline case-img"><img th:src="@{${photos.imgUrl}}"
+                                                           th:onclick="'javascript:showPhotos(\''+${photos.id}+'\');'"
+                                                           style="width: 370px;height: 260px;cursor: pointer"></div>
+                <p class="lable" th:text="${photos.title}" style="cursor: pointer"
+                   th:onclick="'javascript:showPhotos(\''+${photos.id}+'\');'"></p>
+                <p th:text="${photos.note}" style="cursor: pointer"
+                   th:onclick="'javascript:showPhotos(\''+${photos.id}+'\');'"></p>
+            </div>
+        </div>
+    </div>
+    <div id="photosPage"></div>
+</div>
+
+
+<div class="layui-carousel" id="photosBanner" style="display: none"></div>
+
+<div th:replace="au/common :: foot"></div>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.define(['jquery', 'laypage', 'carousel', 'element', 'layer'], function (exports)
+    {
+        var nowPage = /*[[${page}]]*/;
+        var $ = layui.jquery, laypage = layui.laypage;
+        //动态分页
+        laypage.render({
+            elem: 'photosPage'
+            , theme: '#2db5a3'
+            , layout: ['page', 'next']
+            , limit: 16
+            , curr: nowPage
+            , count:/*[[${count}]]*/
+            , jump: function (obj, first)
+            {
+                nowPage = obj.curr;
+                if (!first)
+                {
+                    window.location.href = "/photos?page=" + nowPage + "&sessionId=" + new Date().getTime();
+                }
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    function showPhotos(id)
+    {
+        var $ = layui.jquery;
+        var carousel = layui.carousel;
+        $('#photosBanner').empty();
+        $.ajax({
+            type: 'get',
+            url: '/photos/details?id=' + id + '&sessionId=' + new Date().getTime(),
+            success: function (json)
+            {
+                if (json.success)
+                {
+                    var datas = json.data;
+                    var content = '<div carousel-item>';
+                    for (var i = 0, len = datas.length; i < len; i++)
+                    {
+                        content += '<div style="text-align: center;padding: 10px;">';
+                        content += '<img src="' + datas[i].imgUrl + '" style="width: 700px;height: 480px;" />';
+                        content += '</div>';
+                    }
+                    content += '</div>';
+                    $('#photosBanner').append(content);
+                    //建造实例
+                    carousel.render({
+                        elem: '#photosBanner'
+                        , width: '800px' //设置容器宽度
+                        , height: '500px'
+                        , arrow: 'always' //始终显示箭头
+                    });
+                    layer.open({
+                        type: 1
+                        , closeBtn: 1
+                        , area: ['800px;', '500px;']
+                        , shade: 0.7
+                        , title: ''
+                        , shadeClose: true
+                        , id: 'photosBannerW'
+                        , moveType: 1
+                        , content: $('#photosBanner')
+                    });
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

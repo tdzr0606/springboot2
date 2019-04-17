@@ -1,9 +1,13 @@
 package com.nature.jet.controller.au;
 
+import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.component.system.Page;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.pojo.au.News;
+import com.nature.jet.pojo.au.Photos;
 import com.nature.jet.service.au.NewsService;
+import com.nature.jet.service.au.PhotosListService;
+import com.nature.jet.service.au.PhotosService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -28,6 +33,10 @@ public class AuIndexController extends BaseController
 {
     @Autowired
     NewsService newsService;
+    @Autowired
+    PhotosService photosService;
+    @Autowired
+    PhotosListService photosListService;
 
     /**
      * 进入 新闻页面
@@ -102,5 +111,42 @@ public class AuIndexController extends BaseController
         modelAndView.addObject("nav", "about");
         modelAndView.setViewName("au/about");
         return modelAndView;
+    }
+
+
+    /**
+     * To photos model and view.
+     *
+     * @return the model and view
+     * @author:竺志伟
+     * @date :2019-04-15 22:21:50
+     */
+    @RequestMapping(value = "/photos")
+    public ModelAndView toPhotos(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page)
+    {
+        Page<Photos> photosPage = photosService.listPublicPage(page, 16);
+        modelAndView = new ModelAndView();
+        modelAndView.addObject("nav", "photos");
+        modelAndView.addObject("count", photosPage.getCount());
+        modelAndView.addObject("page", photosPage.getPage());
+        modelAndView.addObject("photosList", photosPage.getData());
+        modelAndView.setViewName("au/photos");
+        return modelAndView;
+    }
+
+
+    /**
+     * Gets photos details.
+     *
+     * @param id the id
+     * @return the photos details
+     * @author:竺志伟
+     * @date :2019-04-16 19:19:41
+     */
+    @RequestMapping(value = "/photos/details")
+    @ResponseBody
+    public CommonResult getPhotosDetails(@RequestParam(value = "id", required = true, defaultValue = "0") Integer id)
+    {
+        return resultSuccessWrapper("", photosListService.listByPhotosId(id));
     }
 }

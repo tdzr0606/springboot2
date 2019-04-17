@@ -126,6 +126,9 @@ body{background: #fff;}
 .main-case #casePage .layui-laypage{display: block; text-align: center; margin-top: 100px;}
 .main-case #casePage .layui-laypage a,.main-case #casePage .layui-laypage span{font-size: 18px; line-height: 40px; height: 40px; margin-right: 20px; border-radius: 3px; color: #e3e3e3;}
 
+.main-case #photosPage .layui-laypage{display: block; text-align: center; margin-top: 100px;}
+.main-case #photosPage .layui-laypage a,.main-case #photosPage .layui-laypage span{font-size: 18px; line-height: 40px; height: 40px; margin-right: 20px; border-radius: 3px; color: #e3e3e3;}
+
 
 /** 关于 */
 .banner.about{background: url(../img/nav_img4.jpg) no-repeat center top; background-size: cover;}
@@ -163,6 +166,7 @@ body{background: #fff;}
 .main-about .tabCour .timeline li .cour-panel{padding-top: 20px; padding-left: 120px; text-align: left;}
 .main-about .tabCour .timeline li .cour-panel p.label{font-size: 18px; color: #000;}
 .main-about .tabCour .timeline li .cour-panel p{color: #949494; line-height: 30px;}
+
 
 
 @media screen and (max-width: 480px){
