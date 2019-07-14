@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
+<mycat:schema xmlns:mycat="http://io.mycat/">
+
+    <!-- 和 server.xml中 用户配置相同 -->
+    <schema name="test" checkSQLschema="false" sqlMaxLimit="100">
+        <!-- 从 rule.xml中获取对应规则进行分片 -->
+        <table name="au_news" primaryKey="id" autoIncrement="true" dataNode="dn1,dn2" rule="mod-long"/>
+        <table name="web_admin" primaryKey="id" autoIncrement="true" dataNode="dn1"/>
+        <table name="au_photos" primaryKey="id" autoIncrement="true" dataNode="dn1"/>
+        <table name="au_photos_list" primaryKey="id" autoIncrement="true" dataNode="dn1"/>
+    </schema>
+
+    <!-- 数据库 分片节点 -->
+    <dataNode name="dn1" dataHost="localhost" database="autumn"/>
+    <dataNode name="dn2" dataHost="localhost" database="autumn2"/>
+
+    <dataHost name="localhost" maxCon="1000" minCon="10" balance="0"
+              writeType="0" dbType="mysql" dbDriver="native" switchType="1" slaveThreshold="100">
+        <heartbeat>select user()</heartbeat> <!-- 心跳语句 保留-->
+        <writeHost host="localhost" url="localhost:3306" user="root" password="root"></writeHost>
+    </dataHost>
+
+
+</mycat:schema>
