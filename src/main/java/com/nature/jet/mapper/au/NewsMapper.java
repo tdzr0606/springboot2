@@ -2,6 +2,7 @@ package com.nature.jet.mapper.au;
 
 import com.nature.jet.mybatis.config.MyMapper;
 import com.nature.jet.pojo.au.News;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * Author:竺志伟
  * Date:2019-03-22 15:36:26
  */
-@Repository
+@Mapper
 public interface NewsMapper extends MyMapper<News>
 {
     /**
@@ -46,7 +47,7 @@ public interface NewsMapper extends MyMapper<News>
      * Author:竺志伟
      * Date:2019-03-22 15:36:26
      */
-    public int deleteById(@Param(value = "id") Long id);
+    public int deleteById(@Param(value = "id") String id);
 
     /**
      * 批量删除
@@ -62,7 +63,7 @@ public interface NewsMapper extends MyMapper<News>
      * Author:竺志伟
      * Date:2019-03-22 15:36:26
      */
-    public News findById(@Param(value = "id") Long id);
+    public News findById(@Param(value = "id") String id);
 
     List<News> listPublic();
 }

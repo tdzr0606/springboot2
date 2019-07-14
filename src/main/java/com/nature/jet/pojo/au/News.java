@@ -24,8 +24,9 @@ public class News implements Serializable
     private String author;
     private Boolean isPublic;
     private String fileurl;
-    private Long id;
+    private String id;
     private String title;
     private String synopsis;
     private String showImg;
+    private Integer sid;
 }

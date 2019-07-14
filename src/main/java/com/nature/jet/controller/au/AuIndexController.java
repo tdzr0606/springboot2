@@ -69,7 +69,7 @@ public class AuIndexController extends BaseController
      * @date :2019-03-23 15:33:18
      */
     @RequestMapping(value = "/news/{id}")
-    public ModelAndView toNewsDetail(@PathVariable(value = "id", required = true) Long id)
+    public ModelAndView toNewsDetail(@PathVariable(value = "id", required = true) String id)
     {
         News news = newsService.findById(id);
         modelAndView = new ModelAndView();

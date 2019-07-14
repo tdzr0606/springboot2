@@ -3,9 +3,11 @@
 
     <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
     <cache-ref namespace="com.nature.jet.mapper.au.NewsMapper"></cache-ref>
+
+
     <!--基础 表字段定义 -->
     <sql id="basicColumn">
-        createTime,author,isPublic,fileurl,id,title,synopsis,showImg
+        createTime,author,isPublic,fileurl,id,title,synopsis,showImg,sid
     </sql>
 
     <!-- 查询所有数据 -->
@@ -13,7 +15,7 @@
         select
         <include refid="basicColumn"/>
         from au_news
-        where id > 0
+        where sid > 0
         <if test="key != null and key != '' ">
             and ( author like CONCAT(concat('%',#{key}),'%')
             or title like CONCAT(concat('%',#{key}),'%')
@@ -23,12 +25,12 @@
     </select>
 
     <!-- 根据ID查询数据 -->
-    <select id="findById" resultType="com.nature.jet.pojo.au.News" parameterType="java.lang.Long">
+    <select id="findById" resultType="com.nature.jet.pojo.au.News" parameterType="java.lang.String">
         select <include refid="basicColumn"></include> from au_news where id = #{id}
     </select>
 
     <!-- 新建 使用mycat的全局增长id  时间戳方式 -->
-    <insert id="add" parameterType="com.nature.jet.pojo.au.News">
+    <insert id="add" parameterType="com.nature.jet.pojo.au.News" useGeneratedKeys="true" keyProperty="sid">
         INSERT INTO au_news ( id, createTime,author,isPublic,fileurl,title,synopsis,showImg )
         VALUES ( next value for MYCATSEQ_AUNEWS,
         #{createTime},#{author},#{isPublic},#{fileurl},#{title},#{synopsis},#{showImg} )
@@ -42,13 +44,13 @@
     </update>
 
     <!-- 删除 -->
-    <delete id="deleteById" parameterType="java.lang.Long">
+    <delete id="deleteById" parameterType="java.lang.String">
         DELETE FROM au_news WHERE  id = #{id}
     </delete>
 
     <!-- 批量删除-->
     <delete id="deleteByIds" parameterType="java.util.Arrays">
-        DELETE FROM au_news WHERE isPublic = 1 and id in
+        DELETE FROM au_news WHERE id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             ${item}
         </foreach>
@@ -58,7 +60,7 @@
     <select id="listPublic" resultType="News">
         select
         <include refid="basicColumn"/>
-        from au_news where isPublic = 1 order by createTime desc
+        from au_news where sid > 0 and isPublic = 1 order by createTime desc
     </select>
 
 </mapper>

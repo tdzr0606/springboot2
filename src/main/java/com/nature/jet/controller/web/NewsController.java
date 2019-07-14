@@ -125,7 +125,7 @@ public class NewsController extends BaseController
      */
     @RequestMapping(value = "/web/news/info", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CommonResult getNewsById(@RequestParam(value = "id", required = true, defaultValue = "0") Long id)
+    public CommonResult getNewsById(@RequestParam(value = "id", required = true, defaultValue = "0") String id)
     {
         return resultBoolWrapper(true, "信息装载成功", "信息装载失败", newsService.findById(id));
     }
