@@ -89,8 +89,8 @@ public class NewsController extends BaseController
      */
     @RequestMapping(value = "/web/news/modify", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CommonResult modify(News news,
-                               @RequestParam(value = "fileContent", required = true, defaultValue = "") String fileContent)
+    public CommonResult modify(News news, @RequestParam(value = "fileContent", required = true, defaultValue = "")
+            String fileContent)
     {
         if(StringUtils.isNotBlank(news.getFileurl()))
         {
@@ -125,7 +125,7 @@ public class NewsController extends BaseController
      */
     @RequestMapping(value = "/web/news/info", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CommonResult getNewsById(@RequestParam(value = "id", required = true, defaultValue = "0") Integer id)
+    public CommonResult getNewsById(@RequestParam(value = "id", required = true, defaultValue = "0") Long id)
     {
         return resultBoolWrapper(true, "信息装载成功", "信息装载失败", newsService.findById(id));
     }

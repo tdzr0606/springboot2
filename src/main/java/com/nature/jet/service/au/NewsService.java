@@ -72,7 +72,7 @@ public class NewsService
      * @param id
      * @return
      */
-    public boolean deleteById(Integer id)
+    public boolean deleteById(Long id)
     {
         return newsMapper.deleteById(id) == 1;
     }
@@ -93,7 +93,7 @@ public class NewsService
      * @param id
      * @return
      */
-    public News findById(int id)
+    public News findById(Long id)
     {
         return newsMapper.findById(id);
     }

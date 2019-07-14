@@ -13,24 +13,25 @@
         select
         <include refid="basicColumn"/>
         from au_news
-        <where>
-            <if test="key != null and key != '' ">
-                author like CONCAT(concat('%',#{key}),'%')
-                or title like CONCAT(concat('%',#{key}),'%')
-            </if>
-        </where>
+        where id > 0
+        <if test="key != null and key != '' ">
+            and ( author like CONCAT(concat('%',#{key}),'%')
+            or title like CONCAT(concat('%',#{key}),'%')
+            )
+        </if>
         order by id desc
     </select>
 
     <!-- 根据ID查询数据 -->
-    <select id="findById" resultType="com.nature.jet.pojo.au.News" parameterType="java.lang.Integer">
+    <select id="findById" resultType="com.nature.jet.pojo.au.News" parameterType="java.lang.Long">
         select <include refid="basicColumn"></include> from au_news where id = #{id}
     </select>
 
-    <!-- 新建 -->
-    <insert id="add" parameterType="com.nature.jet.pojo.au.News" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO au_news ( createTime,author,isPublic,fileurl,id,title,synopsis,showImg )
-        VALUES ( #{createTime},#{author},#{isPublic},#{fileurl},#{id},#{title},#{synopsis},#{showImg} )
+    <!-- 新建 使用mycat的全局增长id  时间戳方式 -->
+    <insert id="add" parameterType="com.nature.jet.pojo.au.News">
+        INSERT INTO au_news ( id, createTime,author,isPublic,fileurl,title,synopsis,showImg )
+        VALUES ( next value for MYCATSEQ_AUNEWS,
+        #{createTime},#{author},#{isPublic},#{fileurl},#{title},#{synopsis},#{showImg} )
     </insert>
 
     <!-- 修改-->
@@ -41,7 +42,7 @@
     </update>
 
     <!-- 删除 -->
-    <delete id="deleteById" parameterType="java.lang.Integer">
+    <delete id="deleteById" parameterType="java.lang.Long">
         DELETE FROM au_news WHERE  id = #{id}
     </delete>
 
