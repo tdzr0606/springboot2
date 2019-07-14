@@ -15,6 +15,7 @@
     <dataNode name="dn1" dataHost="localhost" database="autumn"/>
     <dataNode name="dn2" dataHost="localhost" database="autumn2"/>
 
+    <!-- 真实数据库配置 -->
     <dataHost name="localhost" maxCon="1000" minCon="10" balance="0"
               writeType="0" dbType="mysql" dbDriver="native" switchType="1" slaveThreshold="100">
         <heartbeat>select user()</heartbeat> <!-- 心跳语句 保留-->
