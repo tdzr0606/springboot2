@@ -18,19 +18,21 @@
         </fieldset>
         <div id="adminMenuBar"> <!--将所有的菜单聚集在一起.一块进行监听-->
             <div class="layui-row">
-                <div class="layui-col-md6">
-                    搜索：
-                    <div class="layui-inline" style="width:70%">
-                        <input class="layui-input" name="key" id="searchKey" autocomplete="off" style="width:100%;">
-                    </div>
-                    <button class="layui-btn" data-method="search" id="searchBtn">搜索</button>
-                </div>
-                <div class="layui-col-md6">
+                <div class="layui-col-xs6">
                     <div class="layui-btn-group">
                         <button class="layui-btn" data-method="new" shiro:hasPermission="admin:add">新建</button>
                         <button class="layui-btn" data-method="modify" shiro:hasPermission="admin:modify">修改</button>
                         <button class="layui-btn" data-method="delete" shiro:hasPermission="admin:delete">删除</button>
                     </div>
+                </div>
+                <div class="layui-col-xs6" style="text-align: right">
+                    <div class="layui-inline" style="width:70%">
+                        <input class="layui-input" name="key" id="searchKey" autocomplete="off" style="width:100%;">
+                        <i class="layui-icon" id="keyDelete"
+                           style="position: absolute;right: 10px;top: 12px;cursor: pointer;display: none">
+                            &#x1006;</i>
+                    </div>
+                    <button class="layui-btn" data-method="search" id="searchBtn">搜索</button>
                 </div>
             </div>
         </div>
@@ -113,12 +115,12 @@
             , url: '/web/admin/list'
             , cols: [[
                 {checkbox: true}
-                , {field: 'userName', title: '姓名', width: 120, sort: true}
-                , {field: 'loginName', title: '登录名', width: 120, sort: true}
+                , {field: 'userName', title: '姓名', width: 200, sort: true}
+                , {field: 'loginName', title: '登录名', width: 200, sort: true}
                 , {field: 'isPublic', title: '状态', width: 80, sort: true, templet: '#isPublicTpl'}
-                , {field: 'note', title: '备注', width: 200, sort: true}
+                , {field: 'note', title: '备注', sort: true}
             ]]
-            , height: 'full-240'
+            , height: 'full-200'
             , limit: 40
             , page: true
         });
@@ -269,7 +271,7 @@
             active[method] ? active[method].call(this, othis) : '';
         });
         // 搜索框 回车键触发
-        $('#searchKey').on('keyup', function (e)
+        $('#searchKey').on('keydown', function (e)
         {
             if (e.keyCode == 13)
             {
@@ -315,6 +317,31 @@
                 }
             });
             return false;
+        });
+
+        $('#searchKey').on('keyup', function (e)
+        {
+            if ($(this).val())
+            {
+                $('#keyDelete').show();
+            }
+            else
+            {
+                $('#keyDelete').hide();
+            }
+
+        });
+
+        if ($('#searchKey').val())
+        {
+            $('#keyDelete').show();
+        }
+
+        $('#keyDelete').on('click', function ()
+        {
+            $('#keyDelete').hide();
+            $('#searchKey').val('');
+            $('#searchBtn').click();
         });
     });
 </script>

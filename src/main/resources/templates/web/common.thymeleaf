@@ -74,13 +74,13 @@
             <ul class="layui-nav layui-nav-tree" lay-filter="test" id="leftMainMenu">
                 <!-- 超管  -->
                 <li class="layui-nav-item layui-nav-itemed" shiro:hasRole="admin">
-                    <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;后台管理</a>
+                    <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;系统设置</a>
                     <dl class="layui-nav-child">
                         <dd><a href="/web/admin/toPage"><i class="fa fa-angle-right"></i>&nbsp;用户管理</a></dd>
                     </dl>
                 </li>
                 <!-- 用户 -->
-                <li class="layui-nav-item layui-nav-itemed" shiro:hasRole="user">
+                <li class="layui-nav-item layui-nav-itemed" shiro:hasAnyRoles="admin,user">
                     <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;页面管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="/web/news/toPage"><i class="fa fa-angle-right"></i>&nbsp;新闻管理</a></dd>
