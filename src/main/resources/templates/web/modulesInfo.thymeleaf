@@ -1,0 +1,384 @@
+<!--
+ *  modules
+ * User:竺志伟
+ * Date:2019-07-28 13:40:31
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:replace="web/common :: head"></div>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div th:replace="web/common :: menu"></div>
+    <div class="layui-body" style="padding:10px;min-height:600px;">
+        <blockquote class="layui-elem-quote" style="padding-top:8px;padding-bottom:5px;">
+             <span class="layui-breadcrumb">
+                 <a href="/web/"><i class="fa fa-flag"></i>&nbsp;首页</a>
+                 <a href="">系统设置</a>
+                 <a href=""><cite>模块管理</cite></a>
+             </span>
+        </blockquote>
+        <div id="modulesMenuBar"> <!--将所有的菜单聚集在一起.一块进行监听-->
+            <div class="layui-row">
+                <div class="layui-col-xs6">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn" data-method="new">新建</button>
+                        <button class="layui-btn" data-method="modify">修改</button>
+                        <button class="layui-btn" data-method="delete">删除</button>
+                        <button class="layui-btn" data-method="set">启用/禁用</button>
+                    </div>
+                </div>
+                <div class="layui-col-xs6" style="text-align:right">&nbsp;</div>
+            </div>
+        </div>
+        <table class="layui-hidden" id="modulesTable" lay-filter="modulesTable"></table>
+    </div>
+</div>
+
+<form class="layui-form" id="modulesForm" style="display:none;padding:10px 40px 10px 0px; ">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">父模块</label>
+        <div class="layui-input-block">
+            <select name="parentId" required lay-verify="required" autocomplete="off" id="parentIdS"
+                    lay-filter="parentIdS">
+                <option value="0">无</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="required" placeholder="请输入名称" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">路径</label>
+        <div class="layui-input-block">
+            <input type="text" name="url" placeholder="请输入模块访问路径" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea" name="note" autocomplete="off"></textarea>
+        </div>
+    </div>
+
+    <input type="hidden" name="id" id="id" value="0"/>
+    <input type="hidden" name="isPublic" value="1"/>
+    <input type="hidden" name="actionUrl" id="actionUrl" value=""/>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="modulesForm">确定</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="layer.closeAll()">取消</button>
+        </div>
+    </div>
+</form>
+
+
+<div th:replace="web/common :: foot"></div>
+
+<script type="text/html" id="isPublicTpl">
+    {{# if(d.isPublic) { }}
+    <font color="green">启用</font>
+    {{# } else { }}
+    <font color="red">禁用</font>
+    {{# } }}
+</script>
+
+<script type="text/html" id="parentTpl">
+    {{# if(d.parentId == 0) { }}
+    <div style="position: absolute;left: 9px;">
+        <i class="layui-icon layui-icon-triangle-d"
+           style="font-size: 10px;"></i>
+    </div>
+    {{# } }}
+</script>
+
+<script type="text/javascript" th:inline="none">
+    var selectId = 0;
+    layui.use(['element', 'table', 'layer', 'form'], function ()
+    {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var modulesTable = table.render({
+            elem: '#modulesTable'
+            , id: 'modulesTable'
+            , url: '/web/modules/list'
+            , cols: [[
+                {field: '', title: '', width: 10, align: 'center', templet: '#parentTpl'}
+                , {field: 'title', title: '名称', width: 200, sort: true}
+                , {field: 'url', title: '路径', width: 200, sort: true}
+                , {field: 'isPublic', title: '状态', width: 80, sort: true, templet: '#isPublicTpl'}
+                , {field: 'note', title: '备注'}
+            ]]
+            , height: 'full-200'
+            , limit: 40
+            , page: true
+        });
+        table.on('row(modulesTable)', function (obj)
+        {
+            selectId = obj.data.id;
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+        });
+        //触发事件
+        var active = {
+            new: function ()
+            {
+                $('#modulesForm')[0].reset();
+                initParent();
+                $('#actionUrl').val("new");
+                $('#id').val('0');
+                layer.open({
+                    type: 1
+                    , title: "新建"
+                    , closeBtn: 1
+                    , area: '650px;'
+                    , shade: 0.2
+                    , shadeClose: false
+                    , id: 'modulesFormWindow'
+                    , moveType: 1
+                    , content: $('#modulesForm')
+                });
+            }
+            , modify: function ()
+            {
+                if (selectId == '0')
+                {
+                    layer.msg('您必须选中一条需要修改的记录');
+                    return false;
+                }
+                else
+                {
+                    $.ajax({
+                        type: 'get',
+                        url: '/web/modules/info?id=' + selectId + '&sessionId=' + new Date().getTime(),
+                        success: function (json)
+                        {
+                            if (json.success)
+                            {
+                                initParent();
+                                form.loadData(json.data, 'modulesForm');
+                                $('#actionUrl').val("modify");
+                                form.render();
+                                layer.open({
+                                    type: 1
+                                    , title: "修改"
+                                    , closeBtn: 1
+                                    , area: '650px;'
+                                    , shade: 0.2
+                                    , shadeClose: false
+                                    , id: 'modulesFormWindow'
+                                    , moveType: 1
+                                    , content: $('#modulesForm')
+                                    , success: function (layero)
+                                    {
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                layer.msg(json.msg);
+                            }
+                        },
+                        error: function (json)
+                        {
+                            layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                            {
+                                layer.closeAll();
+                            });
+                        }
+                    });
+                }
+            }
+            , delete: function ()
+            {
+                if (selectId == '0')
+                {
+                    layer.msg('您必须最少选中一条需要删除的记录');
+                    return false;
+                }
+                layer.open({
+                    type: 1
+                    , id: 'modulesDeleteAccept'
+                    , content: '<div style="padding: 20px 30px;">是否真的要删除选中的记录?</div>'
+                    , btn: ['确定', '取消']
+                    , btnAlign: 'c'
+                    , shade: 0.2
+                    , yes: function ()
+                    {
+                        layer.closeAll();
+                        $.ajax({
+                            type: 'post',
+                            data: {ids: selectId},
+                            url: '/web/modules/delete',
+                            success: function (json)
+                            {
+                                if (json.success)
+                                {
+                                    layer.alert(json.msg, {closeBtn: 0}, function ()
+                                    {
+                                        layer.closeAll();
+                                        modulesTable.reload();
+                                    });
+                                }
+                                else
+                                {
+                                    layer.alert(json.msg);
+                                }
+                            },
+                            error: function (json)
+                            {
+                                layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                                {
+                                    layer.closeAll();
+                                    window.location.reload();
+                                });
+                            }
+                        });
+                        return false;
+                    }
+                });
+            }
+            , set: function ()
+            {
+                if (selectId == '0')
+                {
+                    layer.msg('您必须最少选中一条需要设置的记录');
+                    return false;
+                }
+                layer.open({
+                    type: 1
+                    , id: 'modulesSetAccept'
+                    , content: '<div style="padding: 20px 30px;">是否真的要启用/禁用选中的记录?</div>'
+                    , btn: ['确定', '取消']
+                    , btnAlign: 'c'
+                    , shade: 0.2
+                    , yes: function ()
+                    {
+                        layer.closeAll();
+                        $.ajax({
+                            type: 'post',
+                            data: {id: selectId},
+                            url: '/web/modules/set',
+                            success: function (json)
+                            {
+                                if (json.success)
+                                {
+                                    layer.alert(json.msg, {closeBtn: 0}, function ()
+                                    {
+                                        layer.closeAll();
+                                        modulesTable.reload();
+                                    });
+                                }
+                                else
+                                {
+                                    layer.alert(json.msg);
+                                }
+                            },
+                            error: function (json)
+                            {
+                                layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                                {
+                                    layer.closeAll();
+                                    window.location.reload();
+                                });
+                            }
+                        });
+                        return false;
+                    }
+                });
+            }
+        };
+        //总体上调用,是那个按钮激活哪个
+        $('#modulesMenuBar .layui-btn').on('click', function ()
+        {
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+        //form submit新建修改事件提交
+        form.on('submit(modulesForm)', function (data)
+        {
+            var actionUrl = "/web/modules/" + $('#actionUrl').val();
+            $.ajax({
+                type: 'post',
+                data: $('#modulesForm').serialize(),
+                url: actionUrl,
+                success: function (json)
+                {
+                    if (json.success)
+                    {
+                        layer.alert(json.msg, {closeBtn: 0}, function ()
+                        {
+                            layer.closeAll();
+                            modulesTable.reload();
+                        });
+                    }
+                    else
+                    {
+                        layer.alert(json.msg);
+                    }
+                },
+                error: function (json)
+                {
+                    layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                    {
+                        layer.closeAll();
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+
+        function initParent()
+        {
+            $.ajax({
+                url: '/web/modules/listPublicParent',
+                type: 'post',
+                success: function (json)
+                {
+                    if (json.success)
+                    {
+                        $('#parentIdS').empty();
+                        $('#parentIdS').append('<option value="0">无</option>');
+                        var datas = json.data;
+                        if (datas)
+                        {
+                            for (var i = 0, len = datas.length; i < len; i++)
+                            {
+                                $("#parentIdS").append("<option value='" + datas[i].id + "' >" +
+                                                       datas[i].title +
+                                                       "</option>");
+                            }
+                        }
+                        form.render('select');
+                    }
+                    else
+                    {
+                        layer.alert(json.msg);
+                    }
+                },
+                error: function (json)
+                {
+                    layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                    {
+                        layer.closeAll();
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        }
+    });
+</script>
+
+</body>
+</html>

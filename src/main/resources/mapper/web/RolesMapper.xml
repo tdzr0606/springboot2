@@ -1,0 +1,60 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nature.jet.mapper.web.RolesMapper">
+
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+    <cache-ref namespace="com.nature.jet.mapper.web.RolesMapper"></cache-ref>
+    <!--基础 表字段定义 -->
+    <sql id="basicColumn">
+        note,cnName,enName,isPublic,id
+    </sql>
+
+    <!-- 查询所有数据 -->
+    <select id="list" resultType="com.nature.jet.pojo.web.Roles" parameterType="java.lang.String">
+        select
+        <include refid="basicColumn"/>
+        from web_roles
+        where id > 0
+        <if test="key != null and key != '' ">
+            and ( note like CONCAT(concat('%',#{key}),'%')
+            or cnName like CONCAT(concat('%',#{key}),'%')
+            or enName like CONCAT(concat('%',#{key}),'%')
+            )
+        </if>
+        order by id desc
+    </select>
+
+    <!-- 根据ID查询数据 -->
+    <select id="findById" resultType="com.nature.jet.pojo.web.Roles" parameterType="java.lang.Integer">
+        select <include refid="basicColumn"></include> from web_roles where id = #{id}
+    </select>
+
+    <!-- 新建 -->
+    <insert id="add" parameterType="com.nature.jet.pojo.web.Roles" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO web_roles ( note,cnName,enName,isPublic,id ) 
+        VALUES ( #{note},#{cnName},#{enName},#{isPublic},#{id} ) 
+    </insert>
+
+    <!-- 修改-->
+    <update id="modify" parameterType="com.nature.jet.pojo.web.Roles">
+        UPDATE web_roles SET note = #{note},cnName = #{cnName},enName = #{enName},isPublic = #{isPublic}
+        WHERE  id = #{id} 
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM web_roles WHERE  id = #{id}
+    </delete>
+
+    <!-- 批量删除-->
+    <delete id="deleteByIds" parameterType="java.util.Arrays">
+        DELETE FROM web_roles WHERE id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            ${item}
+        </foreach>
+    </delete>
+
+    <select id="checkEnName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1) from web_roles where enName = #{enName}
+    </select>
+
+</mapper>

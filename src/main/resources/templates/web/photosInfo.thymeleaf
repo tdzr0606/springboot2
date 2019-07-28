@@ -11,10 +11,13 @@
 <body>
 <div class="layui-layout layui-layout-admin">
     <div th:replace="web/common :: menu"></div>
-    <div class="layui-body" style="padding:10px">
-        <fieldset class="layui-elem-field layui-field-title">
-            <legend>企业风采</legend>
-        </fieldset>
+    <div class="layui-body" style="padding:10px;min-height:600px;">
+        <blockquote class="layui-elem-quote" style="padding-top:8px;padding-bottom:5px;">
+            <span class="layui-breadcrumb">
+          <a href="/web"><i class="fa fa-flag"></i>&nbsp;首页</a>
+          <a href="">页面管理</a>
+          <a href=""><cite>企业风采</cite></a>
+        </span></blockquote>
         <div id="photosMenuBar"> <!--将所有的菜单聚集在一起.一块进行监听-->
             <div class="layui-row">
                 <div class="layui-col-xs6">
@@ -106,6 +109,7 @@
 </script>
 
 <script type="text/javascript" th:inline="none">
+    var selectId = 0;
     layui.use(['element', 'table', 'layer', 'form','upload'], function ()
     {
         var $ = layui.jquery;
@@ -148,7 +152,7 @@
             , id: 'photosTable'
             , url: '/web/photos/list'
             , cols: [[
-                {checkbox: true}
+                {type: 'numbers'}
                 , {field: 'title', title: '标题', width: 200, sort: true}
                 , {field: 'imgUrl', title: '展示图片', width: 120, sort: true,templet:'#imgUrlTpl'}
                 , {field: 'createTime', title: '创建时间', width: 180, sort: true}
@@ -158,6 +162,11 @@
             , height: 'full-200'
             , limit: 40
             , page: true
+        });
+        table.on('row(photosTable)', function (obj)
+        {
+            selectId = obj.data.id;
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
         });
         //触发事件
         var active = {
@@ -185,23 +194,16 @@
             }
             , modify: function ()
             {
-                var checkStatus = table.checkStatus('photosTable'), data = checkStatus.data;
-                if (data.length < 1)
+                if (selectId == '0')
                 {
                     layer.msg('您必须选中一条需要修改的记录');
                     return false;
                 }
-                else if (data.length > 1)
-                {
-                    layer.msg('您在修改的时候,不能选中多条记录');
-                    return false;
-                }
                 else
                 {
-                    var id = data[0].id;
                     $.ajax({
                         type: 'get',
-                        url: '/web/photos/info?id=' + id + '&sessionId=' + new Date().getTime(),
+                        url: '/web/photos/info?id=' + selectId + '&sessionId=' + new Date().getTime(),
                         success: function (json)
                         {
                             if (json.success)
@@ -241,15 +243,9 @@
             }
             , delete: function ()
             {
-                var checkStatus = table.checkStatus('photosTable'), data = checkStatus.data;
-                if (data.length < 1)
+                if (selectId == '0')
                 {
-                    layer.msg('您必须最少选中一条需要删除的记录');
-                    return false;
-                }
-                else if (data.length > 1)
-                {
-                    layer.msg('您在删除的时候,不能选中多条记录');
+                    layer.msg('您必须选中一条需要删除的记录');
                     return false;
                 }
                 layer.open({
@@ -264,7 +260,7 @@
                         layer.closeAll();
                         $.ajax({
                             type: 'post',
-                            data: {id: data[0].id},
+                            data: {id: selectId},
                             url: '/web/photos/delete',
                             success: function (json)
                             {
@@ -296,15 +292,9 @@
             }
             , imgSet: function ()
             {
-                var checkStatus = table.checkStatus('photosTable'), data = checkStatus.data;
-                if (data.length < 1)
+                if (selectId == '0')
                 {
-                    layer.msg('您必须最少选中一条需要设置相册的记录');
-                    return false;
-                }
-                else if (data.length > 1)
-                {
-                    layer.msg('您在设置相册的时候,不能选中多条记录');
+                    layer.msg('您必须选中一条需要设置相册的记录');
                     return false;
                 }
                 layer.open({
@@ -316,7 +306,7 @@
                     , shadeClose: false
                     , id: 'imgSetW'
                     , moveType: 1
-                    , content: '/web/photosList/toPage?photosId=' + data[0].id + '&sessionId=' + new Date().getTime()
+                    , content: '/web/photosList/toPage?photosId=' + selectId + '&sessionId=' + new Date().getTime()
                     , success: function (layero)
                     {
                     }

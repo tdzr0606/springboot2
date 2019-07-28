@@ -76,7 +76,9 @@
                 <li class="layui-nav-item layui-nav-itemed" shiro:hasRole="admin">
                     <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;系统设置</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/web/admin/toPage"><i class="fa fa-angle-right"></i>&nbsp;用户管理</a></dd>
+                        <dd><a href="/web/roles/toPage"><i class="fa fa-angle-right"></i>&nbsp;角色管理</a></dd>
+                        <dd><a href="/web/modules/toPage"><i class="fa fa-angle-right"></i>&nbsp;模块管理</a></dd>
+                        <dd><a href="/web/admin/toPage"><i class="fa fa-angle-right"></i>&nbsp;账号管理</a></dd>
                     </dl>
                 </li>
                 <!-- 用户 -->

@@ -11,10 +11,13 @@
 <body>
 <div class="layui-layout layui-layout-admin">
     <div th:replace="web/common :: menu"></div>
-    <div class="layui-body" style="padding:10px">
-        <fieldset class="layui-elem-field layui-field-title">
-            <legend>新闻管理</legend>
-        </fieldset>
+    <div class="layui-body" style="padding:10px;min-height:600px;">
+        <blockquote class="layui-elem-quote" style="padding-top:8px;padding-bottom:5px;">
+            <span class="layui-breadcrumb">
+          <a href="/web"><i class="fa fa-flag"></i>&nbsp;首页</a>
+          <a href="">页面管理</a>
+          <a href=""><cite>新闻管理</cite></a>
+        </span></blockquote>
         <div id="newsMenuBar"> <!--将所有的菜单聚集在一起.一块进行监听-->
             <div class="layui-row">
                 <div class="layui-col-xs6">
@@ -110,6 +113,7 @@
 
 
 <script type="text/javascript" th:inline="none">
+    var selectId = 0;
     layui.use(['element', 'table', 'layer', 'form', 'layedit', 'upload'], function ()
     {
         var $ = layui.jquery;
@@ -168,7 +172,7 @@
             , id: 'newsTable'
             , url: '/web/news/list'
             , cols: [[
-                {checkbox: true}
+                {type: 'numbers'}
                 , {field: 'title', title: '新闻标题', width: 200, sort: true}
                 , {field: 'author', title: '作者', width: 120, sort: true}
                 , {field: 'createTime', title: '创建时间', width: 180, sort: true}
@@ -178,6 +182,11 @@
             , height: 'full-200'
             , limit: 40
             , page: true
+        });
+        table.on('row(newsTable)', function (obj)
+        {
+            selectId = obj.data.id;
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
         });
         //触发事件
         var active = {
@@ -208,24 +217,17 @@
             }
             , modify: function ()
             {
-                var checkStatus = table.checkStatus('newsTable'), data = checkStatus.data;
-                if (data.length < 1)
+                if (selectId == '0')
                 {
                     layer.msg('您必须选中一条需要修改的记录');
-                    return false;
-                }
-                else if (data.length > 1)
-                {
-                    layer.msg('您在修改的时候,不能选中多条记录');
                     return false;
                 }
                 else
                 {
                     var loadIndex = layer.load();
-                    var id = data[0].id;
                     $.ajax({
                         type: 'get',
-                        url: '/web/news/info?id=' + id + '&sessionId=' + new Date().getTime(),
+                        url: '/web/news/info?id=' + selectId + '&sessionId=' + new Date().getTime(),
                         success: function (json)
                         {
                             if (json.success)
@@ -291,10 +293,9 @@
             }
             , delete: function ()
             {
-                var checkStatus = table.checkStatus('newsTable'), data = checkStatus.data;
-                if (data.length < 1)
+                if (selectId == '0')
                 {
-                    layer.msg('您必须最少选中一条需要删除的记录');
+                    layer.msg('您必须选中一条需要删除的记录');
                     return false;
                 }
                 layer.open({
@@ -307,14 +308,9 @@
                     , yes: function ()
                     {
                         layer.closeAll();
-                        var idArray = new Array();
-                        for (var i = 0; i < data.length; i++)
-                        {
-                            idArray[i] = data[i].id;
-                        }
                         $.ajax({
                             type: 'post',
-                            data: {ids: idArray.toString()},
+                            data: {ids: selectId},
                             url: '/web/news/delete',
                             success: function (json)
                             {

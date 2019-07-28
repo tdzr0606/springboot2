@@ -10,22 +10,25 @@
 <div th:replace="web/common :: head"></div>
 <body>
 <div class="layui-layout layui-layout-admin">
-    <div class="layui-body" style="left: 0px;top:0px;padding:10px;">
+    <div class="layui-body" style="left: 0px;top:0px;padding:10px;min-height: 550px">
         <div id="photosListMenuBar"> <!--将所有的菜单聚集在一起.一块进行监听-->
             <div class="layui-row">
-                <div class="layui-col-xs9">
-                    搜索：
-                    <div class="layui-inline" style="width:70%">
-                        <input class="layui-input" name="key" id="searchKey" autocomplete="off" style="width:100%;">
-                    </div>
-                    <button class="layui-btn" data-method="search" id="searchBtn">搜索</button>
-                </div>
-                <div class="layui-col-xs3">
+
+                <div class="layui-col-xs6">
                     <div class="layui-btn-group">
                         <button class="layui-btn" data-method="new">新建</button>
                         <button class="layui-btn" data-method="modify">修改</button>
                         <button class="layui-btn" data-method="delete">删除</button>
                     </div>
+                </div>
+                <div class="layui-col-xs6" style="text-align: right">
+                    <div class="layui-inline" style="width:70%">
+                        <input class="layui-input" name="key" id="searchKey" autocomplete="off" style="width:100%;">
+                        <i class="layui-icon" id="keyDelete"
+                           style="position: absolute;right: 10px;top: 12px;cursor: pointer;display: none">
+                            &#x1006;</i>
+                    </div>
+                    <button class="layui-btn" data-method="search" id="searchBtn">搜索</button>
                 </div>
             </div>
         </div>
@@ -81,6 +84,7 @@
 </script>
 
 <script type="text/javascript" th:inline="javascript">
+    var selectId = 0;
     layui.use(['element', 'table', 'layer', 'form', 'upload'], function ()
     {
         var photosId = [[${photosId}]];
@@ -123,14 +127,19 @@
             , url: '/web/photosList/list?photosId=' + photosId + '&sessionId=' + new Date().getTime()
             , cols: [
                 [
-                    {checkbox: true}
-                    , {field: 'title', title: '标题', width: 400, sort: true}
+                    {type: 'numbers'}
+                    , {field: 'title', title: '标题', sort: true}
                     , {field: 'imgUrl', title: '图片', width: 80, templet: '#imgUrlTpl'}
                 ]
             ]
-            , height: 'full-80'
+            , height: 'full-100'
             , limit: 40
             , page: true
+        });
+        table.on('row(photosListTable)', function (obj)
+        {
+            selectId = obj.data.id;
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
         });
         //触发事件
         var active = {
@@ -158,20 +167,14 @@
             }
             , modify: function ()
             {
-                var checkStatus = table.checkStatus('photosListTable'), data = checkStatus.data;
-                if (data.length < 1)
+                if (selectId == '0')
                 {
                     layer.msg('您必须选中一条需要修改的记录');
                     return false;
                 }
-                else if (data.length > 1)
-                {
-                    layer.msg('您在修改的时候,不能选中多条记录');
-                    return false;
-                }
                 else
                 {
-                    var id = data[0].id;
+                    var id = selectId;
                     $.ajax({
                         type: 'get',
                         url: '/web/photosList/info?id=' + id + '&sessionId=' + new Date().getTime(),
@@ -214,10 +217,9 @@
             }
             , delete: function ()
             {
-                var checkStatus = table.checkStatus('photosListTable'), data = checkStatus.data;
-                if (data.length < 1)
+                if (selectId == '0')
                 {
-                    layer.msg('您必须最少选中一条需要删除的记录');
+                    layer.msg('您必须选中一条需要删除的记录');
                     return false;
                 }
                 layer.open({
@@ -230,14 +232,9 @@
                     , yes: function ()
                     {
                         layer.closeAll();
-                        var idArray = new Array();
-                        for (var i = 0; i < data.length; i++)
-                        {
-                            idArray[i] = data[i].id;
-                        }
                         $.ajax({
                             type: 'post',
-                            data: {ids: idArray.toString()},
+                            data: {ids: selectId},
                             url: '/web/photosList/delete',
                             success: function (json)
                             {
@@ -315,6 +312,31 @@
                 }
             });
             return false;
+        });
+
+        $('#searchKey').on('keyup', function (e)
+        {
+            if ($(this).val())
+            {
+                $('#keyDelete').show();
+            }
+            else
+            {
+                $('#keyDelete').hide();
+            }
+
+        });
+
+        if ($('#searchKey').val())
+        {
+            $('#keyDelete').show();
+        }
+
+        $('#keyDelete').on('click', function ()
+        {
+            $('#keyDelete').hide();
+            $('#searchKey').val('');
+            $('#searchBtn').click();
         });
     });
 </script>
