@@ -4,10 +4,16 @@ import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.pojo.web.Admin;
 import com.nature.jet.service.web.AdminService;
+import com.nature.jet.utils.Fields;
 import com.nature.jet.utils.SigarUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.hyperic.sigar.Sigar;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +40,11 @@ public class IndexController extends BaseController
     AdminService adminService;
     @Autowired
     Sigar sigar;
+
+    @Autowired
+    @Qualifier(value = "adminSecruityManager")
+    DefaultWebSecurityManager adminSecruityManager;
+
 
     /**
      * To login model and view.
@@ -66,13 +77,18 @@ public class IndexController extends BaseController
                               @RequestParam(value = "loginPass", required = true, defaultValue = "") String loginPass)
     {
         log.info("登录名:{},密码:{}", loginName, loginPass);
-        Admin admin = adminService.login(loginName, loginPass);
-        if(null == admin)
+        SecurityUtils.setSecurityManager(adminSecruityManager);
+        UsernamePasswordToken token = new UsernamePasswordToken(loginName, loginPass);
+        //获取当前的Subject
+        Subject subject = SecurityUtils.getSubject();
+        subject.login(token);
+        boolean pd = subject.isAuthenticated();
+        request.getSession().setAttribute(Fields.SESSION_ADMIN, (Admin) subject.getPrincipal());
+        if(!pd)
         {
-            return resultFailsWrapper("用户名密码错误", null);
+            token.clear();
         }
-        super.setLoginAdmin(admin, request);
-        return resultSuccessWrapper("登录成功", null);
+        return resultBoolWrapper(pd, "登录成功", "登录失败", null);
     }
 
     /**
@@ -85,8 +101,9 @@ public class IndexController extends BaseController
     @RequestMapping(value = "/web/logOut")
     public ModelAndView logOut()
     {
+        SecurityUtils.getSubject().logout();
+        request.getSession().removeAttribute(Fields.SESSION_ADMIN);
         modelAndView = new ModelAndView();
-        super.clearLoginAdmin(request);
         modelAndView.setView(new RedirectView("/web/login"));
         return modelAndView;
     }
@@ -102,7 +119,7 @@ public class IndexController extends BaseController
     @ResponseBody
     public CommonResult showBasicInfo()
     {
-        return resultSuccessWrapper("", super.getLoginAdmin(request));
+        return resultSuccessWrapper("", super.getLoginAdmin());
     }
 
     /**
@@ -150,6 +167,6 @@ public class IndexController extends BaseController
     public CommonResult refreshMem()
     {
         log.info("更新内存使用信息");
-        return resultSuccessWrapper("",SigarUtils.getMem(sigar));
+        return resultSuccessWrapper("", SigarUtils.getMem(sigar));
     }
 }

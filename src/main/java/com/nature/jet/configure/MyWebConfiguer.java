@@ -64,8 +64,9 @@ public class MyWebConfiguer extends WebMvcConfigurationSupport
     @Override
     protected void addInterceptors(InterceptorRegistry registry)
     {
-        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/", "/error", " /static/**", "/files/**", "/web/login", "/web/loginAction",
-                        "/web/logOut");
+        //        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/**")
+        //                .excludePathPatterns("/", "/error", " /static/**", "/files/**", "/web/login",
+        // "/web/loginAction",
+        //                        "/web/logOut");
     }
 }

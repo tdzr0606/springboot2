@@ -3,9 +3,11 @@ package com.nature.jet.controller.system;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.pojo.web.Admin;
 import com.nature.jet.utils.Fields;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,7 +18,7 @@ public abstract class BaseController
     @Autowired
     CommonResult commonResult;
     @Autowired
-    HttpServletRequest request;
+    protected HttpServletRequest request;
     protected ModelAndView modelAndView = null;
 
 
@@ -139,40 +141,15 @@ public abstract class BaseController
 
 
     /**
-     * Sets login user.
-     *
-     * @param admin   the admin
-     * @param request the request
-     * @author:竺志伟
-     * @date :2019-03-19 23:28:11
-     */
-    public void setLoginAdmin(Admin admin, HttpServletRequest request)
-    {
-        request.getSession().setAttribute(Fields.SESSION_ADMIN, admin);
-    }
-
-    /**
      * Gets login admin.
      *
-     * @param request the request
      * @return the login admin
      * @author:竺志伟
      * @date :2019-03-19 23:28:54
      */
-    public Admin getLoginAdmin(HttpServletRequest request)
+    public Admin getLoginAdmin()
     {
-        return (Admin) request.getSession().getAttribute(Fields.SESSION_ADMIN);
+        return (Admin) SecurityUtils.getSubject().getPrincipal();
     }
 
-    /**
-     * Clear login admin.
-     *
-     * @param request the request
-     * @author:竺志伟
-     * @date :2019-03-21 11:04:14
-     */
-    public void clearLoginAdmin(HttpServletRequest request)
-    {
-        request.getSession().removeAttribute(Fields.SESSION_ADMIN);
-    }
 }

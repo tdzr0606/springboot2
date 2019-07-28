@@ -6,7 +6,8 @@
  -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <div th:replace="web/common :: head"></div>
 <body>
 <div class="layui-layout layui-layout-admin">
@@ -26,10 +27,9 @@
                 </div>
                 <div class="layui-col-md6">
                     <div class="layui-btn-group">
-                        <button class="layui-btn" data-method="new">新建</button>
-                        <button class="layui-btn" data-method="modify">修改</button>
-                        <button class="layui-btn" data-method="delete">删除</button>
-                        <%}%>
+                        <button class="layui-btn" data-method="new" shiro:hasPermission="admin:add">新建</button>
+                        <button class="layui-btn" data-method="modify" shiro:hasPermission="admin:modify">修改</button>
+                        <button class="layui-btn" data-method="delete" shiro:hasPermission="admin:delete">删除</button>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">登录密码</label>
         <div class="layui-input-block">
-            <input type="password" name="loginPass" required lay-verify="required" placeholder="请输入登录密码" autocomplete="off"
+            <input type="password" name="loginPass" required lay-verify="required" placeholder="请输入登录密码"
+                   autocomplete="off"
                    id="loginPass"
                    class="layui-input">
         </div>

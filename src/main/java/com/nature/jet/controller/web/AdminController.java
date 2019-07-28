@@ -4,6 +4,8 @@ import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.component.system.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.eclipse.jetty.server.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -134,7 +136,7 @@ public class AdminController extends BaseController
                                        @RequestParam(value = "loginPassN", required = true, defaultValue = "0")
                                                String loginPassN)
     {
-        Admin admin = super.getLoginAdmin(request);
+        Admin admin = super.getLoginAdmin();
         if(admin.getLoginPass().equals(loginPass))
         {
             return resultBoolWrapper(adminService.modifyPassword(loginPassN, admin.getId()), "密码修改成功,请重新登录", "密码修改失败", null);

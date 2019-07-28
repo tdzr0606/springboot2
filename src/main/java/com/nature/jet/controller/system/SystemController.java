@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -39,7 +40,7 @@ public class SystemController extends BaseController
     public ModelAndView toIndex()
     {
         modelAndView = new ModelAndView();
-        modelAndView.addObject("nav","index");
+        modelAndView.addObject("nav", "index");
         modelAndView.setViewName("au/index");
         return modelAndView;
     }
@@ -57,10 +58,28 @@ public class SystemController extends BaseController
     public ModelAndView error()
     {
         modelAndView = new ModelAndView();
+        modelAndView.addObject("errorInfo","服务器错误,请联系管理员");
+        modelAndView.addObject("uri",request.getRequestURI());
         modelAndView.setViewName("common/error500");
         return modelAndView;
     }
 
+
+    /**
+     * Error 403 model and view.
+     *
+     * @return the model and view
+     * @author:竺志伟
+     * @date :2019-07-27 15:59:30
+     */
+    @RequestMapping(value = "/403")
+    public ModelAndView error403()
+    {
+        modelAndView = new ModelAndView();
+        modelAndView.addObject("errorInfo", "当前页面无权限访问");
+        modelAndView.setViewName("common/error403");
+        return modelAndView;
+    }
 
     /**
      * 读取文件内容
@@ -73,7 +92,7 @@ public class SystemController extends BaseController
      */
     @RequestMapping(value = "/system/readfile")
     @ResponseBody
-    public CommonResult readFile(@RequestParam(value = "fileUrl",required = true,defaultValue = "") String fileUrl)
+    public CommonResult readFile(@RequestParam(value = "fileUrl", required = true, defaultValue = "") String fileUrl)
     {
         int code = CommonResult.SUCCESS;
         String msg = "";

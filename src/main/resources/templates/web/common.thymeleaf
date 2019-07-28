@@ -6,7 +6,8 @@
  -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <body>
 <!-- 头部 模板 -->
 <th:block th:fragment="head">
@@ -49,7 +50,7 @@
             <li class="layui-nav-item">
                 <a href="/web/"><i class="fa fa-home"></i>&nbsp;首页</a>
                 <!--<dl class="layui-nav-child">-->
-                    <!--<dd><a href="#">服务器管理</a></dd>-->
+                <!--<dd><a href="#">服务器管理</a></dd>-->
                 <!--</dl>-->
             </li>
         </ul>
@@ -71,13 +72,15 @@
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree" lay-filter="test" id="leftMainMenu">
-                <li class="layui-nav-item layui-nav-itemed">
+                <!-- 超管  -->
+                <li class="layui-nav-item layui-nav-itemed" shiro:hasRole="admin">
                     <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;后台管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="/web/admin/toPage"><i class="fa fa-angle-right"></i>&nbsp;用户管理</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed">
+                <!-- 用户 -->
+                <li class="layui-nav-item layui-nav-itemed" shiro:hasRole="user">
                     <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;页面管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="/web/news/toPage"><i class="fa fa-angle-right"></i>&nbsp;新闻管理</a></dd>
@@ -108,7 +111,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">新密码</label>
             <div class="layui-input-block">
-                <input type="password" name="loginPassN" id="passwordModifyForm_loginPassN" required lay-verify="required"
+                <input type="password" name="loginPassN" id="passwordModifyForm_loginPassN" required
+                       lay-verify="required"
                        placeholder="请输入新密码"
                        autocomplete="off" class="layui-input">
             </div>
@@ -116,7 +120,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">新密码验证</label>
             <div class="layui-input-block">
-                <input type="password" id="passwordModifyForm_loginPassA" required lay-verify="required" placeholder="请输入新密码验证"
+                <input type="password" id="passwordModifyForm_loginPassA" required lay-verify="required"
+                       placeholder="请输入新密码验证"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
