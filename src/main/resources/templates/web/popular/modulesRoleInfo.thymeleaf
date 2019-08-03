@@ -1,0 +1,328 @@
+<!--
+ *  modulesRole
+ * User:竺志伟
+ * Date:2019-08-03 14:42:17
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/static/design/css/layui.css">
+    <link rel="stylesheet" href="/static/design/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/design/css/layuiExt.css">
+    <script src="/static/design/layui.js"></script>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-body" style="padding:10px;min-height:600px;left: 0px;top:0px;">
+        <div id="modulesRoleMenuBar"> <!--将所有的菜单聚集在一起.一块进行监听-->
+            <div class="layui-row">
+                <div class="layui-col-xs6">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn" data-method="new">新建</button>
+                        <button class="layui-btn" data-method="modify">修改</button>
+                        <button class="layui-btn" data-method="delete">删除</button>
+                    </div>
+                </div>
+                <div class="layui-col-xs6" style="text-align:right">
+                    <div class="layui-inline" style="width:70%">
+                        <input class="layui-input" name="key" id="searchKey" autocomplete="off" style="width:100%;">
+                        <i class="layui-icon" id="keyDelete"
+                           style="position: absolute;right: 10px;top: 12px;cursor: pointer;display: none">&#x1006;</i>
+                    </div>
+                    <button class="layui-btn" data-method="search" id="searchBtn">搜索</button>
+                </div>
+            </div>
+        </div>
+        <table class="layui-hidden" id="modulesRoleTable" lay-filter="modulesRoleTable"></table>
+    </div>
+</div>
+
+<form class="layui-form" id="modulesRoleForm" style="display:none;padding:10px 40px 10px 0px; ">
+    <div class="layui-form-item">
+        <label class="layui-form-label">中文名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="required" placeholder="请输入中文名称" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">英文名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="enTitle" id="enTitle" required lay-verify="required" placeholder="请输入英文名称"
+                   autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="isPublic" required lay-verify="required" lay-skin="switch" autocomplete="off"
+                   lay-text="启用|禁用" checked value="1"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea name="note" autocomplete="off" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <input type="hidden" name="id" id="id" value="0"/>
+    <input type="hidden" name="moduleId" th:value="${moduleId}"/>
+    <input type="hidden" name="actionUrl" id="actionUrl" value=""/>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="modulesRoleForm">确定</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="layer.closeAll()">取消</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/html" id="isPublicTpl">
+    {{# if(d.isPublic) { }}
+    <font color="green">启用</font>
+    {{# } else { }}
+    <font color="red">禁用</font>
+    {{# } }}
+</script>
+
+
+<script type="text/javascript" th:inline="javascript">
+    var selectId = 0;
+    var moduleId = [[${moduleId}]];
+    layui.use(['element', 'table', 'layer', 'form'], function ()
+    {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var modulesRoleTable = table.render({
+            elem: '#modulesRoleTable'
+            , id: 'modulesRoleTable'
+            , url: '/web/modulesRole/list?moduleId=' + moduleId
+            , cols: [
+                [
+                    {type: 'numbers'}
+                    , {field: 'title', title: '中文名称', width: 120, sort: true}
+                    , {field: 'enTitle', title: '英文名称', width: 120, sort: true}
+                    , {field: 'isPublic', title: '状态', width: 80, sort: true,templet:'#isPublicTpl'}
+                    , {field: 'note', title: '备注'}
+                ]
+            ]
+            , height: '520'
+            , limit: 40
+            , page: true
+        });
+        table.on('row(modulesRoleTable)', function (obj)
+        {
+            selectId = obj.data.id;
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+        });
+        //触发事件
+        var active = {
+            search: function ()
+            {
+                var keyValue = $('#searchKey').val();
+                modulesRoleTable.reload({where: {key: keyValue, moduleId: moduleId}, page: {curr: 1}});
+                selectId = 0;
+            }
+            , new: function ()
+            {
+                $('#modulesRoleForm')[0].reset();
+                $('#actionUrl').val("new");
+                $('#id').val('0');
+                $('#enTitle').removeAttr("readonly");
+                $('#enTitle').removeClass("readOnly");
+                layer.open({
+                    type: 1
+                    , title: "新建"
+                    , closeBtn: 1
+                    , area: '650px;'
+                    , shade: 0.2
+                    , shadeClose: false
+                    , id: 'modulesRoleFormWindow'
+                    , moveType: 1
+                    , content: $('#modulesRoleForm')
+                });
+            }
+            , modify: function ()
+            {
+                if (selectId == '0')
+                {
+                    layer.msg('您必须选中一条需要修改的记录');
+                    return false;
+                }
+                else
+                {
+                    $.ajax({
+                        type: 'get',
+                        url: '/web/modulesRole/info?id=' + selectId + '&sessionId=' + new Date().getTime(),
+                        success: function (json)
+                        {
+                            if (json.success)
+                            {
+                                form.loadData(json.data, 'modulesRoleForm');
+                                $('#actionUrl').val("modify");
+                                $('#enTitle').attr("readonly", "readonly");
+                                $('#enTitle').addClass("readOnly");
+                                form.render();
+                                layer.open({
+                                    type: 1
+                                    , title: "修改"
+                                    , closeBtn: 1
+                                    , area: '650px;'
+                                    , shade: 0.2
+                                    , shadeClose: false
+                                    , id: 'modulesRoleFormWindow'
+                                    , moveType: 1
+                                    , content: $('#modulesRoleForm')
+                                    , success: function (layero)
+                                    {
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                layer.msg(json.msg);
+                            }
+                        },
+                        error: function (json)
+                        {
+                            layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                            {
+                                layer.closeAll();
+                            });
+                        }
+                    });
+                }
+            }
+            , delete: function ()
+            {
+                if (selectId == '0')
+                {
+                    layer.msg('您必须最少选中一条需要删除的记录');
+                    return false;
+                }
+                layer.open({
+                    type: 1
+                    , id: 'modulesRoleDeleteAccept'
+                    , content: '<div style="padding: 20px 30px;">是否真的要删除选中的记录?</div>'
+                    , btn: ['确定', '取消']
+                    , btnAlign: 'c'
+                    , shade: 0.2
+                    , yes: function ()
+                    {
+                        layer.closeAll();
+                        $.ajax({
+                            type: 'post',
+                            data: {id: selectId},
+                            url: '/web/modulesRole/delete',
+                            success: function (json)
+                            {
+                                if (json.success)
+                                {
+                                    layer.alert(json.msg, {closeBtn: 0}, function ()
+                                    {
+                                        layer.closeAll();
+                                        modulesRoleTable.reload();
+                                    });
+                                }
+                                else
+                                {
+                                    layer.alert(json.msg);
+                                }
+                            },
+                            error: function (json)
+                            {
+                                layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                                {
+                                    layer.closeAll();
+                                    window.location.reload();
+                                });
+                            }
+                        });
+                        return false;
+                    }
+                });
+            }
+        };
+        //总体上调用,是那个按钮激活哪个
+        $('#modulesRoleMenuBar .layui-btn').on('click', function ()
+        {
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+        // 搜索框 回车键触发
+        $('#searchKey').on('keydown', function (e)
+        {
+            if (e.keyCode == 13)
+            {
+                $('#searchBtn').click();
+            }
+        });
+        $('#searchKey').on('keyup', function (e)
+        {
+            if ($(this).val())
+            {
+                $('#keyDelete').show();
+            }
+            else
+            {
+                $('#keyDelete').hide();
+            }
+        });
+        if ($('#searchKey').val())
+        {
+            $('#keyDelete').show();
+        }
+        $('#keyDelete').on('click', function ()
+        {
+            $('#keyDelete').hide();
+            $('#searchKey').val('');
+            $('#searchBtn').click();
+        });
+        //form submit新建修改事件提交
+        form.on('submit(modulesRoleForm)', function (data)
+        {
+            var loadIndex = layer.load(1);
+            var actionUrl = "/web/modulesRole/" + $('#actionUrl').val();
+            $.ajax({
+                type: 'post',
+                data: $('#modulesRoleForm').serialize(),
+                url: actionUrl,
+                success: function (json)
+                {
+                    layer.close(loadIndex);
+                    if (json.success)
+                    {
+                        layer.alert(json.msg, {closeBtn: 0}, function ()
+                        {
+                            layer.closeAll();
+                            modulesRoleTable.reload();
+                        });
+                    }
+                    else
+                    {
+                        layer.alert(json.msg);
+                    }
+                },
+                error: function (json)
+                {
+                    layer.close(loadIndex);
+                    layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                    {
+                        layer.closeAll();
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+</body>
+</html>

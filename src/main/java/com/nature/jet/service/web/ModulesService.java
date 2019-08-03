@@ -117,8 +117,15 @@ public class ModulesService
         return modulesMapper.useById(id) > 0;
     }
 
-    public boolean useByParentId(int id,int isPublic)
+    public boolean useByParentId(int id, int isPublic)
     {
-        return modulesMapper.useByParentId(id,isPublic) > 0;
+        return modulesMapper.useByParentId(id, isPublic) > 0;
     }
+
+
+    public boolean checkEnTitle(String enTitle)
+    {
+        return modulesMapper.checkEnTitle(enTitle) == 0;
+    }
+
 }

@@ -71,5 +71,8 @@ public interface ModulesMapper extends MyMapper<Modules>
     List<Modules> listSub();
 
     int useById(@Param(value = "id") Integer id);
-    int useByParentId(@Param(value = "id") Integer id,@Param(value = "isPublic") Integer isPublic);
+
+    int useByParentId(@Param(value = "id") Integer id, @Param(value = "isPublic") Integer isPublic);
+
+    int checkEnTitle(@Param(value = "enTitle") String enTitle);
 }

@@ -5,19 +5,19 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Modules
+ * ModulesRole
  * Author:竺志伟
- * Date:2019-07-28 13:40:31
+ * Date:2019-08-03 14:42:17
  */
 
 @Data
-public class Modules implements Serializable
+public class ModulesRole implements Serializable
 {
     private String note;
+    private String enTitle;
     private Boolean isPublic;
     private Integer id;
     private String title;
-    private String url;
-    private Integer parentId;
-    private String enTitle;
+    private Integer moduleId;
+
 }

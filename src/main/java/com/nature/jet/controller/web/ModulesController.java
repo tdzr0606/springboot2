@@ -3,6 +3,7 @@ package com.nature.jet.controller.web;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.component.system.Page;
+import com.nature.jet.service.business.ModuleBusinessService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,8 @@ public class ModulesController extends BaseController
 {
     @Autowired
     ModulesService modulesService;
+    @Autowired
+    ModuleBusinessService moduleBusinessService;
 
     /**
      * 进入页面
@@ -90,7 +93,11 @@ public class ModulesController extends BaseController
     @ResponseBody
     public CommonResult add(Modules modules)
     {
-        return resultBoolWrapper(modulesService.add(modules), "信息创建成功", "信息创建失败", null);
+        if(modules.getParentId().intValue() != 0 && !modulesService.checkEnTitle(modules.getEnTitle()))
+        {
+            return resultFailsWrapper("当前英文名称已经存在", null);
+        }
+        return resultBoolWrapper(moduleBusinessService.add(modules), "信息创建成功", "信息创建失败", null);
     }
 
     /**

@@ -27,6 +27,7 @@
                         <button class="layui-btn" data-method="modify">修改</button>
                         <button class="layui-btn" data-method="delete">删除</button>
                         <button class="layui-btn" data-method="set">启用/禁用</button>
+                        <button class="layui-btn" data-method="role">模板权限</button>
                     </div>
                 </div>
                 <div class="layui-col-xs6" style="text-align:right">&nbsp;</div>
@@ -48,9 +49,16 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">名称</label>
+        <label class="layui-form-label">中文名称</label>
         <div class="layui-input-block">
             <input type="text" name="title" required lay-verify="required" placeholder="请输入名称" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">英文名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="enTitle" id="enTitle" placeholder="请输入英文名称" autocomplete="off"
                    class="layui-input">
         </div>
     </div>
@@ -114,7 +122,8 @@
             , url: '/web/modules/list'
             , cols: [[
                 {field: '', title: '', width: 10, align: 'center', templet: '#parentTpl'}
-                , {field: 'title', title: '名称', width: 200, sort: true}
+                , {field: 'title', title: '中文名称', width: 200, sort: true}
+                , {field: 'enTitle', title: '英文名称', width: 200, sort: true}
                 , {field: 'url', title: '路径', width: 200, sort: true}
                 , {field: 'isPublic', title: '状态', width: 80, sort: true, templet: '#isPublicTpl'}
                 , {field: 'note', title: '备注'}
@@ -136,6 +145,8 @@
                 initParent();
                 $('#actionUrl').val("new");
                 $('#id').val('0');
+                $('#enTitle').removeAttr("readonly");
+                $('#enTitle').removeClass("readOnly");
                 layer.open({
                     type: 1
                     , title: "新建"
@@ -167,6 +178,8 @@
                                 initParent();
                                 form.loadData(json.data, 'modulesForm');
                                 $('#actionUrl').val("modify");
+                                $('#enTitle').attr("readonly", "readonly");
+                                $('#enTitle').addClass('readOnly');
                                 form.render();
                                 layer.open({
                                     type: 1
@@ -296,6 +309,22 @@
                     }
                 });
             }
+            , role: function ()
+            {
+                if (selectId == '0')
+                {
+                    layer.msg('您必须最少选中一条需要设置的记录');
+                    return false;
+                }
+                layer.open({
+                    type: 2
+                    , title:'模板权限'
+                    , id: 'modulesRoleW'
+                    , content: '/web/modulesRole/toPage?moduleId='+selectId+'&sessionId='+new Date().getTime()
+                    , area: ['1024px', '650px']
+                    , shade: 0.2
+                });
+            }
         };
         //总体上调用,是那个按钮激活哪个
         $('#modulesMenuBar .layui-btn').on('click', function ()
@@ -306,6 +335,13 @@
         //form submit新建修改事件提交
         form.on('submit(modulesForm)', function (data)
         {
+            var loadIndex = layer.load(1);
+            if ($('#parentIdS').val() != '0' && !$('#enTitle').val())
+            {
+                layer.close(loadIndex);
+                layer.msg("英文名称没有填写");
+                return false;
+            }
             var actionUrl = "/web/modules/" + $('#actionUrl').val();
             $.ajax({
                 type: 'post',
@@ -313,6 +349,7 @@
                 url: actionUrl,
                 success: function (json)
                 {
+                    layer.close(loadIndex);
                     if (json.success)
                     {
                         layer.alert(json.msg, {closeBtn: 0}, function ()
@@ -328,6 +365,7 @@
                 },
                 error: function (json)
                 {
+                    layer.close(loadIndex);
                     layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
                     {
                         layer.closeAll();
@@ -343,6 +381,7 @@
             $.ajax({
                 url: '/web/modules/listPublicParent',
                 type: 'post',
+                async: false,
                 success: function (json)
                 {
                     if (json.success)

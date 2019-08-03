@@ -1,0 +1,51 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nature.jet.mapper.web.ModulesRoleMapper">
+
+    <!--基础 表字段定义 -->
+    <sql id="basicColumn">
+        note,enTitle,isPublic,id,title,moduleId
+    </sql>
+
+    <!-- 查询所有数据 -->
+    <select id="list" resultType="com.nature.jet.pojo.web.ModulesRole">
+        select
+        <include refid="basicColumn"/>
+        from web_modules_role
+        where moduleId = #{moduleId}
+        <if test="key != null and key != '' ">
+            and (
+            note like CONCAT(concat('%',#{key}),'%')
+            or enTitle like CONCAT(concat('%',#{key}),'%')
+            or title like CONCAT(concat('%',#{key}),'%')
+            )
+        </if>
+        order by id desc
+    </select>
+
+    <!-- 根据ID查询数据 -->
+    <select id="findById" resultType="com.nature.jet.pojo.web.ModulesRole" parameterType="java.lang.Integer">
+        select <include refid="basicColumn"></include> from web_modules_role where id = #{id}
+    </select>
+
+    <!-- 新建 -->
+    <insert id="add" parameterType="com.nature.jet.pojo.web.ModulesRole" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO web_modules_role ( note,enTitle,isPublic,id,title,moduleId )
+        VALUES ( #{note},#{enTitle},#{isPublic},#{id},#{title},#{moduleId} )
+    </insert>
+
+    <!-- 修改-->
+    <update id="modify" parameterType="com.nature.jet.pojo.web.ModulesRole">
+        UPDATE web_modules_role SET note = #{note},enTitle = #{enTitle},isPublic = #{isPublic},title = #{title}
+        WHERE  id = #{id} 
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM web_modules_role WHERE  id = #{id}
+    </delete>
+
+    <select id="checkEnTitle" resultType="java.lang.Integer">
+        select count(1) from web_modules_role where enTitle = #{enTitle} and moduleId = #{moduleId}
+    </select>
+
+</mapper>
