@@ -1,0 +1,52 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nature.jet.mapper.web.RolesRightMapper">
+
+    <!--基础 表字段定义 -->
+    <sql id="basicColumn">
+        moduleRoleTitle,moduleEnTitle,moduleTitle,moduleRoleEnTitle,rolesId,moduleRoleId,id,moduleId
+    </sql>
+
+    <!-- 查询所有数据 -->
+    <select id="list" resultType="com.nature.jet.pojo.web.RolesRight">
+        select
+        <include refid="basicColumn"/>
+        from web_roles_right
+        where rolesId = #{roleId}
+        <if test="key != null and key != '' ">
+            and (
+            moduleRoleTitle like CONCAT(concat('%',#{key}),'%')
+            or moduleEnTitle like CONCAT(concat('%',#{key}),'%')
+            or moduleTitle like CONCAT(concat('%',#{key}),'%')
+            or moduleRoleEnTitle like CONCAT(concat('%',#{key}),'%')
+            )
+        </if>
+        order by id desc
+    </select>
+
+    <!-- 根据ID查询数据 -->
+    <select id="findById" resultType="com.nature.jet.pojo.web.RolesRight" parameterType="java.lang.Integer">
+        select <include refid="basicColumn"></include> from web_roles_right where id = #{id}
+    </select>
+
+    <!-- 新建 -->
+    <insert id="add" parameterType="com.nature.jet.pojo.web.RolesRight" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO web_roles_right ( moduleRoleTitle,moduleEnTitle,moduleTitle,moduleRoleEnTitle,rolesId,moduleRoleId,id,moduleId ) 
+        VALUES ( #{moduleRoleTitle},#{moduleEnTitle},#{moduleTitle},#{moduleRoleEnTitle},#{rolesId},#{moduleRoleId},#{id},#{moduleId} ) 
+    </insert>
+
+    <!-- 修改-->
+    <update id="modify" parameterType="com.nature.jet.pojo.web.RolesRight">
+        UPDATE web_roles_right SET moduleRoleTitle = #{moduleRoleTitle},moduleEnTitle = #{moduleEnTitle},moduleTitle = #{moduleTitle},moduleRoleEnTitle = #{moduleRoleEnTitle},rolesId = #{rolesId},moduleRoleId = #{moduleRoleId},moduleId = #{moduleId}
+        WHERE  id = #{id} 
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM web_roles_right WHERE  id = #{id}
+    </delete>
+
+    <delete id="cleanByRoleId" parameterType="java.lang.Integer">
+        delete from web_roles_right where rolesId = #{roleId}
+    </delete>
+
+</mapper>

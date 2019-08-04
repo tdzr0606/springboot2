@@ -54,4 +54,13 @@
         from web_modules_role where moduleId in (select id from web_modules where isPublic = 1)
     </select>
 
+    <select id="listByIds" resultType="ModulesRole" parameterType="java.util.Arrays">
+        select
+        <include refid="basicColumn"/>
+        from web_modules_role where id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            ${item}
+        </foreach>
+    </select>
+
 </mapper>

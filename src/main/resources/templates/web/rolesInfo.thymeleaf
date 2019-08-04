@@ -25,6 +25,7 @@
                         <button class="layui-btn" data-method="new">新建</button>
                         <button class="layui-btn" data-method="modify">修改</button>
                         <button class="layui-btn" data-method="delete">删除</button>
+                        <button class="layui-btn" data-method="right">权限设置</button>
                     </div>
                 </div>
                 <div class="layui-col-xs6" style="text-align:right">
@@ -83,6 +84,20 @@
     </div>
 </form>
 
+
+<form class="layui-form" id="rolesRightForm" style="display: none;padding:10px 40px 10px 0px; ">
+    <div id="rolesRightDiv"></div>
+    <input type="hidden" name="rolesId" id="rolesId"/>
+    <input type="hidden" name="rolesValue" id="rolesValue"/>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="rolesRightForm">确定</button>
+            <button class="layui-btn layui-btn-primary" onclick="layer.closeAll()">取消</button>
+        </div>
+    </div>
+</form>
+
 <div th:replace="web/common :: foot"></div>
 
 <script type="text/html" id="isPublicTpl">
@@ -109,7 +124,7 @@
                 {type: 'numbers'}
                 , {field: 'cnName', title: '角色名', width: 120, sort: true}
                 , {field: 'enName', title: '英文名', width: 120, sort: true}
-                , {field: 'isPublic', title: '状态', width: 80, sort: true,templet:'#isPublicTpl'}
+                , {field: 'isPublic', title: '状态', width: 80, sort: true, templet: '#isPublicTpl'}
                 , {field: 'note', title: '备注'}
             ]]
             , height: 'full-200'
@@ -165,7 +180,7 @@
                             if (json.success)
                             {
                                 form.loadData(json.data, 'rolesForm');
-                                $('#enName').attr("readOnly","readOnly");
+                                $('#enName').attr("readOnly", "readOnly");
                                 $('#enName').addClass("readOnly");
                                 $('#actionUrl').val("modify");
                                 form.render();
@@ -248,6 +263,82 @@
                     }
                 });
             }
+            , right: function ()
+            {
+                if (selectId == '0')
+                {
+                    layer.msg('您必须最少选中一条需要设置的记录');
+                    return false;
+                }
+                layer.open({
+                    type: 1
+                    , title: '角色权限'
+                    , closeBtn: 1
+                    , shade: 0.2
+                    , shadeClose: false
+                    , id: 'roleRightW'
+                    , content: $('#rolesRightForm')
+                    , area: ['800px', '600px']
+                    , success: function ()
+                    {
+                        $('#rolesRightForm')[0].reset();
+                        $('#rolesId').val(selectId);
+                        var loadIndex = layer.load(1);
+                        $.ajax({
+                            url: '/web/rolesRight/init?roleId='+selectId,
+                            type: 'post',
+                            success: function (json)
+                            {
+                                $('#rolesRightDiv').empty();
+                                var parentModules = json.data.parentModules;
+                                var subModules = json.data.subModules;
+                                var moduleRoles = json.data.moduleRoles;
+                                var roleRights = json.data.roleRights;
+                                var tmp = '';
+                                for (var i = 0, len = parentModules.length; i < len; i++)
+                                {
+                                    tmp += '<fieldset class="layui-elem-field" style="margin-left: 20px;">';
+                                    tmp += '<legend style="font-size: 16px">' + parentModules[i].title + '</legend>';
+                                    tmp += '<div class="layui-field-box">';
+                                    for (var j = 0, len2 = subModules.length; j < len2; j++)
+                                    {
+                                        if (parentModules[i].id == subModules[j].parentId)
+                                        {
+                                            tmp += '<div class="layui-form-item">';
+                                            tmp += '<label class="layui-form-label">' + subModules[j].title +
+                                                   '</label>';
+                                            tmp += '<div class="layui-input-block">';
+                                            for (var k = 0, len3 = moduleRoles.length; k < len3; k++)
+                                            {
+                                                if (moduleRoles[k].moduleId == subModules[j].id)
+                                                {
+                                                    tmp +=
+                                                        '<input type="checkbox" id="' + moduleRoles[k].id +
+                                                        '" value="' + moduleRoles[k].id +
+                                                        '" title="' + moduleRoles[k].title +
+                                                        '" name="mrCheckbox" lay-skin="primary">';
+                                                }
+                                            }
+                                            tmp += '</div>';
+                                            tmp += '</div>';
+                                        }
+                                    }
+                                    tmp += '</div>';
+                                    tmp += '</fieldset>';
+                                }
+                                $('#rolesRightDiv').append(tmp);
+                                for(var i=0,len=roleRights.length;i<len;i++)
+                                {
+                                    $('#'+roleRights[i].moduleRoleId).prop('checked','checked');
+                                }
+                                form.render();
+                                layer.close(loadIndex);
+                            }
+                        });
+                        return false;
+                    }
+                });
+            }
         };
         //总体上调用,是那个按钮激活哪个
         $('#rolesMenuBar .layui-btn').on('click', function ()
@@ -309,6 +400,49 @@
                 },
                 error: function (json)
                 {
+                    layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                    {
+                        layer.closeAll();
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+        //form submit新建修改事件提交
+        form.on('submit(rolesRightForm)', function (data)
+        {
+            var rolesV = '';
+            $('input[name="mrCheckbox"]:checked').each(function ()
+            {
+                rolesV += $(this).val() + ",";
+            });
+            $('#rolesValue').val(rolesV);
+            var loadIndex = layer.load(1);
+            var actionUrl = "/web/rolesRight/set"
+            $.ajax({
+                type: 'post',
+                data: $('#rolesRightForm').serialize(),
+                url: actionUrl,
+                success: function (json)
+                {
+                    layer.close(loadIndex);
+                    if (json.success)
+                    {
+                        layer.alert(json.msg, {closeBtn: 0}, function ()
+                        {
+                            layer.closeAll();
+                            rolesTable.reload();
+                        });
+                    }
+                    else
+                    {
+                        layer.alert(json.msg);
+                    }
+                },
+                error: function (json)
+                {
+                    layer.close(loadIndex);
                     layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
                     {
                         layer.closeAll();

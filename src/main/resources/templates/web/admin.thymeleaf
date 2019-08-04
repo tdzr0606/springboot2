@@ -26,7 +26,6 @@
                         <button class="layui-btn" data-method="new" shiro:hasPermission="admin:add">新建</button>
                         <button class="layui-btn" data-method="modify" shiro:hasPermission="admin:mod">修改</button>
                         <button class="layui-btn" data-method="delete" shiro:hasPermission="admin:del">删除</button>
-                        <button class="layui-btn" data-method="right">权限设置</button>
                     </div>
                 </div>
                 <div class="layui-col-xs6" style="text-align: right">
