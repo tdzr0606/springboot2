@@ -5,10 +5,14 @@
     <!-- 和 server.xml中 用户配置相同 -->
     <schema name="test" checkSQLschema="false" sqlMaxLimit="100">
         <!-- 从 rule.xml中获取对应规则进行分片 -->
-        <table name="au_news" primaryKey="id" autoIncrement="true" dataNode="dn1,dn2" rule="mod-long"/>
-        <table name="web_admin" primaryKey="id" autoIncrement="true" dataNode="dn1"/>
-        <table name="au_photos" primaryKey="id" autoIncrement="true" dataNode="dn1"/>
-        <table name="au_photos_list" primaryKey="id" autoIncrement="true" dataNode="dn1"/>
+        <table name="au_news" primaryKey="id" dataNode="dn1,dn2" rule="mod-long" />
+        <table name="web_admin" primaryKey="id" dataNode="dn1" />
+        <table name="au_photos" primaryKey="id"  dataNode="dn1" />
+        <table name="au_photos_list" primaryKey="id" dataNode="dn1" />
+        <table name="web_roles" primaryKey="id" dataNode="dn1" />
+        <table name="web_modules" primaryKey="id" dataNode="dn1" />
+        <table name="web_modules_role" primaryKey="id" dataNode="dn1" />
+        <table name="web_admin_right" primaryKey="id" dataNode="dn1" />
     </schema>
 
     <!-- 数据库 分片节点 -->

@@ -57,4 +57,6 @@ public interface ModulesRoleMapper extends MyMapper<ModulesRole>
     public ModulesRole findById(@Param(value = "id") Integer id);
 
     int checkEnTitle(@Param(value = "enTitle") String enTitle,@Param(value = "moduleId") Integer moduleId);
+
+    List<ModulesRole> listForPublicModule();
 }

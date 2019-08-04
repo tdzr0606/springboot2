@@ -229,6 +229,7 @@
                 },
                 loginOut: function ()
                 {
+                    console.log("AA");
                     layer.open({
                         type: 1
                         , area: ['300px', '180px']
@@ -248,7 +249,7 @@
             };
             element.on('nav(topMenu)', function (elem)
             {
-                var method = elem[0].childNodes[0].id;
+                var method = elem[0].id;
                 active[method] ? active[method].call(this, elem) : '';
             });
             //form submit新建修改事件提交

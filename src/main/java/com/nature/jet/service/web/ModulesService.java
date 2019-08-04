@@ -3,7 +3,6 @@ package com.nature.jet.service.web;
 import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.nature.jet.component.system.Page;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nature.jet.mapper.web.ModulesMapper;
@@ -100,6 +99,11 @@ public class ModulesService
     public List<Modules> listPublicParent()
     {
         return modulesMapper.listPublicParent();
+    }
+
+    public List<Modules> listPublicSub()
+    {
+        return modulesMapper.listPublicSub();
     }
 
     public List<Modules> listParent()

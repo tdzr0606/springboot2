@@ -48,4 +48,10 @@
         select count(1) from web_modules_role where enTitle = #{enTitle} and moduleId = #{moduleId}
     </select>
 
+    <select id="listForPublicModule" resultType="ModulesRole">
+        select
+        <include refid="basicColumn"/>
+        from web_modules_role where moduleId in (select id from web_modules where isPublic = 1)
+    </select>
+
 </mapper>

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.nature.jet.mapper.web.RolesMapper;
 import com.nature.jet.pojo.web.Roles;
 
+import java.util.List;
+
 /**
  * RolesService
  * Author:竺志伟
@@ -96,5 +98,10 @@ public class RolesService
     public boolean checkEnName(String enName)
     {
         return rolesMapper.checkEnName(enName) == 0;
+    }
+
+    public List<Roles> listPublic()
+    {
+        return rolesMapper.listPublic();
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.nature.jet.mapper.web.ModulesRoleMapper;
 import com.nature.jet.pojo.web.ModulesRole;
 
+import java.util.List;
+
 /**
  * ModulesRoleService
  * Author:竺志伟
@@ -83,8 +85,14 @@ public class ModulesRoleService
         return modulesRoleMapper.findById(id);
     }
 
-    public boolean checkEnTitle(String enTitle,int moduleId)
+    public boolean checkEnTitle(String enTitle, int moduleId)
     {
-        return modulesRoleMapper.checkEnTitle(enTitle,moduleId) == 0;
+        return modulesRoleMapper.checkEnTitle(enTitle, moduleId) == 0;
     }
+
+    public List<ModulesRole> listForPublicModule()
+    {
+        return modulesRoleMapper.listForPublicModule();
+    }
+
 }

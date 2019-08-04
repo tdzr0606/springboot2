@@ -57,6 +57,13 @@
         from web_modules where parentId = 0 and isPublic = 1
     </select>
 
+    <select id="listPublicSub" resultType="Modules">
+        select
+        <include refid="basicColumn"/>
+        from web_modules where parentId != 0 and isPublic = 1
+    </select>
+
+
     <select id="listParent" resultType="Modules">
         select
         <include refid="basicColumn"/>

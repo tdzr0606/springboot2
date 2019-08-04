@@ -57,4 +57,10 @@
         select count(1) from web_roles where enName = #{enName}
     </select>
 
+    <select id="listPublic" resultType="com.nature.jet.pojo.web.Roles">
+        select
+        <include refid="basicColumn"/>
+        from web_roles where isPublic = 1 order by id desc
+    </select>
+
 </mapper>

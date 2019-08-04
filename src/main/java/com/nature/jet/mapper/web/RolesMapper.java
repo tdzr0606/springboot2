@@ -65,4 +65,6 @@ public interface RolesMapper extends MyMapper<Roles>
     public Roles findById(@Param(value = "id") Integer id);
 
     int checkEnName(@Param(value = "enName") String enName);
+
+    List<Roles> listPublic();
 }

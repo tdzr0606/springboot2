@@ -24,8 +24,9 @@
                 <div class="layui-col-xs6">
                     <div class="layui-btn-group">
                         <button class="layui-btn" data-method="new" shiro:hasPermission="admin:add">新建</button>
-                        <button class="layui-btn" data-method="modify" shiro:hasPermission="admin:modify">修改</button>
-                        <button class="layui-btn" data-method="delete" shiro:hasPermission="admin:delete">删除</button>
+                        <button class="layui-btn" data-method="modify" shiro:hasPermission="admin:mod">修改</button>
+                        <button class="layui-btn" data-method="delete" shiro:hasPermission="admin:del">删除</button>
+                        <button class="layui-btn" data-method="right">权限设置</button>
                     </div>
                 </div>
                 <div class="layui-col-xs6" style="text-align: right">
@@ -259,6 +260,22 @@
                     }
                 });
             }
+            , right: function ()
+            {
+                if (selectId == '0')
+                {
+                    layer.msg('您必须最少选中一条需要设置的记录');
+                    return false;
+                }
+                layer.open({
+                    type: 2
+                    , title:'账号权限'
+                    , id: 'adminRightW'
+                    , content: '/web/adminRight/toPage?adminId='+selectId+'&sessionId='+new Date().getTime()
+                    , area: ['1024px', '650px']
+                    , shade: 0.2
+                });
+            }
         };
         //总体上调用,是那个按钮激活哪个
         $('#adminMenuBar .layui-btn').on('click', function ()
@@ -314,7 +331,6 @@
             });
             return false;
         });
-
         $('#searchKey').on('keyup', function (e)
         {
             if ($(this).val())
@@ -325,14 +341,11 @@
             {
                 $('#keyDelete').hide();
             }
-
         });
-
         if ($('#searchKey').val())
         {
             $('#keyDelete').show();
         }
-
         $('#keyDelete').on('click', function ()
         {
             $('#keyDelete').hide();

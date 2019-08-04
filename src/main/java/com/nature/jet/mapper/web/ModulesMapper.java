@@ -66,6 +66,8 @@ public interface ModulesMapper extends MyMapper<Modules>
 
     List<Modules> listPublicParent();
 
+    List<Modules> listPublicSub();
+
     List<Modules> listParent();
 
     List<Modules> listSub();

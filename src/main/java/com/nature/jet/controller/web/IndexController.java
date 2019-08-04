@@ -8,6 +8,7 @@ import com.nature.jet.utils.Fields;
 import com.nature.jet.utils.SigarUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -81,14 +82,25 @@ public class IndexController extends BaseController
         UsernamePasswordToken token = new UsernamePasswordToken(loginName, loginPass);
         //获取当前的Subject
         Subject subject = SecurityUtils.getSubject();
-        subject.login(token);
-        boolean pd = subject.isAuthenticated();
-        request.getSession().setAttribute(Fields.SESSION_ADMIN, (Admin) subject.getPrincipal());
-        if(!pd)
+        boolean pd = false;
+        try
         {
-            token.clear();
+            subject.login(token);
+            pd = subject.isAuthenticated();
+            if(pd)
+            {
+                request.getSession().setAttribute(Fields.SESSION_ADMIN, (Admin) subject.getPrincipal());
+            }
+            else
+            {
+                token.clear();
+            }
         }
-        return resultBoolWrapper(pd, "登录成功", "登录失败", null);
+        catch(AuthenticationException e)
+        {
+            log.error("登录错误", e);
+        }
+        return resultBoolWrapper(pd, "登录成功", "用户名密码错误", null);
     }
 
     /**

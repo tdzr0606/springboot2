@@ -46,6 +46,8 @@ public class AdminRealm extends AuthorizingRealm
         // 权限
         Set<String> permissions = new HashSet<>();
         permissions.add("admin:add");
+        permissions.add("admin:mod");
+        permissions.add("admin:del");
 
         SimpleAuthorizationInfo simpleAuthenticationInfo = new SimpleAuthorizationInfo();
         simpleAuthenticationInfo.setRoles(roles);
