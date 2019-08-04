@@ -3,6 +3,7 @@ package com.nature.jet.mapper.web;
 import com.nature.jet.mybatis.config.MyMapper;
 import com.nature.jet.pojo.web.Admin;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
  * Author:竺志伟
  * Date:2019-03-22 09:12:53
  */
+@Repository
 public interface AdminMapper extends MyMapper<Admin>
 {
     /**

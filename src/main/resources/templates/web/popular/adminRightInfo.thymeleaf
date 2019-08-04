@@ -1,0 +1,249 @@
+<!--
+ *  adminRight
+ * User:竺志伟
+ * Date:2019-08-04 16:14:43
+-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/static/design/css/layui.css">
+    <link rel="stylesheet" href="/static/design/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/design/css/layuiExt.css">
+    <script src="/static/design/layui.js"></script>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-body" style="padding:10px;min-height:600px;left:0px;top:0px;">
+        <div id="adminRightMenuBar">
+            <div class="layui-row">
+                <div class="layui-col-xs6">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn" data-method="new">新建</button>
+                        <button class="layui-btn" data-method="delete">删除</button>
+                    </div>
+                </div>
+                <div class="layui-col-xs6" style="text-align:right">
+                    <div class="layui-inline" style="width:70%">
+                        <input class="layui-input" name="key" id="searchKey" autocomplete="off" style="width:100%;">
+                        <i class="layui-icon" id="keyDelete"
+                           style="position: absolute;right: 10px;top: 12px;cursor: pointer;display: none">&#x1006;</i>
+                    </div>
+                    <button class="layui-btn" data-method="search" id="searchBtn">搜索</button>
+                </div>
+            </div>
+        </div>
+        <table class="layui-hidden" id="adminRightTable" lay-filter="adminRightTable"></table>
+    </div>
+</div>
+
+<form class="layui-form" id="adminRightForm" style="display:none;padding:10px 40px 10px 0px; ">
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色</label>
+        <div class="layui-input-block">
+            <select class="layui-select" name="roleId" id="roleIdS" required lay-verify="required"
+                    autocomplete="off">
+                <option value="">请选择角色</option>
+                <option th:each="role,roleStatus:${roles}" th:value="${role.id}" th:text="${role.cnName}"></option>
+            </select>
+        </div>
+    </div>
+    <input type="hidden" name="id" id="id" value="0"/>
+    <input type="hidden" name="adminId" th:value="${adminId}">
+    <input type="hidden" name="actionUrl" id="actionUrl" value=""/>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="adminRightForm">确定</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="layer.closeAll()">取消</button>
+        </div>
+    </div>
+</form>
+
+
+<div th:replace="web/common :: foot"></div>
+
+<script type="text/javascript" th:inline="javascript">
+    var selectId = 0;
+    var adminId = [[${adminId}]];
+    layui.use(['element', 'table', 'layer', 'form'], function ()
+    {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var adminRightTable = table.render({
+            elem: '#adminRightTable'
+            , id: 'adminRightTable'
+            , url: '/web/adminRight/list?adminId=' + adminId
+            , cols: [
+                [
+                    {type: 'numbers'}
+                    , {field: 'roleTitle', title: '角色中文名', width: 300}
+                    , {field: 'roleEnTitle', title: '角色英文名', width: 300}
+                ]
+            ]
+            , height: '480'
+            , limit: 40
+            , page: true
+        });
+        table.on('row(adminRightTable)', function (obj)
+        {
+            selectId = obj.data.id;
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+        });
+
+
+        //触发事件
+        var active = {
+            search: function ()
+            {
+                var keyValue = $('#searchKey').val();
+                adminRightTable.reload({where: {key: keyValue, adminId: adminId}, page: {curr: 1}});
+                selectId = 0;
+            }
+            , new: function ()
+            {
+                $('#adminRightForm')[0].reset();
+                $('#actionUrl').val("new");
+                $('#id').val('0');
+                layer.open({
+                    type: 1
+                    , title: "新建"
+                    , closeBtn: 1
+                    , area: ['400px;','300px']
+                    , shade: 0.2
+                    , shadeClose: false
+                    , id: 'adminRightFormWindow'
+                    , moveType: 1
+                    , content: $('#adminRightForm')
+                });
+            }
+            , delete: function ()
+            {
+                if (selectId == '0')
+                {
+                    layer.msg('您必须最少选中一条需要删除的记录');
+                    return false;
+                }
+                layer.open({
+                    type: 1
+                    , id: 'adminRightDeleteAccept'
+                    , content: '<div style="padding: 20px 30px;">是否真的要删除选中的记录?</div>'
+                    , btn: ['确定', '取消']
+                    , btnAlign: 'c'
+                    , shade: 0.2
+                    , yes: function ()
+                    {
+                        layer.closeAll();
+                        $.ajax({
+                            type: 'post',
+                            data: {id: selectId},
+                            url: '/web/adminRight/delete',
+                            success: function (json)
+                            {
+                                if (json.success)
+                                {
+                                    layer.alert(json.msg, {closeBtn: 0}, function ()
+                                    {
+                                        layer.closeAll();
+                                        adminRightTable.reload();
+                                    });
+                                }
+                                else
+                                {
+                                    layer.alert(json.msg);
+                                }
+                            },
+                            error: function (json)
+                            {
+                                layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                                {
+                                    layer.closeAll();
+                                    window.location.reload();
+                                });
+                            }
+                        });
+                        return false;
+                    }
+                });
+            }
+        };
+        //总体上调用,是那个按钮激活哪个
+        $('#adminRightMenuBar .layui-btn').on('click', function ()
+        {
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+        // 搜索框 回车键触发
+        $('#searchKey').on('keydown', function (e)
+        {
+            if (e.keyCode == 13)
+            {
+                $('#searchBtn').click();
+            }
+        });
+        $('#searchKey').on('keyup', function (e)
+        {
+            if ($(this).val())
+            {
+                $('#keyDelete').show();
+            }
+            else
+            {
+                $('#keyDelete').hide();
+            }
+        });
+        if ($('#searchKey').val())
+        {
+            $('#keyDelete').show();
+        }
+        $('#keyDelete').on('click', function ()
+        {
+            $('#keyDelete').hide();
+            $('#searchKey').val('');
+            $('#searchBtn').click();
+        });
+        //form submit新建修改事件提交
+        form.on('submit(adminRightForm)', function (data)
+        {
+            var loadIndex = layer.load(1);
+            var actionUrl = "/web/adminRight/" + $('#actionUrl').val();
+            $.ajax({
+                type: 'post',
+                data: $('#adminRightForm').serialize(),
+                url: actionUrl,
+                success: function (json)
+                {
+                    layer.close(loadIndex);
+                    if (json.success)
+                    {
+                        layer.alert(json.msg, {closeBtn: 0}, function ()
+                        {
+                            layer.closeAll();
+                            adminRightTable.reload();
+                        });
+                    }
+                    else
+                    {
+                        layer.alert(json.msg);
+                    }
+                },
+                error: function (json)
+                {
+                    layer.close(loadIndex);
+                    layer.alert(json.responseJSON.message, {closeBtn: 0}, function ()
+                    {
+                        layer.closeAll();
+                        window.location.reload();
+                    });
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+</body>
+</html>

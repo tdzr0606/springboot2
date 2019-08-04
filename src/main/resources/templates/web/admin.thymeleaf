@@ -23,9 +23,10 @@
             <div class="layui-row">
                 <div class="layui-col-xs6">
                     <div class="layui-btn-group">
-                        <button class="layui-btn" data-method="new" shiro:hasPermission="admin:add">新建</button>
+                        <button class="layui-btn" data-method="new" shiro:hasPermission="admin:new">新建</button>
                         <button class="layui-btn" data-method="modify" shiro:hasPermission="admin:mod">修改</button>
                         <button class="layui-btn" data-method="delete" shiro:hasPermission="admin:del">删除</button>
+                        <button class="layui-btn" data-method="right" shiro:hasPermission="roles:role">权限设置</button>
                     </div>
                 </div>
                 <div class="layui-col-xs6" style="text-align: right">
@@ -268,10 +269,10 @@
                 }
                 layer.open({
                     type: 2
-                    , title:'账号权限'
+                    , title: '账号权限'
                     , id: 'adminRightW'
-                    , content: '/web/adminRight/toPage?adminId='+selectId+'&sessionId='+new Date().getTime()
-                    , area: ['1024px', '650px']
+                    , content: '/web/adminRight/toPage?adminId=' + selectId + '&sessionId=' + new Date().getTime()
+                    , area: ['800px', '600px']
                     , shade: 0.2
                 });
             }

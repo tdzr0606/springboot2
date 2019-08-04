@@ -117,7 +117,7 @@ CREATE TABLE `web_admin` (
   `isPublic` tinyint(1) DEFAULT NULL,
   `note` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,8 +126,37 @@ CREATE TABLE `web_admin` (
 
 LOCK TABLES `web_admin` WRITE;
 /*!40000 ALTER TABLE `web_admin` DISABLE KEYS */;
-INSERT INTO `web_admin` VALUES (2,'admin','e10adc3949ba59abbe56e057f20f883e','admin',1,'11122'),(3,'11','698d51a19d8a121ce581499d7b701668','22211',1,'11');
+INSERT INTO `web_admin` VALUES (2,'admin','e10adc3949ba59abbe56e057f20f883e','admin',1,'11122'),(4,'user','e10adc3949ba59abbe56e057f20f883e','客户',1,'');
 /*!40000 ALTER TABLE `web_admin` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `web_admin_right`
+--
+
+DROP TABLE IF EXISTS `web_admin_right`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `web_admin_right` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `adminId` int(11) DEFAULT NULL,
+  `roleId` int(11) DEFAULT NULL,
+  `roleEnTitle` varchar(45) DEFAULT NULL,
+  `roleTitle` varchar(45) DEFAULT NULL,
+  `rightText` text,
+  PRIMARY KEY (`id`),
+  KEY `admin_right_adminId` (`adminId`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='账号权限表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `web_admin_right`
+--
+
+LOCK TABLES `web_admin_right` WRITE;
+/*!40000 ALTER TABLE `web_admin_right` DISABLE KEYS */;
+INSERT INTO `web_admin_right` VALUES (6,2,1,'admin','管理员','photos:set,admin:role,roles:role,module:role,module:set,photos:del,photos:mod,photos:new,news:del,news:mod,news:new,admin:del,admin:mod,admin:new,module:del,module:mod,module:new,roles:del,roles:mod,roles:new'),(7,4,2,'user','用户','photos:set,photos:del,photos:mod,photos:new,news:del,news:mod,news:new');
+/*!40000 ALTER TABLE `web_admin_right` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -146,7 +175,8 @@ CREATE TABLE `web_modules` (
   `note` varchar(45) DEFAULT NULL,
   `enTitle` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `web_modules_parentId` (`parentId`)
+  KEY `web_modules_parentId` (`parentId`),
+  KEY `web_modules_isPublic` (`isPublic`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='模块信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -176,7 +206,7 @@ CREATE TABLE `web_modules_role` (
   `moduleId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `modules_role_moduleId` (`moduleId`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='模板权限';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='模板权限';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,7 +215,7 @@ CREATE TABLE `web_modules_role` (
 
 LOCK TABLES `web_modules_role` WRITE;
 /*!40000 ALTER TABLE `web_modules_role` DISABLE KEYS */;
-INSERT INTO `web_modules_role` VALUES (1,'新建','new',1,'',2),(2,'修改','mod',1,'',2),(3,'删除','del',1,'',2),(4,'新建','new',1,'',3),(5,'修改','mod',1,'',3),(6,'删除','del',1,'',3),(7,'新建','new',1,'',4),(8,'修改','mod',1,'',4),(9,'删除','del',1,'',4),(10,'新建','new',1,'',6),(11,'修改','mod',1,'',6),(12,'删除','del',1,'',6),(13,'新建','new',1,'',7),(14,'修改','mod',1,'',7),(15,'删除','del',1,'',7),(16,'启用/禁用','set',1,'',3),(17,'模板权限','role',1,'',3);
+INSERT INTO `web_modules_role` VALUES (1,'新建','new',1,'',2),(2,'修改','mod',1,'',2),(3,'删除','del',1,'',2),(4,'新建','new',1,'',3),(5,'修改','mod',1,'',3),(6,'删除','del',1,'',3),(7,'新建','new',1,'',4),(8,'修改','mod',1,'',4),(9,'删除','del',1,'',4),(10,'新建','new',1,'',6),(11,'修改','mod',1,'',6),(12,'删除','del',1,'',6),(13,'新建','new',1,'',7),(14,'修改','mod',1,'',7),(15,'删除','del',1,'',7),(16,'启用/禁用','set',1,'',3),(17,'模板权限','role',1,'',3),(18,'权限设置','role',1,'',2),(19,'权限设置','role',1,'',4),(20,'相册设置','set',1,'',7);
 /*!40000 ALTER TABLE `web_modules_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,6 +245,36 @@ LOCK TABLES `web_roles` WRITE;
 INSERT INTO `web_roles` VALUES (1,'管理员','admin','管理员',1),(2,'用户','user','普通用户',1);
 /*!40000 ALTER TABLE `web_roles` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `web_roles_right`
+--
+
+DROP TABLE IF EXISTS `web_roles_right`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `web_roles_right` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rolesId` int(11) DEFAULT NULL,
+  `moduleId` int(11) DEFAULT NULL,
+  `moduleTitle` varchar(45) DEFAULT NULL,
+  `moduleEnTitle` varchar(45) DEFAULT NULL,
+  `moduleRoleId` int(11) DEFAULT NULL,
+  `moduleRoleEnTitle` varchar(45) DEFAULT NULL,
+  `moduleRoleTitle` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8 COMMENT='角色权限';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `web_roles_right`
+--
+
+LOCK TABLES `web_roles_right` WRITE;
+/*!40000 ALTER TABLE `web_roles_right` DISABLE KEYS */;
+INSERT INTO `web_roles_right` VALUES (125,2,6,'新闻管理','news',10,'new','新建'),(126,2,6,'新闻管理','news',11,'mod','修改'),(127,2,6,'新闻管理','news',12,'del','删除'),(128,2,7,'企业风采','photos',13,'new','新建'),(129,2,7,'企业风采','photos',14,'mod','修改'),(130,2,7,'企业风采','photos',15,'del','删除'),(131,2,7,'企业风采','photos',20,'set','相册设置'),(132,1,2,'角色管理','roles',1,'new','新建'),(133,1,2,'角色管理','roles',2,'mod','修改'),(134,1,2,'角色管理','roles',3,'del','删除'),(135,1,3,'模块管理','module',4,'new','新建'),(136,1,3,'模块管理','module',5,'mod','修改'),(137,1,3,'模块管理','module',6,'del','删除'),(138,1,4,'账号管理','admin',7,'new','新建'),(139,1,4,'账号管理','admin',8,'mod','修改'),(140,1,4,'账号管理','admin',9,'del','删除'),(141,1,6,'新闻管理','news',10,'new','新建'),(142,1,6,'新闻管理','news',11,'mod','修改'),(143,1,6,'新闻管理','news',12,'del','删除'),(144,1,7,'企业风采','photos',13,'new','新建'),(145,1,7,'企业风采','photos',14,'mod','修改'),(146,1,7,'企业风采','photos',15,'del','删除'),(147,1,3,'模块管理','module',16,'set','启用/禁用'),(148,1,3,'模块管理','module',17,'role','模板权限'),(149,1,2,'角色管理','roles',18,'role','权限设置'),(150,1,4,'账号管理','admin',19,'role','权限设置'),(151,1,7,'企业风采','photos',20,'set','相册设置');
+/*!40000 ALTER TABLE `web_roles_right` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -225,7 +285,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-03 16:00:46
+-- Dump completed on 2019-08-04 17:25:38
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
 -- Host: 127.0.0.1    Database: autumn2
@@ -284,4 +344,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-03 16:00:46
+-- Dump completed on 2019-08-04 17:25:38

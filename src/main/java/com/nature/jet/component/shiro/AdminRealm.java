@@ -1,6 +1,8 @@
 package com.nature.jet.component.shiro;
 
 import com.nature.jet.pojo.web.Admin;
+import com.nature.jet.pojo.web.AdminRight;
+import com.nature.jet.service.web.AdminRightService;
 import com.nature.jet.service.web.AdminService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -11,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
 
 /**
  * springboot2
@@ -25,6 +29,8 @@ public class AdminRealm extends AuthorizingRealm
 {
     @Autowired
     AdminService adminService;
+    @Autowired
+    AdminRightService adminRightService;
 
     /**
      * 授权
@@ -39,15 +45,20 @@ public class AdminRealm extends AuthorizingRealm
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection)
     {
         Admin admin = (Admin) principalCollection.getPrimaryPrincipal();
+        List<AdminRight> rightList = adminRightService.listByAdminId(admin.getId());
         // 角色
-        Set<String> roles = new HashSet<>();
-        roles.add("admin");
-
+        final Set<String> roles = new HashSet<>();
         // 权限
-        Set<String> permissions = new HashSet<>();
-        permissions.add("admin:add");
-        permissions.add("admin:mod");
-        permissions.add("admin:del");
+        final Set<String> permissions = new HashSet<>();
+
+        rightList.stream().forEach(adminRight -> {
+            roles.add(adminRight.getRoleEnTitle());
+            String[] rightText =adminRight.getRightText().split(",") ;
+            for(String right : rightText)
+            {
+                permissions.add(right);
+            }
+        });
 
         SimpleAuthorizationInfo simpleAuthenticationInfo = new SimpleAuthorizationInfo();
         simpleAuthenticationInfo.setRoles(roles);

@@ -1,0 +1,49 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nature.jet.mapper.web.AdminRightMapper">
+
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+    <cache-ref namespace="com.nature.jet.mapper.web.AdminRightMapper"></cache-ref>
+    <!--基础 表字段定义 -->
+    <sql id="basicColumn">
+        roleEnTitle,rightText,roleTitle,roleId,adminId,id
+    </sql>
+
+    <!-- 查询所有数据 -->
+    <select id="list" resultType="com.nature.jet.pojo.web.AdminRight">
+        select
+        <include refid="basicColumn"/>
+        from web_admin_right
+        where adminId = #{adminId}
+        <if test="key != null and key != '' ">
+            and (
+            roleEnTitle like CONCAT(concat('%',#{key}),'%')
+            or rightText like CONCAT(concat('%',#{key}),'%')
+            or roleTitle like CONCAT(concat('%',#{key}),'%')
+            )
+        </if>
+        order by id desc
+    </select>
+
+    <!-- 根据ID查询数据 -->
+    <select id="findById" resultType="com.nature.jet.pojo.web.AdminRight" parameterType="java.lang.Integer">
+        select <include refid="basicColumn"></include> from web_admin_right where id = #{id}
+    </select>
+
+    <!-- 新建 -->
+    <insert id="add" parameterType="com.nature.jet.pojo.web.AdminRight" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO web_admin_right ( roleEnTitle,rightText,roleTitle,roleId,adminId,id ) 
+        VALUES ( #{roleEnTitle},#{rightText},#{roleTitle},#{roleId},#{adminId},#{id} ) 
+    </insert>
+
+    <!-- 修改-->
+    <update id="modify" parameterType="com.nature.jet.pojo.web.AdminRight">
+        UPDATE web_admin_right SET roleEnTitle = #{roleEnTitle},rightText = #{rightText},roleTitle = #{roleTitle},roleId = #{roleId},adminId = #{adminId}
+        WHERE  id = #{id} 
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM web_admin_right WHERE  id = #{id}
+    </delete>
+
+</mapper>
