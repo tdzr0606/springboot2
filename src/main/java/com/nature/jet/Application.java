@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.jetty.JettyServerCustomizer;
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @MapperScan(value = "com.nature.jet.mapper") // Mybatis 扫描
 @EnableKafka  //打开kafka消息机制
 @EnableScheduling //打开定时器
+@ServletComponentScan  //打開servlet掃描
 public class Application
 {
     public static void main(String[] args)

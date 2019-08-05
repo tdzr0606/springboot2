@@ -1,4 +1,4 @@
-package com.nature.jet.component.filter;
+package com.nature.jet.filter;
 
 
 import javax.servlet.ReadListener;
