@@ -33,6 +33,7 @@ public class UploadController extends BaseController
     String rootPath;
 
     /**
+     * layui 富文本编辑器 图片上传
      * Upload img common result.
      *
      * @param imgFile the img file

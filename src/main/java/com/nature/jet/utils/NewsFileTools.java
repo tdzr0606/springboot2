@@ -17,6 +17,7 @@ public class NewsFileTools
 {
 
     /**
+     * 保存文件
      * Save to file string.
      *
      * @param rootPath    the root path
@@ -53,6 +54,7 @@ public class NewsFileTools
 
 
     /**
+     * 更新文件
      * Update file.
      *
      * @param filePath    the file path
