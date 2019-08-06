@@ -17,7 +17,6 @@ import java.io.IOException;
  * @Author: 竺志伟
  * @Date: 2018 -01-09 15:25
  */
-@Slf4j
 public class XssCodeFilter implements Filter
 {
     FilterConfig filterConfig = null;
@@ -32,7 +31,6 @@ public class XssCodeFilter implements Filter
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException
     {
-        log.info("xss过滤:{}", ((HttpServletRequest) servletRequest).getRequestURI());
         filterChain.doFilter(new XssCodeWrapper((HttpServletRequest) servletRequest), servletResponse);
     }
 
