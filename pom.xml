@@ -55,9 +55,15 @@
         </dependency>
 
         <!-- jetty 服务器 -->
+        <!--<dependency>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-starter-jetty</artifactId>-->
+        <!--</dependency>-->
+
+        <!-- undertow 服務器 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jetty</artifactId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
 
         <!-- 页面 配置 -->
