@@ -50,6 +50,10 @@ public class MyWebConfiguer extends WebMvcConfigurationSupport
         registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/static/favicon.ico");
         registry.addResourceHandler("/files/**").addResourceLocations("file:" + uploadFile);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+
+        // swagger 显示配置
+        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
 

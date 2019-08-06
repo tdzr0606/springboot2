@@ -52,14 +52,15 @@ public class ShiroConfigure
 
         //权限控制map
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/static/**", "anon");
-        filterChainDefinitionMap.put("/files/**", "anon");
-        filterChainDefinitionMap.put("/", "anon");
-        filterChainDefinitionMap.put("/error", "anon");
-        filterChainDefinitionMap.put("/common/error", "anon");
-        filterChainDefinitionMap.put("/web/login", "anon");
-        filterChainDefinitionMap.put("/web/loginAction", "anon");
-        filterChainDefinitionMap.put("/web/logOut", "anon");
+        //        filterChainDefinitionMap.put("/static/**", "anon");
+        //        filterChainDefinitionMap.put("/files/**", "anon");
+        //        filterChainDefinitionMap.put("/api/**","anon");
+        //        filterChainDefinitionMap.put("/", "anon");
+        //        filterChainDefinitionMap.put("/error", "anon");
+        //        filterChainDefinitionMap.put("/common/error", "anon");
+        //        filterChainDefinitionMap.put("/web/login", "anon");
+        //        filterChainDefinitionMap.put("/web/loginAction", "anon");
+        //        filterChainDefinitionMap.put("/web/logOut", "anon");
         filterChainDefinitionMap.put("/web/**", "authc");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

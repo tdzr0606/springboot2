@@ -11,6 +11,7 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * springboot2
@@ -24,6 +25,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableKafka  //打开kafka消息机制
 @EnableScheduling //打开定时器
 @ServletComponentScan  //打開servlet掃描
+@EnableSwagger2
 public class Application
 {
     @Value("${server.port}")
