@@ -1,5 +1,6 @@
 package com.nature.jet.controller.api;
 
+import com.nature.jet.component.aspect.annotation.RateLimit;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.service.au.NewsService;
@@ -36,6 +37,7 @@ public class ApiController extends BaseController
     @RequestMapping(value = "/api/news/top10", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ApiOperation(value = "新闻头10条",tags = {"新闻头10条"})
+    @RateLimit(limitNum = 10)
     public CommonResult newsList()
     {
         return resultSuccessWrapper("", newsService.listPublicPage(1, 10));

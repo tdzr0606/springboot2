@@ -59,14 +59,15 @@ public class Application
         });
 
         // http 强制 转换 https
-        undertow.addDeploymentInfoCustomizers(deploymentInfo ->
-        {
-            deploymentInfo.addSecurityConstraint(
-                    new SecurityConstraint().addWebResourceCollection(new WebResourceCollection().addUrlPattern("/*"))
-                            .setTransportGuaranteeType(TransportGuaranteeType.CONFIDENTIAL)
-                            .setEmptyRoleSemantic(SecurityInfo.EmptyRoleSemantic.PERMIT))
-                    .setConfidentialPortManager(exchange -> httpsPort);
-        });
+        //        undertow.addDeploymentInfoCustomizers(deploymentInfo ->
+        //        {
+        //            deploymentInfo.addSecurityConstraint(
+        //                    new SecurityConstraint().addWebResourceCollection(new WebResourceCollection()
+        // .addUrlPattern("/*"))
+        //                            .setTransportGuaranteeType(TransportGuaranteeType.CONFIDENTIAL)
+        //                            .setEmptyRoleSemantic(SecurityInfo.EmptyRoleSemantic.PERMIT))
+        //                    .setConfidentialPortManager(exchange -> httpsPort);
+        //        });
 
         return undertow;
     }
