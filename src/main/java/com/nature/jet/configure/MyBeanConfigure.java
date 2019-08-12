@@ -1,6 +1,7 @@
 package com.nature.jet.configure;
 
 import com.nature.jet.filter.XssCodeFilter;
+import com.nature.jet.utils.JwtUtils;
 import net.sf.ehcache.CacheManager;
 import org.hyperic.sigar.Sigar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class MyBeanConfigure
 
     @Value("${sigarLibPath}")
     private String sigarLibPath;
+
+    @Value("${jwtSecret}")
+    private String jwtSecret;
 
     /**
      * 系統環境
@@ -117,5 +121,22 @@ public class MyBeanConfigure
     public Filter xssCodeFilter()
     {
         return new XssCodeFilter();
+    }
+
+
+    /**
+     * jwt 工具类
+     * Jwt utils jwt utils.
+     *
+     * @return the jwt utils
+     * @author:竺志伟
+     * @date :2019-08-12 13:09:25
+     */
+    @Bean
+    public JwtUtils jwtUtils()
+    {
+        JwtUtils jwtUtils = new JwtUtils();
+        jwtUtils.setSecret(jwtSecret);
+        return jwtUtils;
     }
 }

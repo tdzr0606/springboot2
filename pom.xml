@@ -216,6 +216,13 @@
             <version>27.0.1-jre</version>
         </dependency>
 
+        <!-- jwt -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
 
     </dependencies>
 
