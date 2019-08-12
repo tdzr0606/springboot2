@@ -11,6 +11,7 @@ import java.util.Map;
 
 
 /**
+ * Json web token 工具類
  * springboot2
  * JwtUtils
  *
@@ -89,11 +90,11 @@ public class JwtUtils
     {
         JwtUtils jwtUtils = new JwtUtils();
         jwtUtils.setSecret("123asdfjoiewXASD@sadfe");
-        //        String token = jwtUtils.createToken("/api/news/top10", "获取前10条新闻信息", 10);
-        String token = "eyJhbGciOiJIUzUxMiJ9" +
-                ".eyJjcmVhdGVUaW1lIjoiMjAxOTA4MTIxMzEzNDE5IiwidXJpIjoiL2FwaS9uZXdzL3RvcDEwIiwiZGVzYyI6IuiOt" +
-                "-WPluWJjTEw5p2h5paw6Ze75L-h5oGvIiwiZXhwIjoxNTY1NTg3NDIxfQ" +
-                ".9N0_8Sv-i3t03VaR5uuFymeZEl8xP3wDyhFbs4mKF0vNRCmqi5E08u3wbDElvOUhMBAG9ISO923_9allJRhosg";
+        String token = jwtUtils.createToken("/api/news/top10", "获取前10条新闻信息", 10);
+        //        String token = "eyJhbGciOiJIUzUxMiJ9" +
+        //                ".eyJjcmVhdGVUaW1lIjoiMjAxOTA4MTIxMzEzNDE5IiwidXJpIjoiL2FwaS9uZXdzL3RvcDEwIiwiZGVzYyI6IuiOt" +
+        //                "-WPluWJjTEw5p2h5paw6Ze75L-h5oGvIiwiZXhwIjoxNTY1NTg3NDIxfQ" +
+        //                ".9N0_8Sv-i3t03VaR5uuFymeZEl8xP3wDyhFbs4mKF0vNRCmqi5E08u3wbDElvOUhMBAG9ISO923_9allJRhosg";
         System.out.println(token);
         Map<String, String> dataMap = jwtUtils.parseToken(token);
         System.out.println(dataMap.get("code"));

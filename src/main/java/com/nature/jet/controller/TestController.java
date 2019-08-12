@@ -41,6 +41,14 @@ public class TestController extends BaseController
     }
 
 
+    /**
+     * jwt 測試
+     * Test 2 common result.
+     *
+     * @return the common result
+     * @author:竺志伟
+     * @date :2019-08-12 15:47:49
+     */
     @RequestMapping(value = "/test2")
     @ResponseBody
     public CommonResult test2()

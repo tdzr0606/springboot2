@@ -63,7 +63,7 @@ public class RateLimitAspect
     }
 
     /**
-     * 处理 controller 切点
+     * 处理 controller 限流 切点
      * Around object.
      *
      * @param joinPoint the join point
