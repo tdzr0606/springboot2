@@ -1,6 +1,9 @@
 package com.nature.jet;
 
-import io.undertow.servlet.api.*;
+import io.undertow.servlet.api.SecurityConstraint;
+import io.undertow.servlet.api.SecurityInfo;
+import io.undertow.servlet.api.TransportGuaranteeType;
+import io.undertow.servlet.api.WebResourceCollection;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -52,22 +55,21 @@ public class Application
         //是否分配的直接内存
         undertow.setUseDirectBuffers(true);
 
-        // 添加其他端口监听, 例如 8080 也可以访问,可以添加多个
+        // 添加其他端口监听, 例如 8081 也可以访问,可以添加多个
         undertow.addBuilderCustomizers(builder ->
         {
             builder.addHttpListener(httpPort, "0.0.0.0");
         });
 
-        // http 强制 转换 https
-        //        undertow.addDeploymentInfoCustomizers(deploymentInfo ->
-        //        {
-        //            deploymentInfo.addSecurityConstraint(
-        //                    new SecurityConstraint().addWebResourceCollection(new WebResourceCollection()
-        // .addUrlPattern("/*"))
-        //                            .setTransportGuaranteeType(TransportGuaranteeType.CONFIDENTIAL)
-        //                            .setEmptyRoleSemantic(SecurityInfo.EmptyRoleSemantic.PERMIT))
-        //                    .setConfidentialPortManager(exchange -> httpsPort);
-        //        });
+        // http 强制 转换 https  部分强制转换,例如 web 后台访问
+        undertow.addDeploymentInfoCustomizers(deploymentInfo ->
+        {
+            deploymentInfo.addSecurityConstraint(new SecurityConstraint()
+                    .addWebResourceCollection(new WebResourceCollection().addUrlPattern("/web/*"))
+                    .setTransportGuaranteeType(TransportGuaranteeType.CONFIDENTIAL)
+                    .setEmptyRoleSemantic(SecurityInfo.EmptyRoleSemantic.PERMIT))
+                    .setConfidentialPortManager(exchange -> httpsPort);
+        });
 
         return undertow;
     }
