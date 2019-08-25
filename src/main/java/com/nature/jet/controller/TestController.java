@@ -1,7 +1,6 @@
 package com.nature.jet.controller;
 
 import com.nature.jet.component.system.CommonResult;
-import com.nature.jet.component.utils.kafka.MyKafkaSender;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class TestController extends BaseController
 {
-    @Autowired
-    MyKafkaSender sender;
 
     @Autowired
     JwtUtils jwtUtils;
-
-    /**
-     * Test common result.
-     *
-     * @return the common result
-     * @author:竺志伟
-     * @date :2019-08-12 13:10:02
-     */
-    @RequestMapping(value = "/test")
-    @ResponseBody
-    public CommonResult test()
-    {
-        sender.sendMessage("test","aaaa");
-        return resultSuccessWrapper("a", null);
-    }
 
 
     /**
