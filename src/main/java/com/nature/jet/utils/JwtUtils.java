@@ -32,6 +32,9 @@ public class JwtUtils
      * 创建 token
      * Create token string.
      *
+     * @param uri          the uri
+     * @param desc         the desc
+     * @param expirSeconds the expir seconds
      * @return the string
      * @author:竺志伟
      * @date :2019-08-12 10:48:55
@@ -56,6 +59,7 @@ public class JwtUtils
      * Parse token.
      *
      * @param token the token
+     * @return the map
      * @author:竺志伟
      * @date :2019-08-12 10:53:01
      */
