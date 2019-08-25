@@ -1,12 +1,12 @@
 package com.nature.jet.controller.web;
 
+import com.nature.jet.component.utils.kafka.NewsKafka;
+import com.nature.jet.utils.enu.NewsKafkaEnum;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.component.system.Page;
-import com.nature.jet.pojo.web.Admin;
 import com.nature.jet.utils.NewsFileTools;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -31,6 +31,8 @@ public class NewsController extends BaseController
 {
     @Autowired
     NewsService newsService;
+    @Autowired
+    NewsKafka newsKafka;
     @Value("${web.upload-path}")
     String rootPath;
 
@@ -80,7 +82,7 @@ public class NewsController extends BaseController
             news.setFileurl(NewsFileTools.saveToFile(rootPath, fileContent));
         }
         news.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        return resultBoolWrapper(newsService.add(news), "信息创建成功", "信息创建失败", null);
+        return resultBoolWrapper(newsKafka.sendMessage(NewsKafkaEnum.NEW.getTopic(), news), "信息创建成功", "信息创建失败", null);
     }
 
     /**
@@ -102,7 +104,8 @@ public class NewsController extends BaseController
         {
             news.setFileurl(NewsFileTools.saveToFile(rootPath, fileContent));
         }
-        return resultBoolWrapper(newsService.modify(news), "信息修改成功", "信息修改失败", null);
+        return resultBoolWrapper(newsKafka.sendMessage(NewsKafkaEnum.MODIFY.getTopic(), news), "信息修改成功", "信息修改失败",
+                null);
     }
 
     /**
@@ -115,8 +118,7 @@ public class NewsController extends BaseController
     @ResponseBody
     public CommonResult delete(@RequestParam(value = "ids", required = true, defaultValue = "0") String ids)
     {
-        newsService.deleteByIds(ids.split(","));
-        return resultBoolWrapper(true, "信息删除成功", "信息删除失败", null);
+        return resultBoolWrapper(newsKafka.sendMessage(NewsKafkaEnum.DELETE.getTopic(), ids), "信息删除成功", "信息删除失败", null);
     }
 
     /**

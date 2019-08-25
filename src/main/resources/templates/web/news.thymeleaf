@@ -165,7 +165,7 @@
                 , 'link' //超链接
                 , 'unlink' //清除链接
             ],
-            height: 200
+            height: 150
         });
         var layeditIndex;
         var newsTable = table.render({

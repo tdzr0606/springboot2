@@ -1,7 +1,7 @@
 package com.nature.jet.controller;
 
 import com.nature.jet.component.system.CommonResult;
-import com.nature.jet.component.utils.MyKafkaSender;
+import com.nature.jet.component.utils.kafka.MyKafkaSender;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class TestController extends BaseController
     @ResponseBody
     public CommonResult test()
     {
-        sender.sendMessage("aaaa");
+        sender.sendMessage("test","aaaa");
         return resultSuccessWrapper("a", null);
     }
 

@@ -27,7 +27,7 @@
     {
         var $ = layui.jquery;
         var layer = layui.layer;
-        var loadIndex = layer.load();
+        var loadIndex = layer.load(1);
         var fileUrl = '/files/' + [[${news.fileurl}]] + '?sessionId=' + new Date().getTime();
         $('#fileIframe').attr("src", fileUrl);
         setTimeout(function ()

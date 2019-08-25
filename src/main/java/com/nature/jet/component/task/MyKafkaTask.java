@@ -1,11 +1,8 @@
 package com.nature.jet.component.task;
 
-import com.nature.jet.component.utils.MyKafkaSender;
+import com.nature.jet.component.utils.kafka.MyKafkaSender;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -31,7 +28,7 @@ public class MyKafkaTask
     public void sendTask()
     {
         log.info("定时发送消息开始");
-        kafkaSender.sendMessage(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
+        kafkaSender.sendMessage("test",DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
         log.info("定时发送消息结束");
     }
 }
