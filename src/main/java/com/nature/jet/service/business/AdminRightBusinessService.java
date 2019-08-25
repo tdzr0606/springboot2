@@ -52,19 +52,19 @@ public class AdminRightBusinessService
             Admin admin = adminMapper.findById(adminId);
             Roles roles = rolesMapper.findById(roleId);
             log.info("账号权限设定,{},{}", admin.getUserName(), roles.getCnName());
-            List<RolesRight> rolesRightList = rolesRightMapper.list(roleId, null);
-
-            final StringBuffer sb = new StringBuffer();
-            rolesRightList.stream().forEach(rolesRight ->
-            {
-                sb.append(rolesRight.getModuleEnTitle()).append(":").append(rolesRight.getModuleRoleEnTitle())
-                        .append(",");
-            });
-            sb.deleteCharAt(sb.length() - 1);
+            //            List<RolesRight> rolesRightList = rolesRightMapper.list(roleId, null);
+            //            final StringBuffer sb = new StringBuffer();
+            //            rolesRightList.stream().forEach(rolesRight ->
+            //            {
+            //                sb.append(rolesRight.getModuleEnTitle()).append(":").append(rolesRight
+            // .getModuleRoleEnTitle())
+            //                        .append(",");
+            //            });
+            //            sb.deleteCharAt(sb.length() - 1);
 
             AdminRight adminRight = new AdminRight();
             adminRight.setRoleEnTitle(roles.getEnName());
-            adminRight.setRightText(sb.toString());
+            //            adminRight.setRightText(sb.toString());
             adminRight.setRoleTitle(roles.getCnName());
             adminRight.setRoleId(roleId);
             adminRight.setAdminId(adminId);
