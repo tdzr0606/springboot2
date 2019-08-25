@@ -19,6 +19,7 @@
         <if test="key != null and key != '' ">
             and ( author like CONCAT(concat('%',#{key}),'%')
             or title like CONCAT(concat('%',#{key}),'%')
+            or synopsis like CONCAT(concat('%',#{key}),'%')
             )
         </if>
         order by id desc
