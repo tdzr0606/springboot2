@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,6 +63,8 @@ public class RolesRightBusinessService
             // 模块权限id组合
             List<ModulesRole> modulesRoleList = modulesRoleMapper.listByIds(rolesValues);
 
+            List<Integer> parentModuleIdList = new ArrayList<>();
+
             modulesRoleList.stream().forEach(modulesRole ->
             {
                 Modules modules = modulesList.stream()
@@ -78,8 +81,32 @@ public class RolesRightBusinessService
                 rolesRight.setId(0);
                 rolesRight.setModuleId(modules.getId());
                 rolesRightMapper.add(rolesRight);
+
+                if(!parentModuleIdList.contains(modules.getParentId()))
+                {
+                    parentModuleIdList.add(modules.getParentId());
+                }
                 log.info("设置权限:{},{}", modules.getTitle(), modulesRole.getTitle());
             });
+
+            parentModuleIdList.stream().forEach(integer ->
+            {
+                Modules modules = modulesMapper.findById(integer);
+
+                RolesRight rolesRight = new RolesRight();
+                rolesRight.setModuleEnTitle(modules.getEnTitle());
+                rolesRight.setModuleTitle(modules.getTitle());
+                rolesRight.setModuleRoleTitle("查看");
+                rolesRight.setModuleRoleEnTitle("show");
+                rolesRight.setRolesId(rolesId);
+                rolesRight.setModuleRoleId(0);
+                rolesRight.setId(0);
+                rolesRight.setModuleId(modules.getId());
+                rolesRightMapper.add(rolesRight);
+                log.info("设置父菜单权限:{}", modules.getTitle());
+            });
+
+
             pd = true;
             log.info("权限设置完成");
         }

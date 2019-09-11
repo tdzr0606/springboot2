@@ -73,20 +73,24 @@
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree" lay-filter="test" id="leftMainMenu">
                 <!-- 超管  -->
-                <li class="layui-nav-item layui-nav-itemed" shiro:hasRole="admin">
+                <li class="layui-nav-item layui-nav-itemed" shiro:hasPermission="sysManage:show">
                     <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;系统设置</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/web/modules/toPage"><i class="fa fa-angle-right"></i>&nbsp;模块管理</a></dd>
-                        <dd><a href="/web/roles/toPage"><i class="fa fa-angle-right"></i>&nbsp;角色管理</a></dd>
-                        <dd><a href="/web/admin/toPage"><i class="fa fa-angle-right"></i>&nbsp;账号管理</a></dd>
+                        <dd shiro:hasPermission="module:show"><a href="/web/modules/toPage"><i
+                                class="fa fa-angle-right"></i>&nbsp;模块管理</a></dd>
+                        <dd shiro:hasPermission="roles:show"><a href="/web/roles/toPage"><i
+                                class="fa fa-angle-right"></i>&nbsp;角色管理</a></dd>
+                        <dd shiro:hasPermission="admin:show"><a href="/web/admin/toPage"><i
+                                class="fa fa-angle-right"></i>&nbsp;账号管理</a></dd>
                     </dl>
                 </li>
                 <!-- 用户 -->
-                <li class="layui-nav-item layui-nav-itemed" shiro:hasAnyRoles="admin,user">
+                <li class="layui-nav-item layui-nav-itemed" shiro:hasPermission="pageManage:show">
                     <a class="layui-nav-item-first" href="javascript:;"><i class="fa fa-user-o"></i>&nbsp;页面管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/web/news/toPage"><i class="fa fa-angle-right"></i>&nbsp;新闻管理</a></dd>
-                        <dd><a href="/web/photos/toPage"><i class="fa fa-angle-right"></i>&nbsp;企业风采</a></dd>
+                        <dd shiro:hasPermission="news:show"><a href="/web/news/toPage"><i
+                                class="fa fa-angle-right"></i>&nbsp;新闻管理</a></dd>
+                        <dd shiro:hasPermission="photos:show"><a href="/web/photos/toPage"><i class="fa fa-angle-right"></i>&nbsp;企业风采</a></dd>
                     </dl>
                 </li>
             </ul>
