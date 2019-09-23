@@ -3,6 +3,7 @@ package com.nature.jet.controller.web;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.component.system.Page;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,7 @@ public class RolesController extends BaseController
      * @return
      */
     @RequestMapping(value = "/web/roles/toPage")
+    @RequiresPermissions(value = "roles:show")
     public ModelAndView toPage()
     {
         modelAndView = new ModelAndView();

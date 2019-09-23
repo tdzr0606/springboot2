@@ -5,6 +5,7 @@ import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.component.system.Page;
 import com.nature.jet.service.business.ModuleBusinessService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,7 @@ public class ModulesController extends BaseController
      * @return
      */
     @RequestMapping(value = "/web/modules/toPage")
+    @RequiresPermissions(value = "module:show")
     public ModelAndView toPage()
     {
         modelAndView = new ModelAndView();

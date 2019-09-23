@@ -1,5 +1,6 @@
 package com.nature.jet.controller.web;
 
+import com.nature.jet.component.shiro.AdminRealm;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.pojo.web.Admin;
@@ -45,6 +46,8 @@ public class IndexController extends BaseController
     @Autowired
     @Qualifier(value = "adminSecruityManager")
     DefaultWebSecurityManager adminSecruityManager;
+    @Autowired
+    AdminRealm adminRealm;
 
 
     /**
@@ -114,6 +117,7 @@ public class IndexController extends BaseController
     public ModelAndView logOut()
     {
         SecurityUtils.getSubject().logout();
+        adminRealm.clearCached(SecurityUtils.getSubject().getPrincipals());
         request.getSession().removeAttribute(Fields.SESSION_ADMIN);
         modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/web/login"));
@@ -163,7 +167,6 @@ public class IndexController extends BaseController
     @ResponseBody
     public CommonResult refreshCpu()
     {
-        log.info("更新cpu使用信息");
         return resultSuccessWrapper("", SigarUtils.getCpu(sigar));
     }
 
@@ -178,7 +181,6 @@ public class IndexController extends BaseController
     @ResponseBody
     public CommonResult refreshMem()
     {
-        log.info("更新内存使用信息");
         return resultSuccessWrapper("", SigarUtils.getMem(sigar));
     }
 }

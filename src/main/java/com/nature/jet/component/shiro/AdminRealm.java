@@ -6,9 +6,11 @@ import com.nature.jet.pojo.web.RolesRight;
 import com.nature.jet.service.web.AdminRightService;
 import com.nature.jet.service.web.AdminService;
 import com.nature.jet.service.web.RolesRightService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.checkerframework.checker.units.qual.A;
@@ -27,7 +29,7 @@ import java.util.Set;
  * @Author: 竺志伟
  * @Date: 2019-07-21 15:58
  */
-@Component
+@Slf4j
 public class AdminRealm extends AuthorizingRealm
 {
     @Autowired
@@ -69,6 +71,7 @@ public class AdminRealm extends AuthorizingRealm
         SimpleAuthorizationInfo simpleAuthenticationInfo = new SimpleAuthorizationInfo();
         simpleAuthenticationInfo.setRoles(roles);
         simpleAuthenticationInfo.setStringPermissions(permissions);
+        log.info("权限获取");
         return simpleAuthenticationInfo;
     }
 
@@ -87,6 +90,7 @@ public class AdminRealm extends AuthorizingRealm
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
             throws AuthenticationException
     {
+        log.info("角色验证");
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         Admin admin = adminService.login(token.getUsername(), new String(token.getPassword()));
         if(null != admin)
@@ -94,5 +98,20 @@ public class AdminRealm extends AuthorizingRealm
             return new SimpleAuthenticationInfo(admin, token.getPassword(), getName());
         }
         return null;
+    }
+
+
+    /**
+     * 清理shiro缓存
+     * Clear cached.
+     *
+     * @param principals the principals
+     * @author:竺志伟
+     * @date :2019-09-15 16:31:22
+     */
+    public void clearCached(PrincipalCollection principals)
+    {
+        log.info("缓存清理");
+        super.clearCache(principals);
     }
 }

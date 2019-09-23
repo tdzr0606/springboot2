@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ehcache name="spring-ehcache" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<ehcache name="shiro-ehcache" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://www.ehcache.org/ehcache.xsd">
 
     <!-- 磁盘缓存位置 -->
@@ -13,5 +13,18 @@
             timeToIdleSeconds="0"
             timeToLiveSeconds="6000"
             memoryStoreEvictionPolicy="LRU"/>
+
+
+    <!-- shiro 授权缓存 -->
+    <cache name="authorizationCache"
+           eternal="false"
+           maxElementsInMemory="10000"
+           maxElementsOnDisk="1000000"
+           overflowToDisk="true"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="6000"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
 
 </ehcache>

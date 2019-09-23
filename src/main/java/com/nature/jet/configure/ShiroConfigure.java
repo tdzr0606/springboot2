@@ -2,6 +2,7 @@ package com.nature.jet.configure;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.nature.jet.component.shiro.AdminRealm;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -65,6 +66,40 @@ public class ShiroConfigure
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
+    }
+
+    /**
+     * Admin realm admin realm.
+     *
+     * @return the admin realm
+     * @author:竺志伟
+     * @date :2019-09-11 09:28:30
+     */
+    @Bean(name = "adminRealm")
+    public AdminRealm adminRealm()
+    {
+        AdminRealm adminRealm = new AdminRealm();
+        adminRealm.setCachingEnabled(true);
+        adminRealm.setCacheManager(shiroEhcache());
+        adminRealm.setAuthorizationCachingEnabled(true);
+        adminRealm.setAuthorizationCacheName("authorizationCache");
+        return adminRealm;
+    }
+
+    /**
+     * shiro 缓存管理
+     * Shiro ehcache eh cache manager.
+     *
+     * @return the eh cache manager
+     * @author:竺志伟
+     * @date :2019-09-15 12:22:36
+     */
+    @Bean
+    public EhCacheManager shiroEhcache()
+    {
+        EhCacheManager manager = new EhCacheManager();
+        manager.setCacheManagerConfigFile("classpath:shiro-ehcache.xml");
+        return manager;
     }
 
 

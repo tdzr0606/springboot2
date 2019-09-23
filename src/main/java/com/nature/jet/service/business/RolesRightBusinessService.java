@@ -1,5 +1,7 @@
 package com.nature.jet.service.business;
 
+import com.nature.jet.component.aspect.annotation.ShiroCacheClean;
+import com.nature.jet.component.shiro.AdminRealm;
 import com.nature.jet.mapper.web.ModulesMapper;
 import com.nature.jet.mapper.web.ModulesRoleMapper;
 import com.nature.jet.mapper.web.RolesMapper;
@@ -9,7 +11,9 @@ import com.nature.jet.pojo.web.ModulesRole;
 import com.nature.jet.pojo.web.Roles;
 import com.nature.jet.pojo.web.RolesRight;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -48,6 +52,7 @@ public class RolesRightBusinessService
      * @date :2019-08-04 13:34:36
      */
     @Transactional
+    @ShiroCacheClean
     public boolean add(int rolesId, String[] rolesValues)
     {
         boolean pd = false;
@@ -105,7 +110,6 @@ public class RolesRightBusinessService
                 rolesRightMapper.add(rolesRight);
                 log.info("设置父菜单权限:{}", modules.getTitle());
             });
-
 
             pd = true;
             log.info("权限设置完成");

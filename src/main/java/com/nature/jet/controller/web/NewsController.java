@@ -7,6 +7,7 @@ import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.component.system.Page;
 import com.nature.jet.utils.NewsFileTools;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -42,6 +43,7 @@ public class NewsController extends BaseController
      * @return
      */
     @RequestMapping(value = "/web/news/toPage")
+    @RequiresPermissions(value = "news:show")
     public ModelAndView toPage()
     {
         modelAndView = new ModelAndView();

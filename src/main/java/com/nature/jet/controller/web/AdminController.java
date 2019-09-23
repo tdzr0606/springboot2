@@ -3,6 +3,7 @@ package com.nature.jet.controller.web;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.component.system.Page;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,7 @@ public class AdminController extends BaseController
      * @return
      */
     @RequestMapping(value = "/web/admin/toPage")
+    @RequiresPermissions(value = "admin:show")
     public ModelAndView toPage()
     {
         modelAndView = new ModelAndView();
@@ -128,14 +130,15 @@ public class AdminController extends BaseController
      */
     @RequestMapping(value = "/web/admin/passwordModify")
     @ResponseBody
-    public CommonResult passwordModify(@RequestParam(value = "loginPass", required = true, defaultValue = "0") String loginPass,
-                                       @RequestParam(value = "loginPassN", required = true, defaultValue = "0")
-                                               String loginPassN)
+    public CommonResult passwordModify(
+            @RequestParam(value = "loginPass", required = true, defaultValue = "0") String loginPass,
+            @RequestParam(value = "loginPassN", required = true, defaultValue = "0") String loginPassN)
     {
         Admin admin = super.getLoginAdmin();
         if(admin.getLoginPass().equals(loginPass))
         {
-            return resultBoolWrapper(adminService.modifyPassword(loginPassN, admin.getId()), "密码修改成功,请重新登录", "密码修改失败", null);
+            return resultBoolWrapper(adminService.modifyPassword(loginPassN, admin.getId()), "密码修改成功,请重新登录", "密码修改失败",
+                    null);
         }
         return resultFailsWrapper("原始密码不匹配,密码修改失败", null);
     }

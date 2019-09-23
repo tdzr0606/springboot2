@@ -90,7 +90,8 @@
                     <dl class="layui-nav-child">
                         <dd shiro:hasPermission="news:show"><a href="/web/news/toPage"><i
                                 class="fa fa-angle-right"></i>&nbsp;新闻管理</a></dd>
-                        <dd shiro:hasPermission="photos:show"><a href="/web/photos/toPage"><i class="fa fa-angle-right"></i>&nbsp;企业风采</a></dd>
+                        <dd shiro:hasPermission="photos:show"><a href="/web/photos/toPage"><i
+                                class="fa fa-angle-right"></i>&nbsp;企业风采</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -102,6 +103,14 @@
 <th:block th:fragment="foot">
     <script src="/static/design/js/security_utf8.js"></script>
     <script src="/static/design/layui.js"></script>
+
+    <script type="text/javascript">
+        // 屏蔽鼠标右键
+        document.oncontextmenu = function ()
+        {
+            return false;
+        }
+    </script>
 
     <!-- 密码修改 表单 -->
     <form class="layui-form" id="passwordModifyForm" style="display:none;padding:10px 40px 10px 0px; ">

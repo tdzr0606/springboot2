@@ -96,7 +96,7 @@ public class AdminRightController extends BaseController
     @ResponseBody
     public CommonResult delete(@RequestParam(value = "id", required = true, defaultValue = "0") Integer id)
     {
-        return resultBoolWrapper(adminRightService.deleteById(id), "账号权限设删除成功", "账号权限设删除失败", null);
+        return resultBoolWrapper(adminRightBusinessService.delete(id), "账号权限设删除成功", "账号权限设删除失败", null);
     }
 
     /**
