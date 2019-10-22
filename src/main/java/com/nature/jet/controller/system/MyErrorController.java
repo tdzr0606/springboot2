@@ -59,7 +59,7 @@ public class MyErrorController extends BasicErrorController
 
         log.error("----------------------------------------");
         log.error("Json错误");
-        log.error("状态:{}", status.series().value());
+        log.error("状态:{}", model.get("status").toString());
         log.error("链接:{}", model.get("path").toString());
         log.error("错误:{}", model.get("message").toString());
         log.error("----------------------------------------");
@@ -93,7 +93,7 @@ public class MyErrorController extends BasicErrorController
 
         log.error("----------------------------------------");
         log.error("Html错误");
-        log.error("状态:{}", status.series().value());
+        log.error("状态:{}", model.get("status").toString());
         log.error("链接:{}", model.get("path").toString());
         log.error("错误:{}", model.get("message").toString());
         log.error("----------------------------------------");
