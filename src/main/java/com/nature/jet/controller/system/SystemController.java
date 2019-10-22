@@ -4,6 +4,7 @@ import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.utils.Fields;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,8 +59,6 @@ public class SystemController extends BaseController
     public ModelAndView error()
     {
         modelAndView = new ModelAndView();
-        modelAndView.addObject("errorInfo","服务器错误,请联系管理员");
-        modelAndView.addObject("uri",request.getRequestURI());
         modelAndView.setViewName("common/error500");
         return modelAndView;
     }
@@ -92,7 +91,8 @@ public class SystemController extends BaseController
      */
     @RequestMapping(value = "/system/readfile")
     @ResponseBody
-    public CommonResult readFile(@RequestParam(value = "fileUrl", required = true, defaultValue = "") String fileUrl)
+    public CommonResult readFile(
+            @RequestParam(value = "fileUrl", required = true, defaultValue = "") String fileUrl)
     {
         int code = CommonResult.SUCCESS;
         String msg = "";

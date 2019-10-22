@@ -42,7 +42,6 @@ public class MyErrorController extends BasicErrorController
     {
         Map<String, Object> model = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.ALL));
         HttpStatus status = getStatus(request);
-        log.error("错误:{}", model.get("message").toString());
         //输出自定义的Json格式
         Map<String, Object> map = new HashMap<String, Object>();
         if(status.is4xxClientError())
@@ -57,6 +56,14 @@ public class MyErrorController extends BasicErrorController
         {
             map.put("message", model.get("message"));
         }
+
+        log.error("----------------------------------------");
+        log.error("Json错误");
+        log.error("状态:{}", status.series().value());
+        log.error("链接:{}", model.get("path").toString());
+        log.error("错误:{}", model.get("message").toString());
+        log.error("----------------------------------------");
+
         return new ResponseEntity<Map<String, Object>>(map, status);
     }
 
@@ -71,7 +78,6 @@ public class MyErrorController extends BasicErrorController
         response.setStatus(getStatus(request).value());
         Map<String, Object> model = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.TEXT_HTML));
         ModelAndView modelAndView = new ModelAndView();
-        log.error("错误:{}", model.get("message").toString());
         if(status.is5xxServerError())
         {
             modelAndView.addObject("errorInfo", model.get("message").toString());
@@ -83,8 +89,15 @@ public class MyErrorController extends BasicErrorController
             modelAndView.addObject("errorInfo", "页面丢失了,程序员悬赏通缉中.....");
             modelAndView.addObject("uri", model.get("path").toString());
             modelAndView.setViewName("/common/error404");
-
         }
+
+        log.error("----------------------------------------");
+        log.error("Html错误");
+        log.error("状态:{}", status.series().value());
+        log.error("链接:{}", model.get("path").toString());
+        log.error("错误:{}", model.get("message").toString());
+        log.error("----------------------------------------");
+
         return modelAndView;
     }
 }

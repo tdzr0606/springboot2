@@ -2,6 +2,7 @@ package com.nature.jet.controller.web;
 
 import com.nature.jet.component.shiro.AdminRealm;
 import com.nature.jet.component.system.CommonResult;
+import com.nature.jet.component.system.SessionSave;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.pojo.web.Admin;
 import com.nature.jet.service.web.AdminService;
@@ -36,8 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class IndexController extends BaseController
 {
-    @Autowired
-    HttpServletRequest request;
     @Autowired
     AdminService adminService;
     @Autowired
@@ -93,6 +92,7 @@ public class IndexController extends BaseController
             if(pd)
             {
                 request.getSession().setAttribute(Fields.SESSION_ADMIN, (Admin) subject.getPrincipal());
+                SessionSave.setSessionInfo(loginName,request.getSession().getId());
             }
             else
             {

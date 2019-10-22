@@ -65,12 +65,14 @@
         {
             var pass = security($('#loginPass').val());
             $('#loginPass').val(pass);
+            var loadIndex = layer.load(2);
             $.ajax({
                 type: 'post',
                 data: $("#loginForm").serialize(),
                 url: '/web/loginAction',
                 success: function (json)
                 {
+                    layer.close(loadIndex);
                     if (json.success)
                     {
                         layer.closeAll();
@@ -86,6 +88,7 @@
                 },
                 error: function (json)
                 {
+                    layer.close(loadIndex);
                     layer.alert("登录超时,请重新登录！", {closeBtn: 0}, function ()
                     {
                         layer.closeAll();
