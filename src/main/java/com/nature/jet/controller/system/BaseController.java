@@ -2,13 +2,8 @@ package com.nature.jet.controller.system;
 
 import com.nature.jet.component.system.CommonResult;
 import com.nature.jet.pojo.web.Admin;
-import com.nature.jet.utils.Fields;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.context.ContextLoader;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -100,19 +95,6 @@ public abstract class BaseController
     protected CommonResult resultFailsWrapper(String message, Object obj)
     {
         return resultWrapper(CommonResult.FAILS, message, obj);
-    }
-
-
-    /**
-     * 方法描述: 获取容器根目录.
-     * 创建日期: 2017-08-45 00:45:50
-     * 创建作者: 李兴武
-     *
-     * @return java.lang.String
-     */
-    protected String getRootPath()
-    {
-        return ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath("/");
     }
 
 
