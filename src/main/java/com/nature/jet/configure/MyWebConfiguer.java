@@ -1,6 +1,8 @@
 package com.nature.jet.configure;
 
 import com.nature.jet.interceptor.MyInterceptor;
+import com.nature.jet.interceptor.TimesInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
@@ -18,6 +20,10 @@ public class MyWebConfiguer implements WebMvcConfigurer
 {
     @Value("${web.upload-path}")
     String uploadFile;
+    @Autowired
+    MyInterceptor myInterceptor;
+    @Autowired
+    TimesInterceptor timesInterceptor;
 
     /**
      * 设置 强制访问路径
@@ -62,8 +68,10 @@ public class MyWebConfiguer implements WebMvcConfigurer
      */
     public void addInterceptors(InterceptorRegistry registry)
     {
-        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/", "/error", " /static/**", "/files/**", "/web/login", "/web/loginAction",
+        registry.addInterceptor(timesInterceptor).addPathPatterns("/**")
+                .excludePathPatterns("/error", "/static/**", "/files/**");
+        registry.addInterceptor(myInterceptor).addPathPatterns("/**")
+                .excludePathPatterns("/", "/error", "/static/**", "/files/**", "/web/login", "/web/loginAction",
                         "/web/logOut");
     }
 }

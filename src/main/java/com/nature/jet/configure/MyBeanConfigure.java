@@ -1,6 +1,8 @@
 package com.nature.jet.configure;
 
 import com.nature.jet.filter.XssCodeFilter;
+import com.nature.jet.interceptor.MyInterceptor;
+import com.nature.jet.interceptor.TimesInterceptor;
 import com.nature.jet.utils.JwtUtils;
 import net.sf.ehcache.CacheManager;
 import org.hyperic.sigar.Sigar;
@@ -45,9 +47,9 @@ public class MyBeanConfigure
     {
         String path = System.getProperty("java.library.path");
         //为防止java.library.path重复加，此处判断了一下
-        if(!path.contains(sigarLibPath))
+        if (!path.contains(sigarLibPath))
         {
-            if(System.getProperty("os.name").toLowerCase().indexOf("win") > -1)
+            if (System.getProperty("os.name").toLowerCase().indexOf("win") > -1)
             {
                 path += ";" + sigarLibPath;
             }
@@ -82,7 +84,7 @@ public class MyBeanConfigure
             bean.isSingleton();
             return bean.getObject();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -138,5 +140,34 @@ public class MyBeanConfigure
         JwtUtils jwtUtils = new JwtUtils();
         jwtUtils.setSecret(jwtSecret);
         return jwtUtils;
+    }
+
+
+    /**
+     * My interceptor my interceptor.
+     *
+     * @return the my interceptor
+     * @author:竺志伟
+     * @email :tdzr_0606@126.com
+     * @date :2019-11-19 09:11:26
+     */
+    @Bean(name = "myInterceptor")
+    public MyInterceptor myInterceptor()
+    {
+        return new MyInterceptor();
+    }
+
+    /**
+     * Times interceptor times interceptor.
+     *
+     * @return the times interceptor
+     * @author:竺志伟
+     * @email :tdzr_0606@126.com
+     * @date :2019-11-19 09:12:57
+     */
+    @Bean(name = "timesInterceptor")
+    public TimesInterceptor timesInterceptor()
+    {
+        return new TimesInterceptor();
     }
 }
