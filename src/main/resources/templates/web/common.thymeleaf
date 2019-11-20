@@ -158,7 +158,7 @@
             <label class="layui-form-label">用户名</label>
 
             <div class="layui-input-block">
-                <input type="text" name="userName" id="userName" required lay-verify="required" placeholder="请输入用户名"
+                <input type="text" name="userName" required lay-verify="required" placeholder="请输入用户名"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -166,7 +166,7 @@
             <label class="layui-form-label">登录名</label>
 
             <div class="layui-input-block">
-                <input type="text" name="loginName" id="loginName" required lay-verify="required" placeholder="请输入登录名"
+                <input type="text" name="loginName" required lay-verify="required" placeholder="请输入登录名"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
