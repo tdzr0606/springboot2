@@ -47,6 +47,8 @@
         </div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><i class="layui-icon" style="cursor: pointer;" id="menuI">&#xe65a;</i></li>
+
             <li class="layui-nav-item">
                 <a href="/web/"><i class="fa fa-home"></i>&nbsp;首页</a>
                 <!--<dl class="layui-nav-child">-->
@@ -69,7 +71,7 @@
             <li class="layui-nav-item"><a href="javascript:;" id="loginOut">退出</a></li>
         </ul>
     </div>
-    <div class="layui-side layui-bg-black">
+    <div class="layui-side layui-bg-black"  id="leftMenuDiv">
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree" lay-filter="test" id="leftMainMenu">
                 <!-- 超管  -->
@@ -371,6 +373,46 @@
                     }
                 }
             });
+
+
+            // 左侧菜单 收缩
+            $('#menuI').on('click', function ()
+            {
+                if (localStorage.menuI == 'h')
+                {
+                    showMenu();
+                }
+                else
+                {
+                    hideMenu();
+                }
+            });
+            if (localStorage.menuI == 'h')
+            {
+                hideMenu();
+            }
+            else
+            {
+                showMenu();
+            }
+
+            function hideMenu()
+            {
+                $('#leftMenuDiv').animate({width: '0px'});
+                $('.layui-body').animate({left: '0px'});
+                $('#menuI').html('&#xe65b;');
+                $('.layui-footer').animate({left:'0px'});
+                localStorage.menuI = 'h';
+            }
+
+            function showMenu()
+            {
+                $('#leftMenuDiv').animate({width:'200px'});
+                $('.layui-body').animate({left: '200px'});
+                $('#menuI').html('&#xe65a;');
+                $('.layui-footer').animate({left:'200px'});
+                localStorage.menuI = 's';
+            }
         });
     </script>
 </th:block>

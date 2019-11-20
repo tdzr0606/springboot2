@@ -1,8 +1,8 @@
 package com.nature.jet.interceptor;
 
-import com.uni2k.jet.component.system.CommonResult;
-import com.uni2k.jet.utils.JsonUtils;
-import com.uni2k.jet.utils.Tools;
+import com.nature.jet.component.system.CommonResult;
+import com.nature.jet.utils.JsonUtils;
+import com.nature.jet.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,6 +2,7 @@ package com.nature.jet.utils;
 
 import org.apache.commons.lang.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,7 +30,7 @@ public class Tools
      */
     public static String getNowDate(String pattern)
     {
-        if(StringUtils.isBlank(pattern))
+        if (StringUtils.isBlank(pattern))
         {
             pattern = "yyyy-MM-dd";
         }
@@ -47,7 +48,7 @@ public class Tools
      */
     public static String getNowDateTime(String pattern)
     {
-        if(StringUtils.isBlank(pattern))
+        if (StringUtils.isBlank(pattern))
         {
             pattern = "yyyy-MM-dd HH:mm:ss";
         }
@@ -83,5 +84,28 @@ public class Tools
     {
         localDateTime = (null == localDateTime) ? LocalDateTime.now() : localDateTime;
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Gets request ip.
+     *
+     * @param request the request
+     * @return the request ip
+     * @author:竺志伟
+     * @email :tdzr_0606@126.com
+     * @date :2019-11-20 08:29:11
+     */
+    public static String getRequestIp(HttpServletRequest request)
+    {
+        String ip = null;
+        if (request.getHeader("x-forwarded-for") == null)
+        {
+            ip = request.getRemoteAddr();
+        }
+        else
+        {
+            ip = request.getHeader("x-forwarded-for");
+        }
+        return ip;
     }
 }
