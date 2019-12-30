@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.*;
  * @date :2019-03-19 22:54:38
  */
 @Configuration
-public class MyWebConfiguer implements WebMvcConfigurer
+public class MyWebConfigure implements WebMvcConfigurer
 {
     @Value("${web.upload-path}")
     String uploadFile;

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <settings>
-        <setting name="logImpl" value="STDOUT_LOGGING"/> <!-- 日志 -->
+        <!--        <setting name="logImpl" value="STDOUT_LOGGING"/> &lt;!&ndash; 日志 &ndash;&gt;-->
         <setting name="cacheEnabled" value="true"/> <!-- 开启二级缓存 -->
     </settings>
 
