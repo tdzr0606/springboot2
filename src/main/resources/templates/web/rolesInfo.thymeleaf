@@ -94,7 +94,7 @@
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn" lay-submit lay-filter="rolesRightForm">确定</button>
-            <button class="layui-btn layui-btn-primary" onclick="layer.closeAll()">取消</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="layer.closeAll()">取消</button>
         </div>
     </div>
 </form>
