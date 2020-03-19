@@ -1,4 +1,4 @@
-package com.nature.jet.component.utils.kafka;
+package com.nature.jet.component.kafka;
 
 import com.nature.jet.pojo.au.News;
 import com.nature.jet.service.au.NewsService;
@@ -6,7 +6,6 @@ import com.nature.jet.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
 
 /**
  * 新闻消息 kafka处理
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
  * @Author: 竺志伟
  * @Date: 2019-08-25 15:56
  */
-@Component
 @Slf4j
 public class NewsKafka extends CommonKafka
 {

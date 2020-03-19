@@ -1,6 +1,6 @@
 package com.nature.jet.controller.web;
 
-import com.nature.jet.component.utils.kafka.NewsKafka;
+import com.nature.jet.component.kafka.NewsKafka;
 import com.nature.jet.utils.enu.NewsKafkaEnum;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.component.system.CommonResult;
@@ -32,10 +32,13 @@ public class NewsController extends BaseController
 {
     @Autowired
     NewsService newsService;
-    @Autowired
-    NewsKafka newsKafka;
     @Value("${web.upload-path}")
     String rootPath;
+
+    @Value("${kafka.open}")
+    String kafkaOpen;
+    @Autowired(required = false)
+    NewsKafka newsKafka;
 
     /**
      * 进入页面
@@ -79,12 +82,23 @@ public class NewsController extends BaseController
     public CommonResult add(News news,
                             @RequestParam(value = "fileContent", required = true, defaultValue = "") String fileContent)
     {
-        if(StringUtils.isNotBlank(fileContent))
+        if (StringUtils.isNotBlank(fileContent))
         {
             news.setFileurl(NewsFileTools.saveToFile(rootPath, fileContent));
         }
         news.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        return resultBoolWrapper(newsKafka.sendMessage(NewsKafkaEnum.NEW.getTopic(), news), "信息创建成功", "信息创建失败", null);
+
+        boolean pd = false;
+        if (kafkaOpen.equals("true"))
+        {
+            pd = newsKafka.sendMessage(NewsKafkaEnum.NEW.getTopic(), news);
+        }
+        else
+        {
+            pd = newsService.add(news);
+        }
+
+        return resultBoolWrapper(pd, "信息创建成功", "信息创建失败", null);
     }
 
     /**
@@ -98,7 +112,7 @@ public class NewsController extends BaseController
     public CommonResult modify(News news, @RequestParam(value = "fileContent", required = true, defaultValue = "")
             String fileContent)
     {
-        if(StringUtils.isNotBlank(news.getFileurl()))
+        if (StringUtils.isNotBlank(news.getFileurl()))
         {
             NewsFileTools.updateFile(rootPath + news.getFileurl(), fileContent);
         }
@@ -106,7 +120,18 @@ public class NewsController extends BaseController
         {
             news.setFileurl(NewsFileTools.saveToFile(rootPath, fileContent));
         }
-        return resultBoolWrapper(newsKafka.sendMessage(NewsKafkaEnum.MODIFY.getTopic(), news), "信息修改成功", "信息修改失败",
+
+        boolean pd = false;
+        if (kafkaOpen.equals("true"))
+        {
+            pd = newsKafka.sendMessage(NewsKafkaEnum.MODIFY.getTopic(), news);
+        }
+        else
+        {
+            pd = newsService.modify(news);
+        }
+
+        return resultBoolWrapper(pd, "信息修改成功", "信息修改失败",
                 null);
     }
 
@@ -120,7 +145,18 @@ public class NewsController extends BaseController
     @ResponseBody
     public CommonResult delete(@RequestParam(value = "ids", required = true, defaultValue = "0") String ids)
     {
-        return resultBoolWrapper(newsKafka.sendMessage(NewsKafkaEnum.DELETE.getTopic(), ids), "信息删除成功", "信息删除失败", null);
+        boolean pd = false;
+        if (kafkaOpen.equals("true"))
+        {
+            pd = newsKafka.sendMessage(NewsKafkaEnum.DELETE.getTopic(), ids);
+        }
+        else
+        {
+            newsService.deleteByIds(ids.split(","));
+            pd = true;
+        }
+        return resultBoolWrapper(pd, "信息删除成功", "信息删除失败",
+                null);
     }
 
     /**

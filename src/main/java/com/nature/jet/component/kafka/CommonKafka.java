@@ -1,10 +1,9 @@
-package com.nature.jet.component.utils.kafka;
+package com.nature.jet.component.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 /**
@@ -14,7 +13,6 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
  * @Author: 竺志伟
  * @Date: 2019-08-25 16:09
  */
-@Component
 @Slf4j
 public class CommonKafka
 {
@@ -46,6 +44,7 @@ public class CommonKafka
             {
                 log.info("消息发送成功");
                 SendResult result = (SendResult) o;
+                log.info("----------------------");
                 log.info("topic:{}", result.getProducerRecord().topic());
                 log.info("key:{}", result.getProducerRecord().key());
                 log.info("value:{}", result.getProducerRecord().value().toString());

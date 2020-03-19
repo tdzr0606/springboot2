@@ -2,6 +2,7 @@ package com.nature.jet.controller.web;
 
 import com.nature.jet.component.shiro.AdminRealm;
 import com.nature.jet.component.system.CommonResult;
+import com.nature.jet.component.system.PassUtils;
 import com.nature.jet.component.system.SessionSave;
 import com.nature.jet.controller.system.BaseController;
 import com.nature.jet.pojo.web.Admin;
@@ -76,11 +77,13 @@ public class IndexController extends BaseController
      */
     @RequestMapping(value = "/web/loginAction")
     @ResponseBody
-    public CommonResult login(@RequestParam(value = "loginName", required = true, defaultValue = "") String loginName,
-                              @RequestParam(value = "loginPass", required = true, defaultValue = "") String loginPass)
+    public CommonResult login(
+            @RequestParam(value = "loginName", required = true, defaultValue = "") String loginName,
+            @RequestParam(value = "loginPass", required = true, defaultValue = "") String loginPass)
     {
         log.info("登录名:{},密码:{}", loginName, loginPass);
         SecurityUtils.setSecurityManager(adminSecruityManager);
+        loginPass = PassUtils.passWord(loginPass);
         UsernamePasswordToken token = new UsernamePasswordToken(loginName, loginPass);
         //获取当前的Subject
         Subject subject = SecurityUtils.getSubject();
@@ -89,17 +92,17 @@ public class IndexController extends BaseController
         {
             subject.login(token);
             pd = subject.isAuthenticated();
-            if(pd)
+            if (pd)
             {
                 request.getSession().setAttribute(Fields.SESSION_ADMIN, (Admin) subject.getPrincipal());
-                SessionSave.setSessionInfo(loginName,request.getSession().getId());
+                SessionSave.setSessionInfo(loginName, request.getSession().getId());
             }
             else
             {
                 token.clear();
             }
         }
-        catch(AuthenticationException e)
+        catch (AuthenticationException e)
         {
             log.error("登录错误", e);
         }
